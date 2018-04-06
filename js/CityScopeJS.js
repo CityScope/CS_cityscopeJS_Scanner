@@ -46,7 +46,7 @@ function setupMedia(mediaToggle) {
     img.onload = function () {
         vidCanvas2dContext.drawImage(img, 0, 0, webcamCanvas.width, webcamCanvas.height);
     }
-    img.src = 'CS_cityscopeJS/media/g0.jpg';
+    img.src = '../media/g0.jpg';
 
 
     ////////////////////
