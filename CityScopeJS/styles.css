@@ -1,0 +1,61 @@
+
+ html {
+    height: 100%;
+}
+body {
+    height: 100%;
+    margin: 0;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    overflow: hidden;
+    background: linear-gradient(115deg, rgba(2,0,36,1) 47%, rgba(121,9,114,1) 97%);
+}
+
+.logo {
+    top: 10%;
+    left: 3%;
+    position: fixed;
+    z-index: 1000;
+  }
+
+.webcamCanvas{
+    z-index: -1;
+    box-shadow: 5px 5px 35px rgb(0, 0, 0);
+    cursor: all-scroll;
+
+}
+
+.info{
+    font-family: Helvetica, sans-serif;
+    font-size: 0.5rem;
+    color: white;
+    background: black;
+    z-index:9999;
+}
+
+.transformedMatrix{
+    border: 1px solid rgb(255, 0, 255);
+    position: fixed;
+}
+
+.vizCellDivParent{
+    z-index: 1000;
+    position: fixed;
+    left: 70vw;
+    top: 2rem;
+    box-shadow: 5px 5px 20px rgb(0, 0, 0);
+    cursor: all-scroll;
+}
+
+.vizRawsDiv{
+    float: left;
+}
+
+.vizCell{
+    position: relative;
+    /* margin:1px; */
+    pointer-events: none;
+    /* border: 1px solid rgba(0, 0, 0, 0.603); */
+    width :5px;
+    height :5px;
+}

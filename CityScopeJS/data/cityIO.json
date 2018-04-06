@@ -1,0 +1,37 @@
+{
+    "grid": [],
+    "id": "",
+    "objects": {
+        "matrixMapping": [
+            119,
+            48,
+            856,
+            35,
+            84,
+            696,
+            883,
+            655
+        ]
+    },
+    "header": {
+        "name": "CityScopeJS",
+        "longName": "TactileScopeMatrixCity©®",
+        "block": [
+            "type"
+        ],
+        "spatial": {
+            "ncols": 20,
+            "physical_longitude": -71.0894527,
+            "physical_latitude": 42.360357,
+            "nrows": 20,
+            "rotation": 0,
+            "latitude": 42.360357,
+            "cellsize": 10,
+            "longitude": -71.087264
+        },
+        "owner": {
+            "name": "Ariel Noyman",
+            "institute": "City Science MIT Media Lab"
+        }
+    }
+}
