@@ -59,7 +59,7 @@ var codes = [
     '0111010011000000'];
 
 //load table settings
-var cityioObj = fetch("/CityScopeJS/data/cityIO.json")
+var cityioObj = fetch("/data/cityIO.json")
     .then(res => res.json())
     .then(data => cityioObj = data)
     .then((cityioObj) => { return cityioObj }
