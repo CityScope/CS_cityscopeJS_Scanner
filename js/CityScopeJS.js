@@ -1,27 +1,34 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-/* CityScopeJS -- decoding 2d array of black and white lego bricks and sending to remote server. 
+/* CityScopeJS -- decoding 2d array of black and white lego bricks and sending to remote server.
 "@context": "https://github.com/CityScope/", "@type": "Person", "address": { "@type": "75 Amherst St, Cambridge, MA 02139", "addressLocality": " Cambridge", "addressRegion": "MA",}, "jobTitle": "Research Scientist", "name": "Ariel Noyman", "alumniOf": "MIT", "url": "http://arielnoyman.com", "https://www.linkedin.com/", "http://twitter.com/relno", https://github.com/RELNO] */
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
-// size var 
+// size var
 var size = 80
 
-//create webworker 
+//load settings file
+var cityioObj = fetch("data/cityIO.json")
+    .then(res => res.json())
+    .then(data => cityioObj = data)
+    .then((cityioObj) => { return cityioObj }
+    )
+
+//create webworker
 var CVworker = new Worker('js/CSjsCV.js');
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//webcam or media parent div for dragging 
+//webcam or media parent div for dragging
 $('<DIV/>', {
     id: "webcamCanvasParent",
     class: "webcamCanvasParent"
 }).appendTo('body');
 
-//get it as div 
+//get it as div
 var canvasParent = document.getElementById('webcamCanvasParent');
 
-//make vid canvas 
+//make vid canvas
 var webcamCanvas = document.createElement('canvas');
 webcamCanvas.id = "webcamCanvas";
 webcamCanvas.className = "webcamCanvas";
@@ -31,7 +38,7 @@ webcamCanvas.style.zIndex = 0;
 webcamCanvas.style.position = "absolute";
 webcamCanvas.style.border = "1px solid";
 canvasParent.appendChild(webcamCanvas);
-//get its context for scanning 
+//get its context for scanning
 var vidCanvas2dContext = webcamCanvas.getContext('2d');
 console.log('canvas size:', webcamCanvas.width, webcamCanvas.height);
 
@@ -39,13 +46,14 @@ console.log('canvas size:', webcamCanvas.width, webcamCanvas.height);
 mediaToggle = false;
 
 function setupMedia(mediaToggle) {
-    //clear canvas at start 
+    //clear canvas at start
     vidCanvas2dContext.clearRect(0, 0, vidCanvas2dContext.width, vidCanvas2dContext.height);
-    // make dummy image for testing 
+    // make dummy image for testing
     var img = new Image();
     img.onload = function () {
         vidCanvas2dContext.drawImage(img, 0, 0, webcamCanvas.width, webcamCanvas.height);
     }
+    //image location for the test image
     img.src = 'media/g0.jpg';
 
 
@@ -57,7 +65,7 @@ function setupMedia(mediaToggle) {
     if (mediaToggle) {
         vidCanvas2dContext.clearRect(0, 0, vidCanvas2dContext.width, vidCanvas2dContext.height);
 
-        //Video loop setup 
+        //Video loop setup
         var loopFrame, centerX, centerY;
         // call video mesh creator
         var width = 0;
@@ -76,7 +84,7 @@ function setupMedia(mediaToggle) {
 
         video.setAttribute('autoplay', true);
         window.vid = video;
-        //call webcam function 
+        //call webcam function
         navigator.getUserMedia({ video: true, audio: false }, function (stream) {
             video.srcObject = stream;
             track = stream.getTracks()[0];
@@ -97,16 +105,16 @@ function setupMedia(mediaToggle) {
     }
     console.log(track);
 }
-//call the media setup method at start 
+//call the media setup method at start
 setupMedia(mediaToggle);
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //make array of evenly divided grid of point to scan
 function scanArrayMaker() {
-    // TODO : replace this with visuals 
+    // TODO : replace this with visuals
     var vizGridLocArray = []
-    //get point every in ration to width divided by # of points 
+    //get point every in ration to width divided by # of points
     let ratioX = webcamCanvas.width / size;
     let ratioY = webcamCanvas.height / size;
     for (let i = 0; i < webcamCanvas.width; i += ratioX) {
@@ -128,7 +136,7 @@ function getPos(el) {
     return ([lx, ly]);
 }
 
-//create the scanning transposed matrix 
+//create the scanning transposed matrix
 function MatrixTransform() {
     // clear dst corners
     var dstCorners = [];
@@ -144,7 +152,7 @@ function MatrixTransform() {
         webcamCanvas.width, webcamCanvas.height
     ]
 
-    //make and get dest div locations 
+    //make and get dest div locations
     dstCorners = [
         // getPos(webcamCanvas)[0] + 20, getPos(webcamCanvas)[1] + 15,
         // webcamCanvas.width - 60, getPos(webcamCanvas)[1] + 30,
@@ -157,15 +165,15 @@ function MatrixTransform() {
         883, 655
 
     ]
-    //var for the distorted points 
+    //var for the distorted points
     let dstPt;
-    // use lib to calculate transform matrix 
+    // use lib to calculate transform matrix
     perspT = PerspT(srcCorners, dstCorners);
     //make parent div
     $('<DIV/>', {
         id: "transformedMatrixParent",
     }).appendTo(canvasParent);
-    //distort the matrix to locations and make cubes 
+    //distort the matrix to locations and make cubes
     for (let j = 0; j < vizGridLocArray.length; j++) {
         dstPt = perspT.transform(vizGridLocArray[j][0], vizGridLocArray[j][1]);
         $('<DIV/>', {
@@ -183,12 +191,12 @@ function MatrixTransform() {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// make visual grid representation 
+// make visual grid representation
 let vizGridArray = []
 vizGrid();
 
 function vizGrid() {
-    // make the grid div parent 
+    // make the grid div parent
     $('<DIV/>', {
         id: "vizCellDivParent",
         class: "vizCellDivParent"
@@ -203,7 +211,7 @@ function vizGrid() {
             var vizCell = document.createElement('div');
             vizCell.className = "vizCell";
             vizRawsDiv.appendChild(vizCell);
-            // get the divs to array 
+            // get the divs to array
             vizGridArray.push(vizCell);
         }
     }
@@ -220,43 +228,43 @@ function ColorPicker() {
     //empty color array for webworker
     scannedColorsArray = [];
 
-    // read all pixels in  canvas 
+    // read all pixels in  canvas
     var pixelArray = vidCanvas2dContext.getImageData(0, 0, window.innerWidth, window.innerHeight)
 
-    //get the pixels 
+    //get the pixels
     var pixelData = pixelArray.data;
 
     for (let i = 0; i < matrixDiv.length; i++) {
-        // get the pixel location at the center of the grid cell div and match it to the pixel location in the PixelBffer linear list 
+        // get the pixel location at the center of the grid cell div and match it to the pixel location in the PixelBffer linear list
         pixLoc = ((matrixGridLocArray[i][1] * innerWidth) + matrixGridLocArray[i][0]) * 4
 
         //convert pixel data to RGBA string
         col = ("rgb(" + pixelData[pixLoc].toString() + ',' + pixelData[pixLoc + 1].toString() + ',' + pixelData[pixLoc + 2].toString() + ")");
 
-        //use RGBA value to color grid cell divs 
+        //use RGBA value to color grid cell divs
         // vizGridArray[i].style.background = col;
 
-        // sample and push to array 3 pixels around to get better recognition  
+        // sample and push to array 3 pixels around to get better recognition
         scannedColorsArray.push(
-            //pixel before 
+            //pixel before
             [pixelData[pixLoc - 4], pixelData[pixLoc - 3], pixelData[pixLoc - 2],
-            //this  pixel 
+            //this  pixel
             pixelData[pixLoc], pixelData[pixLoc + 1], pixelData[pixLoc + 2],
             //next pixel
             pixelData[pixLoc + 4], pixelData[pixLoc + 5], pixelData[pixLoc + 6]]
         )
     }
-    //recoursivally call this 
+    //recoursivally call this
     requestAnimationFrame(function () {
         ColorPicker();
     });
-    //send the scanned colors to webworker for CV operation 
+    //send the scanned colors to webworker for CV operation
     CVworker.postMessage(scannedColorsArray);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//color the viz grid base on the webwroker cv analysis 
+//color the viz grid base on the webwroker cv analysis
 CVworker.addEventListener('message', function (e) {
     // console.log('Worker said:', e.data);
     col = e.data;
@@ -272,31 +280,31 @@ CVworker.addEventListener('message', function (e) {
 
 interact();
 function interact() {
-    //dragable 
+    //dragable
     $('#vizCellDivParent').draggable();
     // $(canvasParent).draggable();
 
     // dat.GUI
-    var mLoc;
-    var gui = new dat.GUI({
-        width: 400
-    });
+    var gui = new dat.GUI({ width: 300 });
 
+    parm = {
+        mouseLocX: 0,
+        mouseLocY: 0,
+        webcam: true
+    }
 
     document.addEventListener('mousemove', function onMouseMove(e) {
-        m = e.clientX + ',' + e.clientY
+        parm.mouseLocX = e.x;
+        parm.mouseLocY = e.y;
     })
-    var params = {
-        calibrating: false,
-        webcam: false,
-        m: ''
-    };
-    gui.add(params, 'm').name("Mouse Location").listen();
 
-    //webcam toggle 
+    gui.add(parm, 'mouseLocX').name("Mouse x:").listen();
+    gui.add(parm, 'mouseLocY').name("Mouse y:").listen();
 
-    gui.add(params, "webcam").name("Toggle webcam").onChange(function (mediaToggle) {
+    // webcam toggle
+    gui.add(parm, "webcam").name("Toggle webcam").onChange(function (mediaToggle) {
         setupMedia(mediaToggle);
     });
-    gui.close();
+
+    // gui.close();
 }

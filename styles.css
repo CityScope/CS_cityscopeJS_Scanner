@@ -21,7 +21,7 @@ body {
 .webcamCanvas{
     z-index: -1;
     box-shadow: 5px 5px 35px rgb(0, 0, 0);
-    cursor: all-scroll;
+    /* cursor: all-scroll; */
 
 }
 
