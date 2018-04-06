@@ -42,7 +42,7 @@ body {
     z-index: 1000;
     position: fixed;
     left: 70vw;
-    top: 2rem;
+    top: 20rem;
     box-shadow: 5px 5px 20px rgb(0, 0, 0);
     cursor: all-scroll;
 }
