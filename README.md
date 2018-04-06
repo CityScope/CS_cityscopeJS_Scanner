@@ -1,6 +1,6 @@
 # CityScopeJS
 
-![](CityScopeJS/media/csjs.jpg)
+![](media/csjs.jpg)
 
 ## [aka 'TactileScopeMatrixCity'©®]
 
