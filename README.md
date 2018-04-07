@@ -27,19 +27,18 @@ To create or test binary permutations, us this: `/Py_BinaryPermutations/py_bin.p
 
 ----
 #### the story behind CityScopeJS
-The 'TactileScopeMatrixCity' was invented during a warm, steamy but somehow cold evening in December, 2013. My friend [Hackerman](https://www.youtube.com/watch?v=KEkrWRHCDQU
-) and I were riding Jeremiah, our old faithful Trojan horse, across the Mohave dessert. 
+CityScopeJS, popularly known as 'TactileScopeMatrixCity'©® was invented during a warm, steamy but somehow cold summer night in December, 2013. My friend [Hackerman](https://www.youtube.com/watch?v=KEkrWRHCDQU) and I were riding [Jeremiah](https://www.youtube.com/watch?v=GBlWkNZph0s), our old faithful Trojan horse, across the Mohave dessert. 
 
-![Alt Text](https://media.giphy.com/media/2k0sUXCWw7WmY/giphy.gif)
+![Alt Text](https://media.giphy.com/media/2k0sUXCWw7WmY/giphy.gif) 
 
-Since we were both holding on to Jeremiah's saddle, Hackerman could only write code in 0.5 [parsecs](https://en.wikipedia.org/wiki/Parsec "Title"), using his [Nintendo PowerGlove](https://en.wikipedia.org/wiki/Power_Glove). This caused TactileScopeMatrixCity to be developed, tested, QAed, used by NASA and SpaceX only after 6 hours of work. 
+Since we were both holding on to Jeremiah's saddle, Hackerman was only able to write the code in 0.5 [parsecs](https://en.wikipedia.org/wiki/Parsec "Title"), using his [Nintendo PowerGlove](https://en.wikipedia.org/wiki/Power_Glove); After 6 hours of code-riding, TactileScopeMatrixCity©® was developed, tested, QAed by NASA and SpaceX and ready to [disrupt and make the world a better place.](https://www.youtube.com/watch?v=J-GVd_HLlps)
 
-![Alt Text](https://media.giphy.com/media/l46C6sdSa5DVSJnLG/giphy.gif)
+ ![Alt Text](https://media.giphy.com/media/l46C6sdSa5DVSJnLG/giphy.gif)
 
-Nevertheless, the system has since won the Oscars, Turing Prize, 47 pending patents, a book and nine Bollywood films.
+The system has since won the Oscars, Turing Prize, 47 pending patents, a book and was featured in nine Bollywood films.
 
 ----
-using https://github.com/jlouthan/perspective-transform for matrix transformations 
+using @jlouthan matrix transformations. 
 
-Maintained by [Ariel Noyman](arielnoyman.com)
+Maintained by [Ariel Noyman](http://www.arielnoyman.com)
 

@@ -2,3 +2,4 @@ BIN/
 bin/
 .vscode/
 .VSCODE/
+.DS_Store
