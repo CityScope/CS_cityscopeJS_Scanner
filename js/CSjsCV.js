@@ -62,8 +62,7 @@ var codes = [
 var cityioObj = fetch("../data/cityIO.json")
     .then(res => res.json())
     .then(data => cityioObj = data)
-    .then((cityioObj) => { return cityioObj }
-    )
+    .then((cityioObj) => { return cityioObj })
 
 //listen to webworker calls 
 self.addEventListener('message', function (msg) {

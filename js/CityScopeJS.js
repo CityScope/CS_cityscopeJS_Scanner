@@ -11,14 +11,12 @@ var CVworker = new Worker('js/CSjsCV.js');
 
 // size var
 var size = 80
-
-//load settings file
-var cityioObj = fetch("data/cityIO.json")
-    .then(res => res.json())
-    .then(data => cityioObj = data)
-    .then((cityioObj) => { return cityioObj }
-    )
-
+// make visual grid representation
+let vizGridArray = []
+// media toggle 
+var mediaToggle = false;
+//array of scanned pixels 
+let scannedColorsArray = [];
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -46,7 +44,6 @@ var vidCanvas2dContext = webcamCanvas.getContext('2d');
 console.log('canvas size:', webcamCanvas.width, webcamCanvas.height);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
-mediaToggle = false;
 
 function setupMedia(mediaToggle) {
     //clear canvas at start
@@ -107,8 +104,6 @@ function setupMedia(mediaToggle) {
         }
     }
 }
-//call the media setup method at start
-setupMedia(mediaToggle);
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -129,15 +124,6 @@ function scanArrayMaker() {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//div position
-function getPos(el) {
-    // yay readability
-    for (var lx = 0, ly = 0;
-        el != null;
-        lx += el.offsetLeft, ly += el.offsetTop, el = el.offsetParent);
-    return ([lx, ly]);
-}
-
 //create the scanning transposed matrix
 function MatrixTransform() {
     // clear dst corners
@@ -154,19 +140,25 @@ function MatrixTransform() {
         webcamCanvas.width, webcamCanvas.height
     ]
 
-    //make and get dest div locations
-    dstCorners = [
-        // getPos(webcamCanvas)[0] + 20, getPos(webcamCanvas)[1] + 15,
-        // webcamCanvas.width - 60, getPos(webcamCanvas)[1] + 30,
-        // getPos(webcamCanvas)[0] + 100, webcamCanvas.height,
-        // webcamCanvas.width - 80, webcamCanvas.height
+    // to be replaced with dynmaic editing 
+    dstCorners =
+        [119, 48,
+            856, 35,
+            84, 696,
+            883, 655]
 
-        119, 48,
-        856, 35,
-        84, 696,
-        883, 655
+    /*
+     cityioObj.objects.matrixMapping
+    make and get dest div locations
+      
+          [getPos(webcamCanvas)[0] + 20, getPos(webcamCanvas)[1] + 15,
+         webcamCanvas.width - 60, getPos(webcamCanvas)[1] + 30,
+         getPos(webcamCanvas)[0] + 100, webcamCanvas.height,
+         webcamCanvas.width - 80, webcamCanvas.height]
+     */
 
-    ]
+
+
     //var for the distorted points
     let dstPt;
     // use lib to calculate transform matrix
@@ -191,11 +183,16 @@ function MatrixTransform() {
     return (matrixGridLocArray)
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
+//div position
+function getPos(el) {
+    // yay readability
+    for (var lx = 0, ly = 0;
+        el != null;
+        lx += el.offsetLeft, ly += el.offsetTop, el = el.offsetParent);
+    return ([lx, ly]);
+}
 
-// make visual grid representation
-let vizGridArray = []
-vizGrid();
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function vizGrid() {
     // make the grid div parent
@@ -221,11 +218,6 @@ function vizGrid() {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-let matrixDiv = document.getElementsByClassName('transformedMatrix');
-let scannedColorsArray = [];
-let matrixGridLocArray = MatrixTransform();
-
-ColorPicker();
 function ColorPicker() {
     //empty color array for webworker
     scannedColorsArray = [];
@@ -277,10 +269,7 @@ CVworker.addEventListener('message', function (e) {
 }, false);
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-interact();
 function interact() {
     //dragable
     $('#vizCellDivParent').draggable();
@@ -310,3 +299,24 @@ function interact() {
 
     // gui.close();
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////LOGIC /////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//load settings file
+var cityioObj = fetch("../data/cityIO.json")
+    .then(res => res.json())
+    .then(data => cityioObj = data)
+    .then(cityioObj => { return cityioObj })
+
+
+//call the media setup method at start
+setupMedia(mediaToggle);
+vizGrid();
+let matrixDiv = document.getElementsByClassName('transformedMatrix');
+
+let matrixGridLocArray = MatrixTransform(cityioObj);
+ColorPicker();
+interact();
