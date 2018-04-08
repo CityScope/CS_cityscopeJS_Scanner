@@ -143,3 +143,15 @@ function cityio() {
         // console.log(response)
     });
 }
+
+
+
+/* For inline WS
+function blobWebWorker(fn) {
+    return new Worker(URL.createObjectURL(new Blob(["(" + fn + ")()"])));
+}
+
+const CVworker = blobWebWorker(function () {
+    //worker code here
+});
+*/

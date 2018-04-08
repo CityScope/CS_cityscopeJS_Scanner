@@ -4,6 +4,11 @@
 "@context": "https://github.com/CityScope/", "@type": "Person", "address": { "@type": "75 Amherst St, Cambridge, MA 02139", "addressLocality": " Cambridge", "addressRegion": "MA",}, "jobTitle": "Research Scientist", "name": "Ariel Noyman", "alumniOf": "MIT", "url": "http://arielnoyman.com", "https://www.linkedin.com/", "http://twitter.com/relno", https://github.com/RELNO] */
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//create webworker
+var CVworker = new Worker('js/CSjsCV.js');
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // size var
 var size = 80
 
@@ -14,8 +19,6 @@ var cityioObj = fetch("data/cityIO.json")
     .then((cityioObj) => { return cityioObj }
     )
 
-//create webworker
-var CVworker = new Worker('js/CSjsCV.js');
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -103,7 +106,6 @@ function setupMedia(mediaToggle) {
             loopFrame = loopFrame || requestAnimationFrame(loop);
         }
     }
-    console.log(track);
 }
 //call the media setup method at start
 setupMedia(mediaToggle);
@@ -290,7 +292,7 @@ function interact() {
     parm = {
         mouseLocX: 0,
         mouseLocY: 0,
-        webcam: true
+        webcam: false
     }
 
     document.addEventListener('mousemove', function onMouseMove(e) {
@@ -302,7 +304,7 @@ function interact() {
     gui.add(parm, 'mouseLocY').name("Mouse y:").listen();
 
     // webcam toggle
-    gui.add(parm, "webcam").name("Toggle webcam").onChange(function (mediaToggle) {
+    gui.add(parm, "webcam").name("Start webcam").onChange(function (mediaToggle) {
         setupMedia(mediaToggle);
     });
 
