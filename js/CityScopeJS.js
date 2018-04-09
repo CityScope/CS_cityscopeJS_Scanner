@@ -69,11 +69,20 @@ const CVworker = blobWebWorker(function () {
         '0100011011000000',
         '0111010011000000'];
 
+    // Temp soultion to Chorme DevTools Bug that Fetches the file twice and catches an error
+    // File should actually be read from here: ../data/cityIO.json
+
     //load table settings
-    var cityioObj = fetch("../data/cityIO.json")
+
+    var cityioObj = fetch('https://raw.githubusercontent.com/CityScope/CS_cityscopeJS/master/data/cityIO.json')
         .then(res => res.json())
         .then(data => cityioObj = data)
         .then((cityioObj) => { return cityioObj })
+
+        .catch(function (err) {
+            console.log("error:" + err);
+        })
+
 
 
     //listen to web-worker calls 
