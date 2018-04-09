@@ -10,29 +10,28 @@
 
 const CVworker = blobWebWorker(function () {
     //worker code here
-
     var cityioData = []
     var types, codes;
-
     // Temp soultion to Chorme DevTools Bug that Fetches the file twice and catches an error
     // File should actually be read from here: ../data/cityIO.json
-
     //load table settings
     var cityioObj = fetch('https://raw.githubusercontent.com/CityScope/CS_cityscopeJS/master/data/cityIO.json')
         // var cityioObj = fetch('/data/cityIO.json')
         .then(res => res.json())
         .then(data => cityioObj = data)
-        .then((cityioObj) => { return cityioObj })
+        .then((cityioObj) => {
+            types = cityioObj.objects.types;
+            codes = cityioObj.objects.codes;
+            return cityioObj
+        })
         .catch(function (err) {
             console.log("error:" + err);
         })
 
     //listen to web-worker calls 
     self.addEventListener('message', function (msg) {
-        // make sure cityioObj loaded
-        if (cityioObj) {
-            types = cityioObj.objects.types;
-            codes = cityioObj.objects.codes;
+        // make sure cityioObj loaded and paresed
+        if (types != null) {
             CV(msg.data)
         }
     }, false)
@@ -86,6 +85,7 @@ const CVworker = blobWebWorker(function () {
                 ].toString()
 
                 thisBrick = thisBrick.replace(/,/g, "");
+                //find the type for this bricks pattern in 'Codes'
                 typesArray.push(types[codes.indexOf(thisBrick)])
             }
         }
@@ -97,14 +97,11 @@ const CVworker = blobWebWorker(function () {
     function cityio() {
         setTimeout(cityio, 500);
         cityioObj.grid = cityioData;
-        // console.log(cityioObj);
 
         fetch("https://cityio.media.mit.edu/api/table/update/cityscopeJS", {
             method: "POST",
             body: JSON.stringify(cityioObj)
-        }).then((response) => {
-            // console.log(response)
-        });
+        }).then((response) => { });
     }
 });
 
