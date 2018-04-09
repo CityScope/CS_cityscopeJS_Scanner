@@ -4,91 +4,35 @@
 "@context": "https://github.com/CityScope/", "@type": "Person", "address": { "@type": "75 Amherst St, Cambridge, MA 02139", "addressLocality": " Cambridge", "addressRegion": "MA",}, "jobTitle": "Research Scientist", "name": "Ariel Noyman", "alumniOf": "MIT", "url": "http://arielnoyman.com", "https://www.linkedin.com/", "http://twitter.com/relno", https://github.com/RELNO] */
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//create web-worker
-// var CVworker = new Worker('js/CSjsCV.js');
-
-/* https://www.sitepoint.com/using-web-workers-to-improve-image-manipulation-performance/webworker */
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+// web-worker
 
 const CVworker = blobWebWorker(function () {
     //worker code here
 
     var cityioData = []
-    var types = [
-        "type_0",
-        "type_1",
-        "type_2",
-        "type_3",
-        "type_4",
-        "type_5",
-        "type_6",
-        "type_7",
-        "type_8",
-        "type_9",
-        "type_10",
-        "type_11",
-        "type_12",
-        "type_13",
-        "type_14",
-        "type_15",
-        "type_16",
-        "type_17",
-        "type_18",
-        "type_19",
-        "type_20",
-        "type_21",
-        "type_22",
-        "type_23",
-        "type_24"
-    ];
-
-    var codes = [
-        '1100011000100000',
-        '0001000100010000',
-        '0000010001000100',
-        '0000011001100000',
-        '0001001001001000',
-        '0001100000101000',
-        '1000100000000001',
-        '0000100000000000',
-        '0000000001000000',
-        '0000100000000001',
-        '1000000000000001',
-        '0100000000000010',
-        '0001010101000000',
-        '1001100110011001',
-        '0000111100110110',
-        '1111100010000000',
-        '1110001000100110',
-        '0011001000110000',
-        '1100010001011111',
-        '0100010001000110',
-        '0011011011000110',
-        '0100011000110000',
-        '0000011001000110',
-        '0100011011000000',
-        '0111010011000000'];
+    var types, codes;
 
     // Temp soultion to Chorme DevTools Bug that Fetches the file twice and catches an error
     // File should actually be read from here: ../data/cityIO.json
 
     //load table settings
-
-    var cityioObj = fetch('https://raw.githubusercontent.com/CityScope/CS_cityscopeJS/master/data/cityIO.json')
+    // var cityioObj = fetch('https://raw.githubusercontent.com/CityScope/CS_cityscopeJS/master/data/cityIO.json')
+    var cityioObj = fetch('/data/cityIO.json')
         .then(res => res.json())
         .then(data => cityioObj = data)
         .then((cityioObj) => { return cityioObj })
-
         .catch(function (err) {
             console.log("error:" + err);
         })
-
-
 
     //listen to web-worker calls 
     self.addEventListener('message', function (msg) {
         // make sure cityioObj loaded
         if (cityioObj) {
+            types = cityioObj.objects.types;
+            codes = cityioObj.objects.codes;
             CV(msg.data)
         }
     }, false)
@@ -170,6 +114,10 @@ function blobWebWorker(fn) {
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+// MAIN THREAD
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // size var
 var size = 80
@@ -179,7 +127,7 @@ let vizGridArray = []
 var mediaToggle = false;
 //array of scanned pixels 
 let scannedColorsArray = [];
-//
+// Global var for GUI controls 
 let brightness = 0
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -459,7 +407,7 @@ function interact() {
     // gui.close();
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////LOGIC /////////////////////////////////////////////////////////////////////
+////////////////////////////// APP LOGIC ////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
