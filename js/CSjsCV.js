@@ -64,6 +64,7 @@ var cityioObj = fetch("../data/cityIO.json")
     .then(data => cityioObj = data)
     .then((cityioObj) => { return cityioObj })
 
+
 //listen to webworker calls 
 self.addEventListener('message', function (msg) {
     // make sure cityioObj loaded
@@ -142,7 +143,6 @@ function cityio() {
         // console.log(response)
     });
 }
-
 
 
 /* For inline WS

@@ -5,8 +5,161 @@
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//create webworker
-var CVworker = new Worker('js/CSjsCV.js');
+//create web-worker
+// var CVworker = new Worker('js/CSjsCV.js');
+
+/* https://www.sitepoint.com/using-web-workers-to-improve-image-manipulation-performance/webworker */
+
+const CVworker = blobWebWorker(function () {
+    //worker code here
+
+    var cityioData = []
+    var types = [
+        "type_0",
+        "type_1",
+        "type_2",
+        "type_3",
+        "type_4",
+        "type_5",
+        "type_6",
+        "type_7",
+        "type_8",
+        "type_9",
+        "type_10",
+        "type_11",
+        "type_12",
+        "type_13",
+        "type_14",
+        "type_15",
+        "type_16",
+        "type_17",
+        "type_18",
+        "type_19",
+        "type_20",
+        "type_21",
+        "type_22",
+        "type_23",
+        "type_24"
+    ];
+
+    var codes = [
+        '1100011000100000',
+        '0001000100010000',
+        '0000010001000100',
+        '0000011001100000',
+        '0001001001001000',
+        '0001100000101000',
+        '1000100000000001',
+        '0000100000000000',
+        '0000000001000000',
+        '0000100000000001',
+        '1000000000000001',
+        '0100000000000010',
+        '0001010101000000',
+        '1001100110011001',
+        '0000111100110110',
+        '1111100010000000',
+        '1110001000100110',
+        '0011001000110000',
+        '1100010001011111',
+        '0100010001000110',
+        '0011011011000110',
+        '0100011000110000',
+        '0000011001000110',
+        '0100011011000000',
+        '0111010011000000'];
+
+    //load table settings
+    var cityioObj = fetch("../data/cityIO.json")
+        .then(res => res.json())
+        .then(data => cityioObj = data)
+        .then((cityioObj) => { return cityioObj })
+
+
+    //listen to web-worker calls 
+    self.addEventListener('message', function (msg) {
+        // make sure cityioObj loaded
+        if (cityioObj) {
+            CV(msg.data)
+        }
+    }, false)
+
+    //do CV on image data 
+    function CV(data) {
+        //reset array
+        let pixelColArr = [];
+        let typesArray = [];
+
+        //sample 3 pixels [3x3 colors] each time 
+        for (let i = 0; i < data.length; i++) {
+            avg_0 = 0.21 * data[i][0] + 0.72 * data[i][1] + 0.07 * data[i][2];
+            avg_1 = 0.21 * data[i][3] + 0.72 * data[i][4] + 0.07 * data[i][5];
+            avg_2 = 0.21 * data[i][6] + 0.72 * data[i][7] + 0.07 * data[i][8];
+            avg = (avg_0 + avg_1 + avg_2) / 3
+
+            avg > 256 / 2 ? pixelCol = 0 : pixelCol = 1;
+            pixelColArr.push(pixelCol);
+        }
+        //return this to DOM for visuals 
+        self.postMessage(pixelColArr);
+
+        cityioData = typesArray
+        //run through the 1D list of colors to reshape this into 4x4 matrices 
+        for (let j = 0; j < pixelColArr.length; j += Math.sqrt(pixelColArr.length) * 4) {
+            // x zero y zero top left going down on y in jumps of 4
+            for (let i = 0; i < Math.sqrt(pixelColArr.length); i = i + 4) {
+                //reshape to lists of 16 bits -- should be rewritten cleaner  
+                thisBrick = [
+                    //first row
+                    pixelColArr[i + j],
+                    pixelColArr[i + j + Math.sqrt(pixelColArr.length)],
+                    pixelColArr[i + j + Math.sqrt(pixelColArr.length) * 2],
+                    pixelColArr[i + j + Math.sqrt(pixelColArr.length) * 3],
+                    //second row 
+                    pixelColArr[i + j + 1],
+                    pixelColArr[i + j + 1 + Math.sqrt(pixelColArr.length)],
+                    pixelColArr[i + j + 1 + Math.sqrt(pixelColArr.length) * 2],
+                    pixelColArr[i + j + 1 + Math.sqrt(pixelColArr.length) * 3],
+                    //third row
+                    pixelColArr[i + j + 2],
+                    pixelColArr[i + j + 2 + Math.sqrt(pixelColArr.length)],
+                    pixelColArr[i + j + 2 + Math.sqrt(pixelColArr.length) * 2],
+                    pixelColArr[i + j + 2 + Math.sqrt(pixelColArr.length) * 3],
+                    //forth row
+                    pixelColArr[i + j + 3],
+                    pixelColArr[i + j + 3 + Math.sqrt(pixelColArr.length)],
+                    pixelColArr[i + j + 3 + Math.sqrt(pixelColArr.length) * 2],
+                    pixelColArr[i + j + 3 + Math.sqrt(pixelColArr.length) * 3]
+                ].toString()
+
+                thisBrick = thisBrick.replace(/,/g, "");
+                typesArray.push(types[codes.indexOf(thisBrick)])
+            }
+        }
+    }
+    if (cityioData && cityioObj) {
+        cityio(cityioData)
+    }
+    //send to cityIO
+    function cityio() {
+        setTimeout(cityio, 500);
+        cityioObj.grid = cityioData;
+        // console.log(cityioObj);
+
+        fetch("https://cityio.media.mit.edu/api/table/update/cityscopeJS", {
+            method: "POST",
+            body: JSON.stringify(cityioObj)
+        }).then((response) => {
+            // console.log(response)
+        });
+    }
+});
+
+// For inline WS
+function blobWebWorker(fn) {
+    return new Worker(URL.createObjectURL(new Blob(["(" + fn + ")()"])));
+}
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // size var
@@ -17,6 +170,8 @@ let vizGridArray = []
 var mediaToggle = false;
 //array of scanned pixels 
 let scannedColorsArray = [];
+//
+let brightness = 0
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -46,8 +201,6 @@ console.log('canvas size:', webcamCanvas.width, webcamCanvas.height);
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
 function setupMedia(mediaToggle) {
-    //clear canvas at start
-    vidCanvas2dContext.clearRect(0, 0, vidCanvas2dContext.width, vidCanvas2dContext.height);
     // make dummy image for testing
     var img = new Image();
     img.onload = function () {
@@ -55,54 +208,53 @@ function setupMedia(mediaToggle) {
     }
     //image location for the test image
     img.src = 'media/g0.jpg';
-
-
     ////////////////////
     // video setup
     ////////////////////
-    var track;
-
     if (mediaToggle) {
-        vidCanvas2dContext.clearRect(0, 0, vidCanvas2dContext.width, vidCanvas2dContext.height);
-
+        console.log('starting video');
         //Video loop setup
-        var loopFrame, centerX, centerY;
+        var track;
         // call video mesh creator
         var width = 0;
         var height = 0;
         var video = document.createElement('video');
-
         video.addEventListener('loadedmetadata', function () {
             width = webcamCanvas.width;
             height = webcamCanvas.height;
-            console.log(width, height);
-
-            centerX = width / 2;
-            centerY = height / 2;
-            startLoop();
+            requestAnimationFrame(loop);
         });
-
         video.setAttribute('autoplay', true);
         window.vid = video;
-        //call webcam function
+        //get the webcam stream
         navigator.getUserMedia({ video: true, audio: false }, function (stream) {
             video.srcObject = stream;
             track = stream.getTracks()[0];
-
         }, function (e) {
             console.error('Webcam issue!', e);
         });
-
         function loop() {
-            loopFrame = requestAnimationFrame(loop);
-            vidCanvas2dContext.save();
-            vidCanvas2dContext.restore();
+            requestAnimationFrame(loop);
+            //draw the image before applying filters 
             vidCanvas2dContext.drawImage(video, 0, 0, width, height);
-        }
-        function startLoop() {
-            loopFrame = loopFrame || requestAnimationFrame(loop);
+            //apply filter every frame !! COSTLY
+            brightnessCanvas(brightness, vidCanvas2dContext)
         }
     }
+}
+
+// Brightens the canvas image
+function brightnessCanvas(value, canvas) {
+    // Get the pixel data
+    var pixelData = canvas.getImageData(0, 0, webcamCanvas.width, webcamCanvas.height);
+    var pixelDataLen = pixelData.data.length;
+    for (var i = 0; i < pixelDataLen; i += 4) {
+        pixelData.data[i] += value;
+        pixelData.data[i + 1] += value;
+        pixelData.data[i + 2] += value;
+    }
+    // Draw the data back to the visible canvas
+    canvas.putImageData(pixelData, 0, 0);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -126,7 +278,7 @@ function scanArrayMaker() {
 
 //create the scanning transposed matrix
 function MatrixTransform() {
-    // clear dst corners
+    // clear destination corners
     var dstCorners = [];
     //matrix Grid Location Array
     var matrixGridLocArray = []
@@ -140,7 +292,7 @@ function MatrixTransform() {
         webcamCanvas.width, webcamCanvas.height
     ]
 
-    // to be replaced with dynmaic editing 
+    // to be replaced with dynamic editing 
     dstCorners =
         [119, 48,
             856, 35,
@@ -148,15 +300,11 @@ function MatrixTransform() {
             883, 655]
 
     /*
-     cityioObj.objects.matrixMapping
-    make and get dest div locations
-      
           [getPos(webcamCanvas)[0] + 20, getPos(webcamCanvas)[1] + 15,
          webcamCanvas.width - 60, getPos(webcamCanvas)[1] + 30,
          getPos(webcamCanvas)[0] + 100, webcamCanvas.height,
          webcamCanvas.width - 80, webcamCanvas.height]
      */
-
 
 
     //var for the distorted points
@@ -219,7 +367,7 @@ function vizGrid() {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function ColorPicker() {
-    //empty color array for webworker
+    //empty color array for web-worker
     scannedColorsArray = [];
 
     // read all pixels in  canvas
@@ -229,7 +377,7 @@ function ColorPicker() {
     var pixelData = pixelArray.data;
 
     for (let i = 0; i < matrixDiv.length; i++) {
-        // get the pixel location at the center of the grid cell div and match it to the pixel location in the PixelBffer linear list
+        // get the pixel location at the center of the grid cell div and match it to the pixel location in the PixelBuffer linear list
         pixLoc = ((matrixGridLocArray[i][1] * innerWidth) + matrixGridLocArray[i][0]) * 4
 
         //convert pixel data to RGBA string
@@ -248,17 +396,17 @@ function ColorPicker() {
             pixelData[pixLoc + 4], pixelData[pixLoc + 5], pixelData[pixLoc + 6]]
         )
     }
-    //recoursivally call this
+    //recursively call this
     requestAnimationFrame(function () {
         ColorPicker();
     });
-    //send the scanned colors to webworker for CV operation
+    //send the scanned colors to web-worker for CV operation
     CVworker.postMessage(scannedColorsArray);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//color the viz grid base on the webwroker cv analysis
+//color the visual grid base on the web-worker cv analysis
 CVworker.addEventListener('message', function (e) {
     // console.log('Worker said:', e.data);
     col = e.data;
@@ -271,52 +419,45 @@ CVworker.addEventListener('message', function (e) {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function interact() {
-    //dragable
+    //drag-able
     $('#vizCellDivParent').draggable();
-    // $(canvasParent).draggable();
-
     // dat.GUI
     var gui = new dat.GUI({ width: 300 });
 
     parm = {
         mouseLocX: 0,
         mouseLocY: 0,
-        webcam: false
+        webcam: false,
+        brightness: 0
     }
-
+    //mouse location 
     document.addEventListener('mousemove', function onMouseMove(e) {
         parm.mouseLocX = e.x;
         parm.mouseLocY = e.y;
     })
-
     gui.add(parm, 'mouseLocX').name("Mouse x:").listen();
     gui.add(parm, 'mouseLocY').name("Mouse y:").listen();
-
     // webcam toggle
     gui.add(parm, "webcam").name("Start webcam").onChange(function (mediaToggle) {
         setupMedia(mediaToggle);
     });
-
+    //brightness
+    gui.add(parm, 'brightness', -100, 100).
+        name("brightness").onChange(function (i) {
+            brightness = i;
+            brightnessCanvas(i, vidCanvas2dContext)
+        });
     // gui.close();
 }
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////LOGIC /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//load settings file
-var cityioObj = fetch("../data/cityIO.json")
-    .then(res => res.json())
-    .then(data => cityioObj = data)
-    .then(cityioObj => { return cityioObj })
 
 
 //call the media setup method at start
 setupMedia(mediaToggle);
 vizGrid();
 let matrixDiv = document.getElementsByClassName('transformedMatrix');
-
-let matrixGridLocArray = MatrixTransform(cityioObj);
+let matrixGridLocArray = MatrixTransform();
 ColorPicker();
 interact();
