@@ -18,8 +18,8 @@ const CVworker = blobWebWorker(function () {
     // File should actually be read from here: ../data/cityIO.json
 
     //load table settings
-    // var cityioObj = fetch('https://raw.githubusercontent.com/CityScope/CS_cityscopeJS/master/data/cityIO.json')
-    var cityioObj = fetch('/data/cityIO.json')
+    var cityioObj = fetch('https://raw.githubusercontent.com/CityScope/CS_cityscopeJS/master/data/cityIO.json')
+        // var cityioObj = fetch('/data/cityIO.json')
         .then(res => res.json())
         .then(data => cityioObj = data)
         .then((cityioObj) => { return cityioObj })
