@@ -20,7 +20,7 @@ var cityioData = []
 var types, codes;
 
 //load table settings
-var cityioObj = fetch('/data/cityIO.json')
+var cityioObj = fetch('../data/cityIO.json')
     .then(res => res.json())
     .then(data => cityioObj = data)
     .then((cityioObj) => {
