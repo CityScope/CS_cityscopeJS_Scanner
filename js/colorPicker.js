@@ -1,6 +1,8 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 function ColorPicker() {
+
+    let matrixDiv = document.getElementsByClassName('transformedMatrix');
+
     // empty color array for web-worker
     let scannedColorsArray = [];
     // read all pixels in  canvas

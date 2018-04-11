@@ -22,7 +22,6 @@ var size = 80
 
 //call the media setup method at start
 setupMedia(mediaToggle);
-let matrixDiv = document.getElementsByClassName('transformedMatrix');
 let matrixGridLocArray = MatrixTransform();
 ColorPicker();
 vizGrid();
