@@ -1,7 +1,8 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 function ColorPicker() {
-    //empty color array for web-worker
-    scannedColorsArray = [];
+    // empty color array for web-worker
+    let scannedColorsArray = [];
     // read all pixels in  canvas
     var pixelArray = vidCanvas2dContext.getImageData(0, 0, window.innerWidth, window.innerHeight)
     //get the pixels

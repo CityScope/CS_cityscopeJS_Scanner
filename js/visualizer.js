@@ -1,3 +1,5 @@
+// make visual grid representation
+let vizGridArray = [];
 
 function vizGrid() {
     // make the grid div parent
@@ -20,11 +22,11 @@ function vizGrid() {
         }
     }
     //call viz function from WS 
-    vizFromWebworker()
+    vizFromWebworker(vizGridArray)
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
-function vizFromWebworker() {
+function vizFromWebworker(vizGridArray) {
     //color the visual grid base on the web-worker cv analysis
     CVworker.addEventListener('message', function (e) {
         col = e.data;

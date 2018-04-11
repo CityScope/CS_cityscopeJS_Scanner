@@ -15,14 +15,6 @@ https://github.com/RELNO]
 const CVworker = new Worker('js/CVwebworker.js');
 // size var
 var size = 80
-// make visual grid representation
-let vizGridArray = []
-// media toggle 
-var mediaToggle = false;
-//array of scanned pixels 
-let scannedColorsArray = [];
-// Global var for GUI controls 
-let brightness = 0
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////// APP LOGIC ////////////////////////////////////////////////////////////////

@@ -2,8 +2,12 @@
 // WEBCAM / MEDIA SETUP
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//webcam or media parent div
+// media toggle 
+var mediaToggle = false;
+// Global var for GUI controls 
+let brightness = 0
 
+//webcam or media parent div
 $('<DIV/>', {
     id: "webcamCanvasParent",
     class: "webcamCanvasParent"
