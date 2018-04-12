@@ -16,8 +16,8 @@ function blobWebWorker(fn) {
 
 ///////////////////////////////////////////////////////////////////
 
-var cityioData = []
 var types, codes;
+var cityioData = []
 
 //load table settings
 var cityioObj = fetch('../data/cityIO.json')
@@ -36,9 +36,11 @@ var cityioObj = fetch('../data/cityIO.json')
 self.addEventListener('message', function (msg) {
     // make sure cityioObj loaded and paresed
     if (types != null) {
-        CV(msg.data)
+        CV(msg.data);
     }
+
 }, false)
+
 
 //do CV on image data 
 function CV(data) {
@@ -56,10 +58,7 @@ function CV(data) {
         avg > 256 / 2 ? pixelCol = 0 : pixelCol = 1;
         pixelColArr.push(pixelCol);
     }
-    //return this to DOM for visuals 
-    self.postMessage(pixelColArr);
 
-    cityioData = typesArray
     //run through the 1D list of colors to reshape this into 4x4 matrices 
     for (let j = 0; j < pixelColArr.length; j += Math.sqrt(pixelColArr.length) * 4) {
         // x zero y zero top left going down on y in jumps of 4
@@ -93,18 +92,27 @@ function CV(data) {
             typesArray.push(types[codes.indexOf(thisBrick)])
         }
     }
+
+    cityioData = typesArray;
+
+    //return this to DOM for visuals 
+    self.postMessage(pixelColArr);
 }
 
-///////////////////////////////////////////////////////////////////
-// cityIO 
-///////////////////////////////////////////////////////////////////
-if (cityioData && cityioObj) {
-    cityio(cityioData)
+
+if (cityioData != null && cityioObj) {
+    cityio()
 }
+
+/////////////////////////////////////////////////////////////////
+// cityIO
+/////////////////////////////////////////////////////////////////
 //send to cityIO
-function cityio(cityioData) {
+function cityio(typesArray) {
     setTimeout(cityio, 500);
     cityioObj.grid = cityioData;
+    console.log(cityioObj);
+
 
     fetch("https://cityio.media.mit.edu/api/table/update/cityscopeJS", {
         method: "POST",

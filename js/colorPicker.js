@@ -29,11 +29,13 @@ function ColorPicker() {
         //     ',' + pixelData[pixLoc + 1].toString() +
         //     ',' + pixelData[pixLoc + 2].toString() + ")");
     }
+
+    //every frame, send the scanned colors to web-worker for CV operation
+    CVworker.postMessage(scannedColorsArray);
+
     //recursively call this method
     requestAnimationFrame(function () {
         ColorPicker();
     });
-    //send the scanned colors to web-worker for CV operation
-    CVworker.postMessage(scannedColorsArray);
 }
 
