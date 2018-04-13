@@ -1,7 +1,7 @@
 // DAT GUI 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 function interact() {
+
     //drag-able
     $('#vizCellDivParent').draggable();
     // dat.GUI
@@ -21,6 +21,19 @@ function interact() {
     })
     gui.add(parm, 'mouseLocX').name("Mouse x:").listen();
     gui.add(parm, 'mouseLocY').name("Mouse y:").listen();
+
+    let clickArray = [];
+    document.addEventListener('click', function m(e) {
+
+        clickArray.push(e.x, e.y)
+        infoDiv("Mouse click " + clickArray.length / 2 + " at " + e.x + ", " + e.y);
+
+        if (clickArray.length == 8) {
+            MatrixTransform(clickArray)
+            clickArray = [];
+        }
+    })
+
     // webcam toggle
     gui.add(parm, "webcam").name("Start webcam").onChange(function (mediaToggle) {
         setupMedia(mediaToggle);
@@ -41,4 +54,6 @@ function interact() {
     // });
 
     // gui.close();
+
+    infoDiv();
 }

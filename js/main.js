@@ -19,10 +19,21 @@ var size = 80
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////// APP LOGIC ////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
+function infoDiv(text) {
+    let d = document.getElementById('infoDiv')
+    if (d === null) {
+        //make parent div
+        $('<DIV/>', {
+            id: "infoDiv",
+            class: "info"
+        }).appendTo('body');
+    } else {
+        d.innerHTML = text;
+    }
+    return;
+}
 
 //call the media setup method at start
 setupMedia(mediaToggle);
-let matrixGridLocArray = MatrixTransform();
-ColorPicker();
 vizGrid();
 interact();
