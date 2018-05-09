@@ -26,6 +26,8 @@ var cityioObj = fetch('../data/cityIO.json')
     .then((cityioObj) => {
         types = cityioObj.objects.types;
         codes = cityioObj.objects.codes;
+        console.log(cityioObj);
+
         return cityioObj
     })
     .catch(function (err) {
@@ -41,14 +43,19 @@ if (cityioData != null && cityioObj) {
 /////////////////////////////////////////////////////////////////
 //send to cityIO
 function cityio(typesArray) {
-    setTimeout(cityio, 500);
+    setTimeout(cityio, 1000);
     cityioObj.grid = cityioData;
 
     fetch("https://cityio.media.mit.edu/api/table/update/cityscopeJS", {
         method: "POST",
+        mode: 'no-cors', // fix cors issue 
         body: JSON.stringify(cityioObj)
-    }).then((response) => { });
+    }).then(
+        (response) => {
+            // console.log(response);
+        });
 }
+
 
 
 /////////////////////////////////////////////////////////////////
