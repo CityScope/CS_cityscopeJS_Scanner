@@ -3,3 +3,6 @@ bin/
 .vscode/
 .VSCODE/
 .DS_Store
+.cache/
+.ds_store
+.DS_Store
