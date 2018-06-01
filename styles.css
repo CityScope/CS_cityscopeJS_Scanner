@@ -1,4 +1,3 @@
-
  html {
     height: 100%;
 }
@@ -45,10 +44,12 @@ body {
 .vizCellDivParent{
     z-index: 1000;
     position: fixed;
-    left: 70vw;
+    left: 10vw;
     top: 20rem;
     box-shadow: 5px 5px 20px rgb(0, 0, 0);
     cursor: all-scroll;
+    border: 3px solid black;
+
 }
 
 .vizRawsDiv{
@@ -57,9 +58,9 @@ body {
 
 .vizCell{
     position: relative;
-    /* margin:1px; */
+    margin:1px;
     pointer-events: none;
-    /* border: 1px solid rgba(0, 0, 0, 0.603); */
-    width :4px;
-    height :4px;
+    border: 1px solid rgba(0, 0, 0, 0.603);
+    /* width :4px;
+    height :4px; */
 }

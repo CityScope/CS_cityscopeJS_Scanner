@@ -39,7 +39,7 @@ function setupMedia(mediaToggle) {
         vidCanvas2dContext.drawImage(img, 0, 0, webcamCanvas.width, webcamCanvas.height);
     }
     //image location for the test image
-    img.src = 'media/g0.jpg';
+    img.src = 'media/demotable.jpg';
     ////////////////////
     // video setup
     ////////////////////

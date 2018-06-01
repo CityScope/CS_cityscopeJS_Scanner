@@ -14,7 +14,7 @@ https://github.com/RELNO]
 // web-worker
 const CVworker = new Worker('js/CVwebworker.js');
 // grid pixels size var
-var size = 80
+var gridSize = 80
 // make visual grid representation
 let vizGridArray = [];
 
@@ -122,8 +122,8 @@ function scanArrayMaker() {
     var vizGridLocArray = []
     //get point in certain ratio
     //to width divided by # of points
-    let ratioX = webcamCanvas.width / size;
-    let ratioY = webcamCanvas.height / size;
+    let ratioX = webcamCanvas.width / gridSize;
+    let ratioY = webcamCanvas.height / gridSize;
     for (let i = 0; i < webcamCanvas.width; i += ratioX) {
         for (let j = 0; j < webcamCanvas.height; j += ratioY) {
             vizGridLocArray.push([i + (ratioX / 2), j + (ratioY / 2)]);
@@ -209,14 +209,20 @@ function vizGrid() {
     }).appendTo('body');
 
     // make the visual rep of the now distorted grid
-    for (let i = 0; i < size; i++) {
+    for (let i = 0; i < gridSize; i++) {
         var vizRawsDiv = document.createElement('div');
         vizRawsDiv.className = "vizRawsDiv";
         vizCellDivParent.appendChild(vizRawsDiv);
-        for (let j = 0; j < size; j++) {
+        for (let j = 0; j < gridSize; j++) {
             var vizCell = document.createElement('div');
             vizCell.className = "vizCell";
             vizRawsDiv.appendChild(vizCell);
+            let cellDims = (document.documentElement.clientWidth / gridSize / 10).toString() + "px";
+            vizCell.style.width = cellDims;
+            vizCell.style.height = cellDims;
+
+
+
             // get the divs to array
             vizGridArray.push(vizCell);
         }
