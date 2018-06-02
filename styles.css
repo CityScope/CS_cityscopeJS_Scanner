@@ -58,9 +58,9 @@ body {
 
 .vizCell{
     position: relative;
-    margin:1px;
+    /* margin:1px; */
     pointer-events: none;
-    border: 1px solid rgba(0, 0, 0, 0.603);
+    /* border: 1px solid rgba(0, 0, 0, 0.603); */
     /* width :4px;
     height :4px; */
 }
