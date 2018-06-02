@@ -14,17 +14,104 @@ https://github.com/RELNO]
 // web-worker
 const CVworker = new Worker('js/CVwebworker.js');
 // grid pixels size var
-var gridSize = 20
+var gridSize = 20;
+// POST to cityIO rate in MS
+var sendRate = 1000;
 // make visual grid representation
-let vizGridArray = [];
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////// APP LOGIC ////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
-//call the media setup method at start
-setupMedia(mediaToggle);
-vizGrid();
-interact();
+var vizGridArray = [];
+// cityIO structure for POST
+var cityIOstruct =
+    {
+        "grid": [],
+        "id": "",
+        "objects": {
+            "matrixMapping": [
+                119,
+                48,
+                856,
+                35,
+                84,
+                696,
+                883,
+                655
+            ],
+            "types": [
+                "type_0",
+                "type_1",
+                "type_2",
+                "type_3",
+                "type_4",
+                "type_5",
+                "type_6",
+                "type_7",
+                "type_8",
+                "type_9",
+                "type_10",
+                "type_11",
+                "type_12",
+                "type_13",
+                "type_14",
+                "type_15",
+                "type_16",
+                "type_17",
+                "type_18",
+                "type_19",
+                "type_20",
+                "type_21",
+                "type_22",
+                "type_23",
+                "type_24"
+            ],
+            "codes": [
+                "1100011000100000",
+                "0001000100010000",
+                "0000010001000100",
+                "0000011001100000",
+                "0001001001001000",
+                "0001100000101000",
+                "1000100000000001",
+                "0000100000000000",
+                "0000000001000000",
+                "0000100000000001",
+                "1000000000000001",
+                "0100000000000010",
+                "0001010101000000",
+                "1001100110011001",
+                "0000111100110110",
+                "1111100010000000",
+                "1110001000100110",
+                "0011001000110000",
+                "1100010001011111",
+                "0100010001000110",
+                "0011011011000110",
+                "0100011000110000",
+                "0000011001000110",
+                "0100011011000000",
+                "0111010011000000"
+            ]
+        },
+        "header": {
+            "name": "CityScopeJS",
+            "longName": "TactileScopeMatrixCity©®",
+            "block": [
+                "type"
+            ],
+            "spatial": {
+                "ncols": 20,
+                "physical_longitude": -71.0894527,
+                "physical_latitude": 42.360357,
+                "nrows": 20,
+                "rotation": 0,
+                "latitude": 42.360357,
+                "cellsize": 10,
+                "longitude": -71.087264
+            },
+            "owner": {
+                "name": "Ariel Noyman",
+                "institute": "City Science MIT Media Lab"
+            }
+        }
+    }
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -144,66 +231,42 @@ function vizGrid() {
             vizGridArray.push(vizCell);
         }
     }
-    //call viz function from WS 
-    vizFromWebworker(vizGridArray)
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
+// global for colors back from webworker
+var pixelColArr = [];
+//types and codes for cityIO objects 
+var types, codes;
+let typesArray = [];
 
 //color the visual grid base on the web-worker cv analysis
-function vizFromWebworker(vizGridArray) {
-    console.log('setting up webworker listener');
-
-    CVworker.addEventListener('message', function (e) {
-        col = e.data;
-        for (let i = 0; i < vizGridArray.length; i++) {
-            col[i] == 0 ?
-                vizGridArray[i].style.background = 'white' :
-                vizGridArray[i].style.background = 'black';
-        }
-    }, false);
-}
+console.log('setting up webworker listener');
+CVworker.addEventListener('message', function (e) {
+    pixelColArr = e.data;
+    for (let i = 0; i < vizGridArray.length; i++) {
+        pixelColArr[i] == 0 ? vizGridArray[i].style.background = 'white' : vizGridArray[i].style.background = 'black';
+    }
+}, false);
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 // method to get the scanned data, look for matching brick 'types' 
 // and send the results back to cityIO server for other apps to use 
-
-async function cityIOstruct() {
-    const response = await fetch('../data/cityIO.json', {});
-    const json = await response.json();
-    console.log(json);
-    return json;
-}
-
-cityIOstruct().then(cityIOstruct => {
-    console.log(
-        cityIOstruct
-    );
-});
-
-
-function cityio() {
-
-    //types and codes for cityIO objects 
-    var types, codes;
-    var cityioData = []
-
-    //load cityIO structure
-
-
-    let typesArray = [];
-    setTimeout(cityioPOST, 1000);
-
-    function cityioPOST() {
-
+function cityioPOST() {
+    setTimeout(cityioPOST, sendRate);
+    //reset typesArray var 
+    typesArray = [];
+    // if new data is back from webworker with colors
+    if (pixelColArr.length > 1) {
         // find this brick's type using the cv color info 
-        // and by matching the 4x4 pixels to known types 
+        // and by matching the 4x4 pixels to known types
+        // run through the 1D list of colors to reshape 
+        //this into 4x4 matrices
 
-        //run through the 1D list of colors to reshape this into 4x4 matrices 
         for (let j = 0; j < pixelColArr.length; j += Math.sqrt(pixelColArr.length) * 4) {
             // x zero y zero top left going down on y in jumps of 4
             for (let i = 0; i < Math.sqrt(pixelColArr.length); i = i + 4) {
-                //reshape to lists of 16 bits -- should be rewritten cleaner  
+                //reshape to lists of 16 bits, or one brick [should be rewritten cleaner ] 
                 thisBrick = [
                     //first row
                     pixelColArr[i + j],
@@ -226,20 +289,23 @@ function cityio() {
                     pixelColArr[i + j + 3 + Math.sqrt(pixelColArr.length) * 2],
                     pixelColArr[i + j + 3 + Math.sqrt(pixelColArr.length) * 3]
                 ].toString()
-
+                //avoid new lines and commas for clear list 
                 thisBrick = thisBrick.replace(/,/g, "");
+
                 //find the type for this bricks pattern in 'Codes'
-                typesArray.push(types[codes.indexOf(thisBrick)])
+                typesArray.push(cityIOstruct.objects.types[cityIOstruct.objects.codes
+                    .indexOf(thisBrick)]);
             }
         }
+        console.log(typesArray);
 
         //sending to cityIO 
-        cityioObj.grid = cityioData;
+        cityIOstruct.grid = typesArray;
 
         fetch("https://cityio.media.mit.edu/api/table/update/cityscopeJS", {
             method: "POST",
             mode: 'no-cors', // fix cors issue 
-            body: JSON.stringify(cityioObj)
+            body: JSON.stringify(cityIOstruct)
         }).then(
             (response) => {
                 console.log(response);
@@ -359,7 +425,6 @@ function interact() {
         }
     }
 
-
     // webcam toggle
     gui.add(parm, "webcam").name("Start webcam").onChange(function (mediaToggle) {
         setupMedia(mediaToggle);
@@ -398,3 +463,13 @@ function infoDiv(text) {
     }
     return;
 }
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////// APP LOGIC ////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+//call the media setup method at start
+setupMedia(mediaToggle);
+vizGrid();
+interact();
+cityioPOST();
