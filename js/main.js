@@ -266,7 +266,6 @@ function cityIOstop() {
 
 
 function cityioPOST() {
-    console.log(sendRate);
 
     //reset typesArray var 
     typesArray = [];
@@ -323,7 +322,7 @@ function cityioPOST() {
             body: JSON.stringify(cityIOstruct)
         }).then(
             (response) => {
-                console.log(response);
+                // console.log(response);
             });
     }
 }
@@ -461,17 +460,7 @@ function interact() {
             cityIOrun(sendRate);
         });
 
-    // cityIO toggle
-    // gui.add(parm, "cityIO").name("Toggle cityIO").onChange(function (bool) {
-    //     if (!bool) {
-    //         console.log(bool);
-    //         cityio(bool);
-    //     }
-    // });
-
     // gui.close();
-
-    infoDiv();
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 //make info div 
@@ -498,4 +487,5 @@ setupMedia(mediaToggle);
 vizGrid();
 interact();
 cityIOrun(sendRate);
+infoDiv();
 
