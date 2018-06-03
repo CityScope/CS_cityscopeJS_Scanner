@@ -252,12 +252,27 @@ CVworker.addEventListener('message', function (e) {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 // method to get the scanned data, look for matching brick 'types' 
 // and send the results back to cityIO server for other apps to use 
+
+
+var timer;
+function cityIOrun(sendRate) {
+    timer =
+        window.setInterval("cityioPOST()", sendRate);
+}
+
+function cityIOstop() {
+    clearInterval(timer);
+}
+
+
 function cityioPOST() {
-    setTimeout(cityioPOST, sendRate);
+    console.log(sendRate);
+
     //reset typesArray var 
     typesArray = [];
     // if new data is back from webworker with colors
     if (pixelColArr.length > 1) {
+
         // find this brick's type using the cv color info 
         // and by matching the 4x4 pixels to known types
         // run through the 1D list of colors to reshape 
@@ -391,7 +406,8 @@ function interact() {
         webcam: false,
         brightness: 0,
         cityIO: false,
-        keySt: false
+        keySt: false,
+        sendRate: 1000
     }
     //mouse location 
     document.addEventListener('mousemove', function onMouseMove(e) {
@@ -429,11 +445,20 @@ function interact() {
     gui.add(parm, "webcam").name("Start webcam").onChange(function (mediaToggle) {
         setupMedia(mediaToggle);
     });
+
     //brightness
     gui.add(parm, 'brightness', -100, 100).
         name("brightness").onChange(function (i) {
             brightness = i;
             brightnessCanvas(i, vidCanvas2dContext)
+        });
+
+    //cityio send rate 
+    gui.add(parm, 'sendRate', 250, 2000).step(250).
+        name("cityIO send [ms]").onChange(function (d) {
+            sendRate = d;
+            cityIOstop();
+            cityIOrun(sendRate);
         });
 
     // cityIO toggle
@@ -472,4 +497,5 @@ function infoDiv(text) {
 setupMedia(mediaToggle);
 vizGrid();
 interact();
-cityioPOST();
+cityIOrun(sendRate);
+
