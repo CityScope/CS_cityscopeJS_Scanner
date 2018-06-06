@@ -14,7 +14,7 @@ https://github.com/RELNO]
 // web-worker
 const CVworker = new Worker('js/CVwebworker.js');
 // grid pixels size var
-var gridSize = 20;
+var gridSize = 80;
 // POST to cityIO rate in MS
 var sendRate = 1000;
 // make visual grid representation
@@ -223,7 +223,8 @@ function vizGrid() {
             var vizCell = document.createElement('div');
             vizCell.className = "vizCell";
             vizRawsDiv.appendChild(vizCell);
-            let cellDims = (document.documentElement.clientWidth / gridSize / 5).toString() + "px";
+            //cell sized in viz grid 
+            let cellDims = (document.documentElement.clientWidth / gridSize / 4).toString() + "px";
             vizCell.style.width = cellDims;
             vizCell.style.height = cellDims;
 
@@ -245,7 +246,13 @@ console.log('setting up webworker listener');
 CVworker.addEventListener('message', function (e) {
     pixelColArr = e.data;
     for (let i = 0; i < vizGridArray.length; i++) {
-        pixelColArr[i] == 0 ? vizGridArray[i].style.background = 'white' : vizGridArray[i].style.background = 'black';
+        if (pixelColArr[i] == 0) {
+            vizGridArray[i].style.background = 'white'
+        } else if (pixelColArr[i] == 1) {
+            vizGridArray[i].style.background = 'black';
+        } else {
+            vizGridArray[i].style.background = 'red';
+        }
     }
 }, false);
 
