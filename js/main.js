@@ -130,15 +130,6 @@ var mediaToggle = false;
 // Global var for GUI controls 
 let brightness = 0
 
-//webcam or media parent div
-$('<DIV/>', {
-    id: "webcamCanvasParent",
-    class: "webcamCanvasParent"
-}).appendTo('body');
-
-//get it as div
-var canvasParent = document.getElementById('webcamCanvasParent');
-
 //make vid canvas
 var webcamCanvas = document.createElement('canvas');
 webcamCanvas.id = "webcamCanvas";
@@ -148,9 +139,15 @@ webcamCanvas.height = 720;
 webcamCanvas.style.zIndex = 0;
 webcamCanvas.style.position = "absolute";
 webcamCanvas.style.border = "1px solid";
-canvasParent.appendChild(webcamCanvas);
+document.body.appendChild(webcamCanvas);
 //get its context for scanning
 var vidCanvas2dContext = webcamCanvas.getContext('2d');
+
+
+//temp canvas for testing 
+var tempCanvas = webcamCanvas.cloneNode(true);
+tempCanvas.id = "temp";
+document.body.appendChild(tempCanvas);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -161,7 +158,9 @@ function setupMedia(mediaToggle) {
         vidCanvas2dContext.drawImage(img, 0, 0, webcamCanvas.width, webcamCanvas.height);
     }
     //image location for the test image
-    img.src = 'media/demotable.jpg';
+    img.src =
+        // 'media/demotable.jpg';
+        'media/RAW/grid_sm.png';
     ////////////////////
     // video setup
     ////////////////////
@@ -268,7 +267,7 @@ function MatrixTransform(dstCorners) {
     // use perspT lib to calculate transform matrix
     let perspT;
     perspT = PerspT(srcCorners, dstCorners);
-    //distort the matrix to locations and make cubes
+    //distort each dot in the matrix to locations and make cubes
     for (let j = 0; j < vizGridLocArray.length; j++) {
         dstPt = perspT.transform(vizGridLocArray[j][0], vizGridLocArray[j][1]);
         $('<DIV/>', {
@@ -485,7 +484,7 @@ function ColorPicker(matrixGridLocArray) {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 // GUI 
-function interact() {
+function UI() {
 
     //drag-able
     $('#vizCellDivParent').draggable();
@@ -500,38 +499,6 @@ function interact() {
         keySt: false,
         sendRate: 1000
     }
-
-    //mouse location display 
-    document.addEventListener('mousemove', function onMouseMove(e) {
-        parm.mouseLocX = e.x;
-        parm.mouseLocY = e.y;
-    })
-
-
-    //collect 4 mouse clicks as corners of keystone 
-    let clickArray = [];
-    function mouseKeystone(e) {
-        clickArray.push(e.x, e.y)
-        infoDiv("Mouse click " + clickArray.length / 2 + " at " + e.x + ", " + e.y);
-        // when 2x4 locations were added 
-        if (clickArray.length == 8) {
-            MatrixTransform(clickArray)
-            //reset the clicks array 
-            clickArray = [];
-        }
-    }
-
-
-    // keystone toggle
-    gui.add(parm, "keySt").name("toggle Keystoning").onChange(function (bool) {
-        if (bool) {
-            document.addEventListener('click', mouseKeystone);
-        } else {
-            document.removeEventListener('click', mouseKeystone)
-        }
-        bool = !bool
-    });
-
 
     // webcam toggle
     gui.add(parm, "webcam").name("Start webcam").onChange(function (mediaToggle) {
@@ -553,9 +520,47 @@ function interact() {
             cityIOrun(sendRate);
         });
 
+    // keystone toggle
+    gui
+        .add(parm, "keySt")
+        .name("toggle Keystoning")
+        .listen()
+        .onChange(function (bool) {
+
+            if (bool) {
+                document.addEventListener('click', mouseKeystone);
+            } else {
+                document.removeEventListener('click', mouseKeystone)
+            }
+            bool = !bool
+        });
+
+    //collect 4 mouse clicks as corners of keystone 
+    let clickArray = [];
+    function mouseKeystone(e) {
+        // only collect clicks that are in the canvas area 
+        if (e.x < webcamCanvas.width && e.y < webcamCanvas.height) {
+            clickArray.push(e.x, e.y)
+            infoDiv("Mouse click " + clickArray.length / 2 + " at " + e.x + ", " + e.y);
+
+            // when 2x4 locations were added 
+            if (clickArray.length == 8) {
+                MatrixTransform(clickArray)
+                //reset the clicks array 
+                clickArray = [];
+                //turn off keystone in gui 
+                parm['keySt'] = false;
+                //stop keystone mouse clicks 
+                document.removeEventListener('click', mouseKeystone)
+            }
+        }
+    }
     // gui.close();
 }
+
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //make info div [on screen console] or add text to it 
 function infoDiv(text) {
     let d = document.getElementById('infoDiv')
@@ -579,7 +584,6 @@ function infoDiv(text) {
     return;
 }
 
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////// APP LOGIC ////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -587,5 +591,5 @@ function infoDiv(text) {
 infoDiv('starting CityScopeJS applet');
 setupMedia(mediaToggle);
 vizGrid();
-interact();
+UI();
 cityIOrun(sendRate);
