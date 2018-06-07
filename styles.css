@@ -26,7 +26,7 @@ body {
 
 .info{
     font-family:  Helvetica, sans-serif;
-    font-weight: bolder;
+    font-weight: 300;
     position: fixed;
     padding: 0.5rem;
     left: 80vw;

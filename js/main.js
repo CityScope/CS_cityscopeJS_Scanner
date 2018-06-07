@@ -22,6 +22,10 @@ var gridSize = 20;
 var sendRate = 1000;
 // make visual grid representation
 var vizGridArray = [];
+// global for colors back from webworker
+var pixelColArr = [];
+//types and codes for cityIO objects 
+let typesArray = [];
 // cityIO structure for POST
 var cityIOstruct =
 {
@@ -258,16 +262,10 @@ function MatrixTransform(dstCorners) {
         getPos(webcamCanvas)[0], webcamCanvas.height,
         webcamCanvas.width, webcamCanvas.height
     ]
-    // dstCorners =
-    //     [119, 48,
-    //         856, 35,
-    //         84, 696,
-    //         883, 655]
-
 
     //var for the distorted points
     let dstPt;
-    // use lib to calculate transform matrix
+    // use perspT lib to calculate transform matrix
     let perspT;
     perspT = PerspT(srcCorners, dstCorners);
     //distort the matrix to locations and make cubes
@@ -328,11 +326,6 @@ function vizGrid() {
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
-// global for colors back from webworker
-var pixelColArr = [];
-//types and codes for cityIO objects 
-var types, codes;
-let typesArray = [];
 
 //color the visual grid base on the web-worker cv analysis
 infoDiv('setting up webworker listener');
@@ -344,7 +337,7 @@ CVworker.addEventListener('message', function (e) {
         } else if (pixelColArr[i] == 1) {
             vizGridArray[i].style.background = 'black';
         } else {
-            vizGridArray[i].style.background = 'red';
+            vizGridArray[i].style.background = 'magenta';
         }
     }
 }, false);
@@ -500,32 +493,20 @@ function interact() {
     var gui = new dat.GUI({ width: 300 });
 
     parm = {
-        mouseLocX: 0,
-        mouseLocY: 0,
+
         webcam: false,
         brightness: 0,
         cityIO: false,
         keySt: false,
         sendRate: 1000
     }
-    //mouse location 
+
+    //mouse location display 
     document.addEventListener('mousemove', function onMouseMove(e) {
         parm.mouseLocX = e.x;
         parm.mouseLocY = e.y;
     })
-    gui.add(parm, 'mouseLocX').name("Mouse x:").listen();
-    gui.add(parm, 'mouseLocY').name("Mouse y:").listen();
 
-
-    // keystone toggle
-    gui.add(parm, "keySt").name("toggle Keystoning").onChange(function (bool) {
-        if (bool) {
-            document.addEventListener('click', mouseKeystone);
-        } else {
-            document.removeEventListener('click', mouseKeystone)
-        }
-        bool = !bool
-    });
 
     //collect 4 mouse clicks as corners of keystone 
     let clickArray = [];
@@ -539,6 +520,18 @@ function interact() {
             clickArray = [];
         }
     }
+
+
+    // keystone toggle
+    gui.add(parm, "keySt").name("toggle Keystoning").onChange(function (bool) {
+        if (bool) {
+            document.addEventListener('click', mouseKeystone);
+        } else {
+            document.removeEventListener('click', mouseKeystone)
+        }
+        bool = !bool
+    });
+
 
     // webcam toggle
     gui.add(parm, "webcam").name("Start webcam").onChange(function (mediaToggle) {
