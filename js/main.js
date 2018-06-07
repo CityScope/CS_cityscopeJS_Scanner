@@ -11,107 +11,201 @@ https://github.com/RELNO]
 */
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
+//VARS 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // web-worker
 const CVworker = new Worker('js/CVwebworker.js');
 // grid pixels size var
-var gridSize = 80;
+var gridSize = 20;
 // POST to cityIO rate in MS
 var sendRate = 1000;
 // make visual grid representation
 var vizGridArray = [];
 // cityIO structure for POST
 var cityIOstruct =
-    {
-        "grid": [],
-        "id": "",
-        "objects": {
-            "matrixMapping": [
-                119,
-                48,
-                856,
-                35,
-                84,
-                696,
-                883,
-                655
-            ],
-            "types": [
-                "type_0",
-                "type_1",
-                "type_2",
-                "type_3",
-                "type_4",
-                "type_5",
-                "type_6",
-                "type_7",
-                "type_8",
-                "type_9",
-                "type_10",
-                "type_11",
-                "type_12",
-                "type_13",
-                "type_14",
-                "type_15",
-                "type_16",
-                "type_17",
-                "type_18",
-                "type_19",
-                "type_20",
-                "type_21",
-                "type_22",
-                "type_23",
-                "type_24"
-            ],
-            "codes": [
-                "1100011000100000",
-                "0001000100010000",
-                "0000010001000100",
-                "0000011001100000",
-                "0001001001001000",
-                "0001100000101000",
-                "1000100000000001",
-                "0000100000000000",
-                "0000000001000000",
-                "0000100000000001",
-                "1000000000000001",
-                "0100000000000010",
-                "0001010101000000",
-                "1001100110011001",
-                "0000111100110110",
-                "1111100010000000",
-                "1110001000100110",
-                "0011001000110000",
-                "1100010001011111",
-                "0100010001000110",
-                "0011011011000110",
-                "0100011000110000",
-                "0000011001000110",
-                "0100011011000000",
-                "0111010011000000"
-            ]
+{
+    "grid": [],
+    "id": "",
+    "objects": {
+        "matrixMapping": [
+            119,
+            48,
+            856,
+            35,
+            84,
+            696,
+            883,
+            655
+        ],
+        "types": [
+            "type_0",
+            "type_1",
+            "type_2",
+            "type_3",
+            "type_4",
+            "type_5",
+            "type_6",
+            "type_7",
+            "type_8",
+            "type_9",
+            "type_10",
+            "type_11",
+            "type_12",
+            "type_13",
+            "type_14",
+            "type_15",
+            "type_16",
+            "type_17",
+            "type_18",
+            "type_19",
+            "type_20",
+            "type_21",
+            "type_22",
+            "type_23",
+            "type_24"
+        ],
+        "codes": [
+            "1100011000100000",
+            "0001000100010000",
+            "0000010001000100",
+            "0000011001100000",
+            "0001001001001000",
+            "0001100000101000",
+            "1000100000000001",
+            "0000100000000000",
+            "0000000001000000",
+            "0000100000000001",
+            "1000000000000001",
+            "0100000000000010",
+            "0001010101000000",
+            "1001100110011001",
+            "0000111100110110",
+            "1111100010000000",
+            "1110001000100110",
+            "0011001000110000",
+            "1100010001011111",
+            "0100010001000110",
+            "0011011011000110",
+            "0100011000110000",
+            "0000011001000110",
+            "0100011011000000",
+            "0111010011000000"
+        ]
+    },
+    "header": {
+        "name": "CityScopeJS",
+        "longName": "TactileScopeMatrixCity©®",
+        "block": [
+            "type"
+        ],
+        "spatial": {
+            "ncols": 20,
+            "physical_longitude": -71.0894527,
+            "physical_latitude": 42.360357,
+            "nrows": 20,
+            "rotation": 0,
+            "latitude": 42.360357,
+            "cellsize": 10,
+            "longitude": -71.087264
         },
-        "header": {
-            "name": "CityScopeJS",
-            "longName": "TactileScopeMatrixCity©®",
-            "block": [
-                "type"
-            ],
-            "spatial": {
-                "ncols": 20,
-                "physical_longitude": -71.0894527,
-                "physical_latitude": 42.360357,
-                "nrows": 20,
-                "rotation": 0,
-                "latitude": 42.360357,
-                "cellsize": 10,
-                "longitude": -71.087264
-            },
-            "owner": {
-                "name": "Ariel Noyman",
-                "institute": "City Science MIT Media Lab"
-            }
+        "owner": {
+            "name": "Ariel Noyman",
+            "institute": "City Science MIT Media Lab"
         }
     }
+}
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+// WEBCAM / MEDIA SETUP
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// media toggle 
+var mediaToggle = false;
+// Global var for GUI controls 
+let brightness = 0
+
+//webcam or media parent div
+$('<DIV/>', {
+    id: "webcamCanvasParent",
+    class: "webcamCanvasParent"
+}).appendTo('body');
+
+//get it as div
+var canvasParent = document.getElementById('webcamCanvasParent');
+
+//make vid canvas
+var webcamCanvas = document.createElement('canvas');
+webcamCanvas.id = "webcamCanvas";
+webcamCanvas.className = "webcamCanvas";
+webcamCanvas.width = 960;
+webcamCanvas.height = 720;
+webcamCanvas.style.zIndex = 0;
+webcamCanvas.style.position = "absolute";
+webcamCanvas.style.border = "1px solid";
+canvasParent.appendChild(webcamCanvas);
+//get its context for scanning
+var vidCanvas2dContext = webcamCanvas.getContext('2d');
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+
+function setupMedia(mediaToggle) {
+    // make dummy image for testing
+    var img = new Image();
+    img.onload = function () {
+        vidCanvas2dContext.drawImage(img, 0, 0, webcamCanvas.width, webcamCanvas.height);
+    }
+    //image location for the test image
+    img.src = 'media/demotable.jpg';
+    ////////////////////
+    // video setup
+    ////////////////////
+    if (mediaToggle) {
+        console.log('starting video');
+        //Video loop setup
+        var track;
+        // call video mesh creator
+        var width = 0;
+        var height = 0;
+        var video = document.createElement('video');
+        video.addEventListener('loadedmetadata', function () {
+            width = webcamCanvas.width;
+            height = webcamCanvas.height;
+            requestAnimationFrame(loop);
+        });
+        video.setAttribute('autoplay', true);
+        window.vid = video;
+        //get the webcam stream
+        navigator.getUserMedia({ video: true, audio: false }, function (stream) {
+            video.srcObject = stream;
+            track = stream.getTracks()[0];
+        }, function (e) {
+            console.error('Webcam issue!', e);
+        });
+        function loop() {
+            requestAnimationFrame(loop);
+            //draw the image before applying filters 
+            vidCanvas2dContext.drawImage(video, 0, 0, width, height);
+            //apply filter every frame !! COSTLY
+            brightnessCanvas(brightness, vidCanvas2dContext)
+        }
+    }
+}
+
+// Brightens the canvas image
+function brightnessCanvas(value, canvas) {
+    // Get the pixel data
+    var pixelData = canvas.getImageData(0, 0, webcamCanvas.width, webcamCanvas.height);
+    var pixelDataLen = pixelData.data.length;
+    for (var i = 0; i < pixelDataLen; i += 4) {
+        pixelData.data[i] += value;
+        pixelData.data[i + 1] += value;
+        pixelData.data[i + 2] += value;
+    }
+    // Draw the data back to the visible canvas
+    canvas.putImageData(pixelData, 0, 0);
+}
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -138,12 +232,11 @@ function scanArrayMaker() {
 
 //create the scanning transposed matrix
 function MatrixTransform(dstCorners) {
-    console.log('4 corners are at: ', dstCorners);
+    infoDiv('4 corners are at: ' + dstCorners);
 
     //clear div before creating new one
     if (document.getElementById('transformedMatrixParent') != null) {
-        console.log('removing transformedMatrixParent');
-
+        infoDiv('removing transformedMatrixParent');
         $("#transformedMatrixParent").remove()
     }
 
@@ -242,7 +335,7 @@ var types, codes;
 let typesArray = [];
 
 //color the visual grid base on the web-worker cv analysis
-console.log('setting up webworker listener');
+infoDiv('setting up webworker listener');
 CVworker.addEventListener('message', function (e) {
     pixelColArr = e.data;
     for (let i = 0; i < vizGridArray.length; i++) {
@@ -318,7 +411,7 @@ function cityioPOST() {
                     .indexOf(thisBrick)]);
             }
         }
-        console.log(typesArray);
+        // infoDiv(typesArray);
 
         //sending to cityIO 
         cityIOstruct.grid = typesArray;
@@ -329,7 +422,7 @@ function cityioPOST() {
             body: JSON.stringify(cityIOstruct)
         }).then(
             (response) => {
-                // console.log(response);
+                // infoDiv(response);
             });
     }
 }
@@ -470,17 +563,25 @@ function interact() {
     // gui.close();
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
-//make info div 
+//make info div [on screen console] or add text to it 
 function infoDiv(text) {
     let d = document.getElementById('infoDiv')
     if (d === null) {
-        //make parent div
+        //make info div
         $('<DIV/>', {
             id: "infoDiv",
             class: "info"
         }).appendTo('body');
+        $('#infoDiv').draggable();
+
     } else {
-        d.innerHTML = text;
+        // clear div if too much text 
+        if (d.scrollHeight > 5000) {
+            d.innerHTML = null;
+        } else {
+            d.innerHTML += text.toString() + '<p></p>';
+            d.scrollTop = d.scrollHeight;
+        }
     }
     return;
 }
@@ -490,9 +591,8 @@ function infoDiv(text) {
 ////////////////////////////// APP LOGIC ////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 //call the media setup method at start
+infoDiv('starting CityScopeJS applet');
 setupMedia(mediaToggle);
 vizGrid();
 interact();
 cityIOrun(sendRate);
-infoDiv();
-
