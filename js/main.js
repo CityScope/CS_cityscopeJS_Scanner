@@ -17,7 +17,7 @@ https://github.com/RELNO]
 // web-worker
 const CVworker = new Worker('js/CVwebworker.js');
 // grid pixels size var
-var gridSize = 20;
+var gridSize = 80;
 // POST to cityIO rate in MS
 var sendRate = 1000;
 // make visual grid representation
@@ -159,8 +159,8 @@ function setupMedia(mediaToggle) {
     }
     //image location for the test image
     img.src =
-        // 'media/demotable.jpg';
-        'media/RAW/grid_sm.png';
+        'media/demotable.jpg';
+    // 'media/RAW/grid_sm.png';
     ////////////////////
     // video setup
     ////////////////////
@@ -175,18 +175,24 @@ function setupMedia(mediaToggle) {
         video.addEventListener('loadedmetadata', function () {
             width = webcamCanvas.width;
             height = webcamCanvas.height;
-            requestAnimationFrame(loop);
+            //call the video to canvas loop 
+            loop();
         });
         video.setAttribute('autoplay', true);
         window.vid = video;
+
         //get the webcam stream
+
+
         navigator.getUserMedia({ video: true, audio: false }, function (stream) {
             video.srcObject = stream;
             track = stream.getTracks()[0];
         }, function (e) {
-            console.error('Webcam issue!', e);
+            infoDiv('Webcam issue!' + e);
+
         });
         function loop() {
+            //loop the video to canvas method 
             requestAnimationFrame(loop);
             //draw the image before applying filters 
             vidCanvas2dContext.drawImage(video, 0, 0, width, height);
