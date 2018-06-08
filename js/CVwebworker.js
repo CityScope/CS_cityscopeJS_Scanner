@@ -8,7 +8,7 @@ self.addEventListener('message', function (msg) {
 //do CV on image data 
 function CV(scannedPixels) {
 
-    let threshold = 50;
+    let threshold = 5;
     //reset array
     let pixelColArr = [];
 
