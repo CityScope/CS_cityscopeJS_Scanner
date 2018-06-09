@@ -11,7 +11,7 @@ https://github.com/RELNO]
 */
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
-//VARS 
+//Global VARS 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // web-worker
@@ -28,6 +28,17 @@ var pixelColArr = [];
 var typesArray = [];
 //default table name for cityIO
 cityIOtableName = "CityScopeJS";
+// media toggle 
+var mediaToggle = false;
+// Global var for GUI controls 
+var brightness = 0
+//make vid canvas
+var webcamCanvas = document.createElement('canvas');
+//get main canvas context for scanning
+var vidCanvas2dContext = webcamCanvas.getContext('2d');
+
+//cityIO timer
+var cityIOtimer;
 
 
 // cityIO structure for POST [should be extrenal] 
@@ -105,30 +116,37 @@ var cityIOstruct =
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 // WEBCAM & MEDIA SETUP
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-// media toggle 
-var mediaToggle = false;
-// Global var for GUI controls 
-let brightness = 0
-
-//make vid canvas
-var webcamCanvas = document.createElement('canvas');
-webcamCanvas.id = "webcamCanvas";
-webcamCanvas.className = "webcamCanvas";
-webcamCanvas.width = 960;
-webcamCanvas.height = 720;
-webcamCanvas.style.zIndex = 0;
-webcamCanvas.style.position = "absolute";
-webcamCanvas.style.border = "1px solid";
-document.body.appendChild(webcamCanvas);
-//get its context for scanning
-var vidCanvas2dContext = webcamCanvas.getContext('2d');
+function setupCanvs() {
+    webcamCanvas.id = "webcamCanvas";
+    webcamCanvas.className = "webcamCanvas";
+    webcamCanvas.width = 960;
+    webcamCanvas.height = 720;
+    webcamCanvas.style.zIndex = 0;
+    webcamCanvas.style.position = "absolute";
+    webcamCanvas.style.border = "1px solid";
+    document.body.appendChild(webcamCanvas);
 
 
-//temp canvas for testing 
-var tempCanvas = webcamCanvas.cloneNode(true);
-tempCanvas.id = "temp";
-document.body.appendChild(tempCanvas);
+
+    var ns = 'http://www.w3.org/2000/svg'
+    var svgDiv = document.createElement("div");
+    document.body.appendChild(svgDiv);
+    svgDiv.id = 'svgDiv';
+    svgDiv.width = webcamCanvas.width;
+    svgDiv.height = webcamCanvas.height;
+    svgDiv.className = "svgDiv";
+    var svg = document.createElementNS(ns, 'svg');
+    svg.className = "svgDiv";
+    svg.setAttributeNS(null, 'width', webcamCanvas.width);
+    svg.setAttributeNS(null, 'height', webcamCanvas.height);
+    svgDiv.appendChild(svg);
+
+    var rect = document.createElementNS(ns, 'rect');
+    rect.setAttributeNS(null, 'width', 300);
+    rect.setAttributeNS(null, 'height', 300);
+    rect.setAttributeNS(null, 'fill', '#f06');
+    svg.appendChild(rect);
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -323,90 +341,11 @@ CVworker.addEventListener('message', function (e) {
         } else if (pixelColArr[i] == 1) {
             vizGridArray[i].style.background = 'black';
         } else {
+            //if color scanning is in the threshold area 
             vizGridArray[i].style.background = 'magenta';
         }
     }
 }, false);
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
-// method to get the scanned data, look for matching brick 'types' 
-// and send the results back to cityIO server for other apps to use 
-
-
-var timer;
-function cityIOrun(sendRate) {
-    timer =
-        window.setInterval("cityioPOST()", sendRate);
-}
-
-function cityIOstop() {
-    clearInterval(timer);
-}
-
-
-function cityioPOST() {
-
-    //reset typesArray var 
-    typesArray = [];
-    // if new data is back from webworker with colors
-    if (pixelColArr.length > 1) {
-
-        // find this brick's type using the cv color info 
-        // and by matching the 4x4 pixels to known types
-        // run through the 1D list of colors to reshape 
-        //this into 4x4 matrices
-
-        for (let j = 0; j < pixelColArr.length; j += Math.sqrt(pixelColArr.length) * 4) {
-            // x zero y zero top left going down on y in jumps of 4
-            for (let i = 0; i < Math.sqrt(pixelColArr.length); i = i + 4) {
-                //reshape to lists of 16 bits, or one brick [should be rewritten cleaner ] 
-                thisBrick = [
-                    //first row
-                    pixelColArr[i + j],
-                    pixelColArr[i + j + Math.sqrt(pixelColArr.length)],
-                    pixelColArr[i + j + Math.sqrt(pixelColArr.length) * 2],
-                    pixelColArr[i + j + Math.sqrt(pixelColArr.length) * 3],
-                    //second row 
-                    pixelColArr[i + j + 1],
-                    pixelColArr[i + j + 1 + Math.sqrt(pixelColArr.length)],
-                    pixelColArr[i + j + 1 + Math.sqrt(pixelColArr.length) * 2],
-                    pixelColArr[i + j + 1 + Math.sqrt(pixelColArr.length) * 3],
-                    //third row
-                    pixelColArr[i + j + 2],
-                    pixelColArr[i + j + 2 + Math.sqrt(pixelColArr.length)],
-                    pixelColArr[i + j + 2 + Math.sqrt(pixelColArr.length) * 2],
-                    pixelColArr[i + j + 2 + Math.sqrt(pixelColArr.length) * 3],
-                    //forth row
-                    pixelColArr[i + j + 3],
-                    pixelColArr[i + j + 3 + Math.sqrt(pixelColArr.length)],
-                    pixelColArr[i + j + 3 + Math.sqrt(pixelColArr.length) * 2],
-                    pixelColArr[i + j + 3 + Math.sqrt(pixelColArr.length) * 3]
-                ].toString()
-                //avoid new lines and commas for clear list 
-                thisBrick = thisBrick.replace(/,/g, "");
-
-                //find the type for this bricks pattern in 'Codes'
-                typesArray.push(cityIOstruct.objects.types[cityIOstruct.objects.codes
-                    .indexOf(thisBrick)]);
-            }
-        }
-        // infoDiv(typesArray);
-
-        //sending to cityIO 
-        cityIOstruct.grid = typesArray;
-
-        fetch("https://cityio.media.mit.edu/api/table/update/" +
-            //get dynamic name change for table 
-            cityIOtableName.toString(), {
-                method: "POST",
-                mode: 'no-cors', // fix cors issue 
-                body: JSON.stringify(cityIOstruct)
-            }).then(
-                (response) => {
-                    // infoDiv(response);
-                });
-    }
-}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 function ColorPicker(matrixGridLocArray) {
@@ -487,6 +426,85 @@ var loadSettings = function () {
     }
 }
 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+//cityIO
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// method to get the scanned data, look for matching brick 'types' 
+// and send the results back to cityIO server for other apps to use 
+
+function cityIOrun(sendRate) {
+    cityIOtimer = window.setInterval("cityioPOST()", sendRate);
+}
+
+function cityIOstop() {
+    clearInterval(cityIOtimer);
+}
+
+function cityioPOST() {
+    //reset typesArray var 
+    typesArray = [];
+    // if new data is back from webworker with colors
+    if (pixelColArr.length > 1) {
+
+        // find this brick's type using the cv color info 
+        // and by matching the 4x4 pixels to known types
+        // run through the 1D list of colors to reshape 
+        //this into 4x4 matrices
+
+        for (let j = 0; j < pixelColArr.length; j += Math.sqrt(pixelColArr.length) * 4) {
+            // x zero y zero top left going down on y in jumps of 4
+            for (let i = 0; i < Math.sqrt(pixelColArr.length); i = i + 4) {
+                //reshape to lists of 16 bits, or one brick [should be rewritten cleaner ] 
+                thisBrick = [
+                    //first row
+                    pixelColArr[i + j],
+                    pixelColArr[i + j + Math.sqrt(pixelColArr.length)],
+                    pixelColArr[i + j + Math.sqrt(pixelColArr.length) * 2],
+                    pixelColArr[i + j + Math.sqrt(pixelColArr.length) * 3],
+                    //second row 
+                    pixelColArr[i + j + 1],
+                    pixelColArr[i + j + 1 + Math.sqrt(pixelColArr.length)],
+                    pixelColArr[i + j + 1 + Math.sqrt(pixelColArr.length) * 2],
+                    pixelColArr[i + j + 1 + Math.sqrt(pixelColArr.length) * 3],
+                    //third row
+                    pixelColArr[i + j + 2],
+                    pixelColArr[i + j + 2 + Math.sqrt(pixelColArr.length)],
+                    pixelColArr[i + j + 2 + Math.sqrt(pixelColArr.length) * 2],
+                    pixelColArr[i + j + 2 + Math.sqrt(pixelColArr.length) * 3],
+                    //forth row
+                    pixelColArr[i + j + 3],
+                    pixelColArr[i + j + 3 + Math.sqrt(pixelColArr.length)],
+                    pixelColArr[i + j + 3 + Math.sqrt(pixelColArr.length) * 2],
+                    pixelColArr[i + j + 3 + Math.sqrt(pixelColArr.length) * 3]
+                ].toString()
+                //avoid new lines and commas for clear list 
+                thisBrick = thisBrick.replace(/,/g, "");
+
+                //find the type for this bricks pattern in 'Codes'
+                typesArray.push(cityIOstruct.objects.types[cityIOstruct.objects.codes
+                    .indexOf(thisBrick)]);
+            }
+        }
+        // infoDiv(typesArray);
+
+        //sending to cityIO 
+        cityIOstruct.grid = typesArray;
+
+        fetch("https://cityio.media.mit.edu/api/table/update/" +
+            //get dynamic name change for table 
+            cityIOtableName.toString(), {
+                method: "POST",
+                mode: 'no-cors', // fix cors issue 
+                body: JSON.stringify(cityIOstruct)
+            }).then(
+                (response) => {
+                    // infoDiv(response);
+                });
+    }
+}
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -504,7 +522,7 @@ function UI() {
         brightness: 0,
         cityIO: false,
         keySt: false,
-        tableName: "CityScopeJS",
+        tableName: cityIOtableName,
         sendRate: 1000
     }
 
@@ -550,7 +568,6 @@ function UI() {
         .name("toggle Keystoning")
         .listen()
         .onChange(function (bool) {
-
             if (bool) {
                 document.addEventListener('click', mouseKeystone);
             } else {
@@ -562,7 +579,6 @@ function UI() {
     //collect 4 mouse clicks as corners of keystone 
     let clickArray = [];
     function mouseKeystone(e) {
-
         // only collect clicks that are in the canvas area 
         if (e.x < webcamCanvas.width && e.y < webcamCanvas.height) {
             clickArray.push(e.x, e.y)
@@ -615,6 +631,7 @@ function infoDiv(text) {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 //call the media setup method at start
 infoDiv('starting CityScopeJS applet');
+setupCanvs();
 setupMedia(mediaToggle);
 vizGrid();
 UI();
