@@ -26,7 +26,8 @@ var vizGridArray = [];
 var pixelColArr = [];
 //types and codes for cityIO objects 
 let typesArray = [];
-// cityIO structure for POST
+
+// cityIO structure for POST [should be extrenal] 
 var cityIOstruct =
 {
     "grid": [],
@@ -142,7 +143,7 @@ function setupMedia(mediaToggle) {
     // video setup
     ////////////////////
     if (mediaToggle) {
-        console.log('starting video');
+        infoDiv('starting video');
         //Video loop setup
         var track;
         // call video mesh creator
@@ -218,7 +219,7 @@ function scanArrayMaker() {
 
 //create the scanning transposed matrix
 function MatrixTransform(dstCorners) {
-    infoDiv('4 corners are at: ' + dstCorners);
+    infoDiv('Matrix Transformed 4 corners are at: ' + dstCorners);
 
     //clear div before creating new one
     if (document.getElementById('transformedMatrixParent') != null) {
@@ -404,9 +405,10 @@ function cityioPOST() {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 function ColorPicker(matrixGridLocArray) {
+    infoDiv("starting pixel scanner");
+
     //get the scanners divs for thier locations 
     let matrixDiv = document.getElementsByClassName('transformedMatrix');
-    infoDiv("starting pixel scanner");
 
     // call a looping method that scans the grid
     // [this is a hack, so this function could be called 
@@ -460,6 +462,23 @@ function ColorPicker(matrixGridLocArray) {
         requestAnimationFrame(function () {
             ColorPickerRecursive();
         });
+    }
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+//save keystone
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+var saveSettings = function (clickArray) {
+    infoDiv('saving keystone to localStorage in \'CityScopeJS_keystone\' key');
+
+    localStorage.setItem('CityScopeJS_keystone', JSON.stringify(clickArray));
+};
+
+var loadSettings = function () {
+    if (localStorage.getItem('CityScopeJS_keystone')) {
+        var data = JSON.parse(localStorage.getItem('CityScopeJS_keystone'));
+        return data;
     }
 }
 
@@ -521,6 +540,7 @@ function UI() {
     //collect 4 mouse clicks as corners of keystone 
     let clickArray = [];
     function mouseKeystone(e) {
+
         // only collect clicks that are in the canvas area 
         if (e.x < webcamCanvas.width && e.y < webcamCanvas.height) {
             clickArray.push(e.x, e.y)
@@ -529,6 +549,7 @@ function UI() {
             // when 2x4 locations were added 
             if (clickArray.length == 8) {
                 MatrixTransform(clickArray)
+                saveSettings(clickArray);
                 //reset the clicks array 
                 clickArray = [];
                 //turn off keystone in gui 
@@ -576,3 +597,11 @@ setupMedia(mediaToggle);
 vizGrid();
 UI();
 cityIOrun(sendRate);
+
+//On load, load settings 
+//from localStorage if exists 
+if (loadSettings()) {
+    infoDiv("...Loading prev. keystoning");
+
+    MatrixTransform(loadSettings());
+}
