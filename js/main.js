@@ -25,7 +25,10 @@ var vizGridArray = [];
 // global for colors back from webworker
 var pixelColArr = [];
 //types and codes for cityIO objects 
-let typesArray = [];
+var typesArray = [];
+//default table name for cityIO
+cityIOtableName = "CityScopeJS";
+
 
 // cityIO structure for POST [should be extrenal] 
 var cityIOstruct =
@@ -76,7 +79,7 @@ var cityIOstruct =
         ]
     },
     "header": {
-        "name": "CityScopeJS",
+        "name": cityIOtableName,
         "longName": "TactileScopeMatrixCity©®",
         "block": [
             "type"
@@ -100,7 +103,7 @@ var cityIOstruct =
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
-// WEBCAM / MEDIA SETUP
+// WEBCAM & MEDIA SETUP
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // media toggle 
@@ -392,14 +395,16 @@ function cityioPOST() {
         //sending to cityIO 
         cityIOstruct.grid = typesArray;
 
-        fetch("https://cityio.media.mit.edu/api/table/update/cityscopeJS", {
-            method: "POST",
-            mode: 'no-cors', // fix cors issue 
-            body: JSON.stringify(cityIOstruct)
-        }).then(
-            (response) => {
-                // infoDiv(response);
-            });
+        fetch("https://cityio.media.mit.edu/api/table/update/" +
+            //get dynamic name change for table 
+            cityIOtableName.toString(), {
+                method: "POST",
+                mode: 'no-cors', // fix cors issue 
+                body: JSON.stringify(cityIOstruct)
+            }).then(
+                (response) => {
+                    // infoDiv(response);
+                });
     }
 }
 
@@ -499,8 +504,34 @@ function UI() {
         brightness: 0,
         cityIO: false,
         keySt: false,
+        tableName: "CityScopeJS",
         sendRate: 1000
     }
+
+    //cityIO table name 
+    gui.add(parm, 'tableName').name("table name").
+        onFinishChange(function (e) {
+            //delete old table name before making a new one
+            //to keep Yasushi happy 
+            fetch("https://cityio.media.mit.edu/api/table/clear/" +
+                cityIOtableName.toString()
+                , {
+                    method: "GET",
+                    mode: 'no-cors' // fix cors issue 
+                });
+            infoDiv("cityIO table name is now: " + e);
+            //get the new table name 
+            cityIOtableName = e;
+        });
+
+
+    //cityio send rate 
+    gui.add(parm, 'sendRate', 250, 2000).step(250).
+        name("cityIO send [ms]").onChange(function (d) {
+            sendRate = d;
+            cityIOstop();
+            cityIOrun(sendRate);
+        });
 
     // webcam toggle
     gui.add(parm, "webcam").name("Start webcam").onChange(function (mediaToggle) {
@@ -514,17 +545,8 @@ function UI() {
             brightnessCanvas(i, vidCanvas2dContext)
         });
 
-    //cityio send rate 
-    gui.add(parm, 'sendRate', 250, 2000).step(250).
-        name("cityIO send [ms]").onChange(function (d) {
-            sendRate = d;
-            cityIOstop();
-            cityIOrun(sendRate);
-        });
-
     // keystone toggle
-    gui
-        .add(parm, "keySt")
+    gui.add(parm, "keySt")
         .name("toggle Keystoning")
         .listen()
         .onChange(function (bool) {
@@ -602,6 +624,5 @@ cityIOrun(sendRate);
 //from localStorage if exists 
 if (loadSettings()) {
     infoDiv("...Loading prev. keystoning");
-
     MatrixTransform(loadSettings());
 }
