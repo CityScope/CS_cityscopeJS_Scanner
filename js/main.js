@@ -22,7 +22,7 @@ var gridSize = 16;
 var sendRate = 1000;
 // make visual grid representation
 var vizGridArray = [];
-// global for colors back from webworker
+// global var for colors returning from webworker
 var pixelColArr = [];
 //types and codes for cityIO objects 
 var typesArray = [];
@@ -36,10 +36,12 @@ var brightness = 0
 var webcamCanvas = document.createElement('canvas');
 //get main canvas context for scanning
 var vidCanvas2dContext = webcamCanvas.getContext('2d');
-
 //cityIO timer
 var cityIOtimer;
-
+//SVG element for keystone matrix 
+var svgKeystone;
+// load the SVGcdn to var 
+var svgCDN = 'http://www.w3.org/2000/svg'
 
 // cityIO structure for POST [should be extrenal] 
 var cityIOstruct =
@@ -127,25 +129,18 @@ function setupCanvs() {
     document.body.appendChild(webcamCanvas);
 
 
-
-    var ns = 'http://www.w3.org/2000/svg'
+    //SVG setup 
     var svgDiv = document.createElement("div");
     document.body.appendChild(svgDiv);
     svgDiv.id = 'svgDiv';
     svgDiv.width = webcamCanvas.width;
     svgDiv.height = webcamCanvas.height;
     svgDiv.className = "svgDiv";
-    var svg = document.createElementNS(ns, 'svg');
-    svg.className = "svgDiv";
-    svg.setAttributeNS(null, 'width', webcamCanvas.width);
-    svg.setAttributeNS(null, 'height', webcamCanvas.height);
-    svgDiv.appendChild(svg);
-
-    var rect = document.createElementNS(ns, 'rect');
-    rect.setAttributeNS(null, 'width', 300);
-    rect.setAttributeNS(null, 'height', 300);
-    rect.setAttributeNS(null, 'fill', '#f06');
-    svg.appendChild(rect);
+    svgKeystone = document.createElementNS(svgCDN, 'svg');
+    svgKeystone.className = "svgDiv";
+    svgKeystone.setAttributeNS(null, 'width', webcamCanvas.width);
+    svgKeystone.setAttributeNS(null, 'height', webcamCanvas.height);
+    svgDiv.appendChild(svgKeystone);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -220,9 +215,8 @@ function brightnessCanvas(value, canvas) {
 //////////////////////////////SCAN LOGIC ////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 //make an initial array of evenly
-// divided grid of points to scan
+// divided grid points to scan
 function scanArrayMaker() {
-    // TODO : replace this with visuals
     var vizGridLocArray = []
     //get point in certain ratio
     //to width divided by # of points
@@ -242,16 +236,6 @@ function scanArrayMaker() {
 function MatrixTransform(dstCorners) {
     infoDiv('Matrix Transformed 4 corners are at: ' + dstCorners);
 
-    //clear div before creating new one
-    if (document.getElementById('transformedMatrixParent') != null) {
-        infoDiv('removing transformedMatrixParent');
-        $("#transformedMatrixParent").remove()
-    }
-
-    //make parent div
-    $('<DIV/>', {
-        id: "transformedMatrixParent",
-    }).appendTo('body');
 
     //matrix Grid Location Array
     var matrixGridLocArray = []
@@ -260,6 +244,7 @@ function MatrixTransform(dstCorners) {
 
     //set the reference points of the 4 edges of the canvas 
     // to get 100% of the image/video in canvas 
+    //before distorting 
     srcCorners = [
         getPos(webcamCanvas)[0], getPos(webcamCanvas)[1],
         webcamCanvas.width, getPos(webcamCanvas)[1],
@@ -267,22 +252,33 @@ function MatrixTransform(dstCorners) {
         webcamCanvas.width, webcamCanvas.height
     ]
 
+    //method to get div position
+    function getPos(el) {
+        // yay readability
+        for (var lx = 0, ly = 0;
+            el != null;
+            lx += el.offsetLeft, ly += el.offsetTop, el = el.offsetParent);
+        return ([lx, ly]);
+    }
+
     //var for the distorted points
     let dstPt;
     // use perspT lib to calculate transform matrix
+    //and store the results of the 4 points dist. in var perspT
     let perspT;
     perspT = PerspT(srcCorners, dstCorners);
+
     //distort each dot in the matrix to locations and make cubes
     for (let j = 0; j < vizGridLocArray.length; j++) {
         dstPt = perspT.transform(vizGridLocArray[j][0], vizGridLocArray[j][1]);
-        $('<DIV/>', {
-            id: "transformedMatrix" + j,
-            class: "transformedMatrix",
-        }).appendTo('#transformedMatrixParent');
-        var d = document.getElementById('transformedMatrix' + j);
-        d.style.position = "absolute";
-        d.style.left = dstPt[0] + 'px';
-        d.style.top = dstPt[1] + 'px';
+        //display with SVG
+        var scanPt = document.createElementNS(svgCDN, 'circle');
+        scanPt.setAttributeNS(null, 'cx', dstPt[0]);
+        scanPt.setAttributeNS(null, 'cy', dstPt[1]);
+        scanPt.setAttributeNS(null, 'r', 2);
+        scanPt.setAttributeNS(null, 'fill', '#f07');
+        svgKeystone.appendChild(scanPt);
+        //push these locs to an array for scanning 
         matrixGridLocArray.push([Math.floor(dstPt[0]), Math.floor(dstPt[1])]);
     }
     ColorPicker(matrixGridLocArray);
@@ -290,15 +286,6 @@ function MatrixTransform(dstCorners) {
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//get div position
-function getPos(el) {
-    // yay readability
-    for (var lx = 0, ly = 0;
-        el != null;
-        lx += el.offsetLeft, ly += el.offsetTop, el = el.offsetParent);
-    return ([lx, ly]);
-}
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -308,6 +295,8 @@ function vizGrid() {
         id: "vizCellDivParent",
         class: "vizCellDivParent"
     }).appendTo('body');
+    //drag-able
+    $('#vizCellDivParent').draggable();
 
     // make the visual rep of the now distorted grid
     for (let i = 0; i < gridSize; i++) {
@@ -332,7 +321,6 @@ function vizGrid() {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //color the visual grid base on the web-worker cv analysis
-infoDiv('setting up webworker listener');
 CVworker.addEventListener('message', function (e) {
     pixelColArr = e.data;
     for (let i = 0; i < vizGridArray.length; i++) {
@@ -346,13 +334,12 @@ CVworker.addEventListener('message', function (e) {
         }
     }
 }, false);
+infoDiv('setting up webworker listener');
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 function ColorPicker(matrixGridLocArray) {
     infoDiv("starting pixel scanner");
-
-    //get the scanners divs for thier locations 
-    let matrixDiv = document.getElementsByClassName('transformedMatrix');
 
     // call a looping method that scans the grid
     // [this is a hack, so this function could be called 
@@ -368,7 +355,7 @@ function ColorPicker(matrixGridLocArray) {
         let pixelArray = vidCanvas2dContext.getImageData(0, 0, window.innerWidth, window.innerHeight)
         //get the pixels
         let pixelData = pixelArray.data;
-        for (let i = 0; i < matrixDiv.length; i++) {
+        for (let i = 0; i < matrixGridLocArray.length; i++) {
             // get the pixel location at the center of the grid cell div 
             // and match it to the pixel location in the PixelBuffer linear list
             /*            
@@ -406,23 +393,6 @@ function ColorPicker(matrixGridLocArray) {
         requestAnimationFrame(function () {
             ColorPickerRecursive();
         });
-    }
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
-//save keystone
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-var saveSettings = function (clickArray) {
-    infoDiv('saving keystone to localStorage in \'CityScopeJS_keystone\' key');
-
-    localStorage.setItem('CityScopeJS_keystone', JSON.stringify(clickArray));
-};
-
-var loadSettings = function () {
-    if (localStorage.getItem('CityScopeJS_keystone')) {
-        var data = JSON.parse(localStorage.getItem('CityScopeJS_keystone'));
-        return data;
     }
 }
 
@@ -501,23 +471,25 @@ function cityioPOST() {
             }).then(
                 (response) => {
                     // infoDiv(response);
+                    console.log(cityIOstruct.grid);
+
                 });
     }
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////UI + INTERACTION /////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 // GUI 
 function UI() {
 
-    //drag-able
-    $('#vizCellDivParent').draggable();
     // dat.GUI
     var gui = new dat.GUI({ width: 300 });
 
     parm = {
-
         webcam: false,
         brightness: 0,
         cityIO: false,
@@ -542,7 +514,6 @@ function UI() {
             cityIOtableName = e;
         });
 
-
     //cityio send rate 
     gui.add(parm, 'sendRate', 250, 2000).step(250).
         name("cityIO send [ms]").onChange(function (d) {
@@ -556,7 +527,7 @@ function UI() {
         setupMedia(mediaToggle);
     });
 
-    //brightness
+    //brightness control 
     gui.add(parm, 'brightness', -100, 100).
         name("brightness").onChange(function (i) {
             brightness = i;
@@ -568,38 +539,83 @@ function UI() {
         .name("toggle Keystoning")
         .listen()
         .onChange(function (bool) {
-            if (bool) {
-                document.addEventListener('click', mouseKeystone);
-            } else {
-                document.removeEventListener('click', mouseKeystone)
-            }
-            bool = !bool
+            keystoneUI(bool, gui);
         });
+}
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function keystoneUI(bool, gui) {
+    if (bool) {
+        document.addEventListener('click', mouseKeystone);
+        infoDiv("starting keystone" + '<\p>' + "NOTE: make sure to select the croners of the scanned area!");
+        //clear prev. svg contanier 
+        $(svgKeystone).empty();
+
+        //make room by hiding gui 
+        gui.close();
+    } else {
+        document.removeEventListener('click', mouseKeystone);
+    }
+    //flip bool
+    bool = !bool
     //collect 4 mouse clicks as corners of keystone 
     let clickArray = [];
+
+    // react to mouse events 
     function mouseKeystone(e) {
+
         // only collect clicks that are in the canvas area 
         if (e.x < webcamCanvas.width && e.y < webcamCanvas.height) {
-            clickArray.push(e.x, e.y)
+            //pop. array of clicks 
+            clickArray.push(e.x, e.y);
             infoDiv("Mouse click " + clickArray.length / 2 + " at " + e.x + ", " + e.y);
+
+            //viz points with svg 
+            var keystonePt = document.createElementNS(svgCDN, 'circle');
+            keystonePt.setAttributeNS(null, 'cx', e.x);
+            keystonePt.setAttributeNS(null, 'cy', e.y);
+            keystonePt.setAttributeNS(null, 'r', 8);
+            keystonePt.setAttributeNS(null, 'stroke', '#00b7f9');
+            keystonePt.setAttributeNS(null, 'stroke-width', '2');
+            keystonePt.setAttributeNS(null, 'fill-opacity', '0');
+            svgKeystone.appendChild(keystonePt);
+
 
             // when 2x4 locations were added 
             if (clickArray.length == 8) {
-                MatrixTransform(clickArray)
+                MatrixTransform(clickArray);
+                //save these keystone points 
                 saveSettings(clickArray);
                 //reset the clicks array 
                 clickArray = [];
-                //turn off keystone in gui 
+                //turn off keystone toggle in gui 
                 parm['keySt'] = false;
-                //stop keystone mouse clicks 
-                document.removeEventListener('click', mouseKeystone)
+                // and stop keystone mouse clicks 
+                document.removeEventListener('click', mouseKeystone);
+                //open gui when done 
+                gui.open();
             }
         }
     }
-    // gui.close();
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+//save keystone
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+var saveSettings = function (clickArray) {
+    infoDiv('saving keystone to localStorage in \'CityScopeJS_keystone\' key');
+
+    localStorage.setItem('CityScopeJS_keystone', JSON.stringify(clickArray));
+};
+
+var loadSettings = function () {
+    if (localStorage.getItem('CityScopeJS_keystone')) {
+        var data = JSON.parse(localStorage.getItem('CityScopeJS_keystone'));
+        return data;
+    }
+}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -640,6 +656,7 @@ cityIOrun(sendRate);
 //On load, load settings 
 //from localStorage if exists 
 if (loadSettings()) {
+    infoDiv("found keystoning setup >>");
     infoDiv("...Loading prev. keystoning");
     MatrixTransform(loadSettings());
 }
