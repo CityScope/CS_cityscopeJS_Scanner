@@ -17,7 +17,7 @@ https://github.com/RELNO]
 // web-worker
 const CVworker = new Worker('js/CVwebworker.js');
 // grid pixels size var
-var gridSize = 16;
+var gridSize = 64;
 // POST to cityIO rate in MS
 var sendRate = 1000;
 // make visual grid representation
@@ -34,6 +34,8 @@ var mediaToggle = false;
 var brightness = 0
 //make vid canvas
 var webcamCanvas = document.createElement('canvas');
+//another canvas for magnifying glass 
+var magGlassCanvas = document.createElement('canvas');
 //get main canvas context for scanning
 var vidCanvas2dContext = webcamCanvas.getContext('2d');
 //cityIO timer
@@ -152,9 +154,7 @@ function setupMedia(mediaToggle) {
         vidCanvas2dContext.drawImage(img, 0, 0, webcamCanvas.width, webcamCanvas.height);
     }
     //image location for the test image
-    img.src =
-        // 'media/demotable.jpg';
-        'media/RAW/4x4.png';
+    img.src = 'media/TESTS/16x16_lowres.png';
     ////////////////////
     // video setup
     ////////////////////
@@ -275,7 +275,7 @@ function MatrixTransform(dstCorners) {
         var scanPt = document.createElementNS(svgCDN, 'circle');
         scanPt.setAttributeNS(null, 'cx', dstPt[0]);
         scanPt.setAttributeNS(null, 'cy', dstPt[1]);
-        scanPt.setAttributeNS(null, 'r', 2);
+        scanPt.setAttributeNS(null, 'r', 1);
         scanPt.setAttributeNS(null, 'fill', '#f07');
         svgKeystone.appendChild(scanPt);
         //push these locs to an array for scanning 
@@ -471,8 +471,6 @@ function cityioPOST() {
             }).then(
                 (response) => {
                     // infoDiv(response);
-                    console.log(cityIOstruct.grid);
-
                 });
     }
 }
@@ -546,16 +544,48 @@ function UI() {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function keystoneUI(bool, gui) {
+
     if (bool) {
         document.addEventListener('click', mouseKeystone);
         infoDiv("starting keystone" + '<\p>' + "NOTE: make sure to select the croners of the scanned area!");
         //clear prev. svg contanier 
         $(svgKeystone).empty();
 
+        // mag. glass [WIP - should remove when off] 
+        document.body.appendChild(magGlassCanvas);
+        magGlassCanvas.id = "magGlass";
+        magGlassCanvas.className = "magGlassCanvas";
+        magGlassCanvas.width = 200;
+        magGlassCanvas.height = 200;
+        magGlassCanvas.style.zIndex = 10000;
+        var magGlassCtx = magGlassCanvas.getContext("2d");
+        //
+        document.addEventListener("mousemove", function (e) {
+            $('html,body').css('cursor', 'crosshair');
+
+            magGlassCtx.clearRect(0, 0, magGlassCanvas.width, magGlassCanvas.height);
+            magGlassCtx.fillStyle = "transparent";
+            magGlassCtx.fillRect(0, 0, magGlassCanvas.width, magGlassCanvas.height);
+            magGlassCtx.drawImage(webcamCanvas, e.x, e.y, 200, 200, 0, 0, 800, 800);
+            magGlassCanvas.style.top = e.pageY + 15 + "px";
+            magGlassCanvas.style.left = e.pageX + 15 + "px";
+            magGlassCanvas.style.display = "block";
+            magGlassCanvas.style.position = "absolute";
+            magGlassCanvas.style.border = '3px black solid';
+
+        });
+
+        document.addEventListener("mouseout", function () {
+            magGlassCanvas.style.display = "none";
+        });
+
+
         //make room by hiding gui 
         gui.close();
+
     } else {
         document.removeEventListener('click', mouseKeystone);
+        magGlassCanvas.style.display = "none";
     }
     //flip bool
     bool = !bool
@@ -564,13 +594,11 @@ function keystoneUI(bool, gui) {
 
     // react to mouse events 
     function mouseKeystone(e) {
-
         // only collect clicks that are in the canvas area 
         if (e.x < webcamCanvas.width && e.y < webcamCanvas.height) {
             //pop. array of clicks 
             clickArray.push(e.x, e.y);
             infoDiv("Mouse click " + clickArray.length / 2 + " at " + e.x + ", " + e.y);
-
             //viz points with svg 
             var keystonePt = document.createElementNS(svgCDN, 'circle');
             keystonePt.setAttributeNS(null, 'cx', e.x);
@@ -580,8 +608,6 @@ function keystoneUI(bool, gui) {
             keystonePt.setAttributeNS(null, 'stroke-width', '2');
             keystonePt.setAttributeNS(null, 'fill-opacity', '0');
             svgKeystone.appendChild(keystonePt);
-
-
             // when 2x4 locations were added 
             if (clickArray.length == 8) {
                 MatrixTransform(clickArray);
