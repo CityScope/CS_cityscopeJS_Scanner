@@ -93,7 +93,7 @@ var cityIOstruct =
     },
     "header": {
         "name": cityIOtableName,
-        "longName": "TactileScopeMatrixCity©®",
+        "longName": "®©//Tactile|Scope|Matrix|City\\\©®",
         "block": [
             "type"
         ],
