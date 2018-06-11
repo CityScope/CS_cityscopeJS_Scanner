@@ -471,10 +471,10 @@ function cityioPOST() {
                 body: JSON.stringify(cityIOstruct)
             })
             .then(response => handleErrors(response))
-            .catch(error => console.log(error));
+            .catch(error => infoDiv(error));
 
         function handleErrors(response) {
-            if (!response.ok) {
+            if (response.ok) {
                 infoDiv("cityIO response: " + response.ok);
             }
             return response;
@@ -569,7 +569,7 @@ function keystoneUI(bool, gui) {
         //
         document.addEventListener("mousemove", function (e) {
             $('html,body').css('cursor', 'crosshair');
-            console.log(e.pageX, e.pageY);
+            // console.log(e.pageX, e.pageY);
             magGlassCtx.clearRect(0, 0, magWid, magWid);
             magGlassCtx.drawImage(webcamCanvas,
                 e.pageX - (magWid / 16), e.pageY - (magWid / 16), 100, 100,
