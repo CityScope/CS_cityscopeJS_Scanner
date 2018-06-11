@@ -33,7 +33,7 @@ body {
     left: 80vw;
     top: 20rem;
     height: 10rem;
-    max-width: 30rem;
+    max-width: 300px;
     overflow-y: auto;
     font-size: 0.75rem;
     color: white;

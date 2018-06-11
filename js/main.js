@@ -123,8 +123,9 @@ var cityIOstruct =
 function setupCanvs() {
     webcamCanvas.id = "webcamCanvas";
     webcamCanvas.className = "webcamCanvas";
-    webcamCanvas.width = 960;
-    webcamCanvas.height = 720;
+    //org. 960x720
+    webcamCanvas.width = 800;
+    webcamCanvas.height = 800;
     webcamCanvas.style.zIndex = 0;
     webcamCanvas.style.position = "absolute";
     webcamCanvas.style.border = "1px solid";
@@ -468,10 +469,16 @@ function cityioPOST() {
                 method: "POST",
                 mode: 'no-cors', // fix cors issue 
                 body: JSON.stringify(cityIOstruct)
-            }).then(
-                (response) => {
-                    // infoDiv(response);
-                });
+            })
+            .then(response => handleErrors(response))
+            .catch(error => console.log(error));
+
+        function handleErrors(response) {
+            if (!response.ok) {
+                infoDiv("cityIO response: " + response.ok);
+            }
+            return response;
+        }
     }
 }
 
@@ -555,23 +562,23 @@ function keystoneUI(bool, gui) {
         document.body.appendChild(magGlassCanvas);
         magGlassCanvas.id = "magGlass";
         magGlassCanvas.className = "magGlassCanvas";
-        magGlassCanvas.width = 200;
-        magGlassCanvas.height = 200;
-        magGlassCanvas.style.zIndex = 10000;
+        magWid = magGlassCanvas.width = 100;
+        magGlassCanvas.height = magWid;
+        magGlassCanvas.style.zIndex = 100;
         var magGlassCtx = magGlassCanvas.getContext("2d");
         //
         document.addEventListener("mousemove", function (e) {
             $('html,body').css('cursor', 'crosshair');
-
-            magGlassCtx.clearRect(0, 0, magGlassCanvas.width, magGlassCanvas.height);
-            magGlassCtx.fillStyle = "transparent";
-            magGlassCtx.fillRect(0, 0, magGlassCanvas.width, magGlassCanvas.height);
-            magGlassCtx.drawImage(webcamCanvas, e.x, e.y, 200, 200, 0, 0, 800, 800);
-            magGlassCanvas.style.top = e.pageY + 15 + "px";
-            magGlassCanvas.style.left = e.pageX + 15 + "px";
+            console.log(e.pageX, e.pageY);
+            magGlassCtx.clearRect(0, 0, magWid, magWid);
+            magGlassCtx.drawImage(webcamCanvas,
+                e.pageX - (magWid / 16), e.pageY - (magWid / 16), 100, 100,
+                0, 0, webcamCanvas.width, webcamCanvas.height);
+            magGlassCanvas.style.top = e.pageY - (magWid / 2) + "px";
+            magGlassCanvas.style.left = e.pageX - (magWid / 2) + "px";
             magGlassCanvas.style.display = "block";
             magGlassCanvas.style.position = "absolute";
-            magGlassCanvas.style.border = '3px black solid';
+            magGlassCanvas.style.border = '2px black solid';
 
         });
 
