@@ -484,7 +484,8 @@ function cityioPOST() {
                 mode: 'no-cors', // fix cors issue 
                 body: JSON.stringify(cityIOstruct)
             })
-            .then(response => handleErrors(response))
+            .then(response => handleErrors(response),
+                infoDiv("OK! sent to cityIO for table '" + cityIOtableName + "' at " + timeNow()))
             .catch(error => infoDiv(error));
 
         function handleErrors(response) {
@@ -494,7 +495,13 @@ function cityioPOST() {
             return response;
         }
     }
+    //calc this time 
+    function timeNow() {
+        var d = Date.now();
+        return new Date(d);
+    }
 }
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
