@@ -12,17 +12,17 @@ body {
 
 
 
-.vizCellDivParent{
+.Grid_Parent{
     position: fixed;
-    left: 0vw;
-    top: 20rem;
+    left: 5vw;
+    top: 5rem;
     box-shadow: 5px 5px 20px rgb(0, 0, 0);
     cursor: all-scroll;
     border: 3px solid black;
-    background-color: rgba(0, 0, 0, 0.5);
+    /* background-color: rgba(0, 0, 0, 0.5); */
 }
 
-.vizRawsDiv{
+.vizRaws{
     float: left;
 }
 
@@ -31,8 +31,6 @@ body {
     margin:1px;
     pointer-events: none;
     border: 1px solid rgba(255, 255, 255, 0.25); 
-  width: 0.5rem; 
-    height: 0.5rem; 
     color: white;
     font-family: 'Courier New', Courier, monospace;
 }
