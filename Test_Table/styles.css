@@ -13,9 +13,10 @@ body {
 
 
 .Grid_Parent{
-    position: fixed;
-    left: 5vw;
-    top: 5rem;
+    position: absolute;
+    top: 25%;
+    left: 25%;
+
     box-shadow: 5px 5px 20px rgb(0, 0, 0);
     cursor: all-scroll;
     border: 3px solid black;
@@ -33,4 +34,5 @@ body {
     border: 1px solid rgba(255, 255, 255, 0.25); 
     color: white;
     font-family: 'Courier New', Courier, monospace;
+    font-size: 1vw;
 }

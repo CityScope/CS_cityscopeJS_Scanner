@@ -45,6 +45,7 @@ function getCityIO() {
 function viz(jsonData) {
     let cells = document.getElementsByClassName('vizCell');
     // console.log(cells);
+
     for (let i = 0; i < cells.length; i++) {
         cells[i].innerHTML =
             jsonData.grid[i];

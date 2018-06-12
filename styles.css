@@ -8,6 +8,13 @@ body {
     background-attachment: fixed;
     overflow: hidden;
     background: linear-gradient(115deg, rgba(2,0,36,1) 47%, rgba(121,9,114,1) 97%);
+    font-family:  Helvetica, sans-serif;
+    font-weight: 700;
+    font-size: 1vw;
+    color: white;
+}
+a {
+    color: white;
 }
 
 .logo {
