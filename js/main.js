@@ -162,7 +162,7 @@ function setupCanvs() {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
-function setupMedia(mediaToggle) {
+function setupMedia(mediaToggle, mirrorVid) {
     // make dummy image for testing
     var img = new Image();
     img.onload = function () {
@@ -176,7 +176,7 @@ function setupMedia(mediaToggle) {
     if (mediaToggle) {
         infoDiv('starting video');
         //Video loop setup
-        var track;
+
         // call video mesh creator
         var width = 0;
         var height = 0;
@@ -184,6 +184,11 @@ function setupMedia(mediaToggle) {
         video.addEventListener('loadedmetadata', function () {
             width = webcamCanvas.width;
             height = webcamCanvas.height;
+
+            if (mirrorVid) {
+                vidCanvas2dContext.translate(width, 0);
+                vidCanvas2dContext.scale(-1, 1);
+            }
             //call the video to canvas loop 
             loop();
         });
@@ -191,7 +196,6 @@ function setupMedia(mediaToggle) {
         window.vid = video;
 
         //get the webcam stream
-
 
         navigator.getUserMedia({ video: true, audio: false }, function (stream) {
             video.srcObject = stream;
@@ -204,9 +208,10 @@ function setupMedia(mediaToggle) {
             //loop the video to canvas method 
             requestAnimationFrame(loop);
             //draw the image before applying filters 
-            vidCanvas2dContext.drawImage(video, 0, 0, width, height);
+            // vidCanvas2dContext.drawImage(video, 0, 0, width, height);
             //apply filter every frame !! COSTLY
             brightnessCanvas(brightness, vidCanvas2dContext)
+            vidCanvas2dContext.drawImage(video, 0, 0, width, height);
         }
     }
 }
@@ -224,6 +229,7 @@ function brightnessCanvas(value, canvas) {
     // Draw the data back to the visible canvas
     canvas.putImageData(pixelData, 0, 0);
 }
+
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -517,6 +523,7 @@ function UI() {
 
     parm = {
         webcam: false,
+        mirror: false,
         brightness: 0,
         cityIO: false,
         keySt: false,
@@ -549,8 +556,17 @@ function UI() {
         });
 
     // webcam toggle
-    gui.add(parm, "webcam").name("Start webcam").onChange(function (mediaToggle) {
-        setupMedia(mediaToggle);
+    gui.add(parm, "webcam").name("Start webcam").onChange(function () {
+        let bool;
+        bool = !bool;
+        setupMedia(bool, false);
+    });
+
+    // webcam toggle
+    gui.add(parm, "mirror").name("mirror webcam").onChange(function () {
+        let bool;
+        bool = !bool;
+        setupMedia(true, bool);
     });
 
     //brightness control 
