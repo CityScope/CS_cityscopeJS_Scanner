@@ -14,7 +14,7 @@ body {
 
 .Grid_Parent{
     position: absolute;
-    top: 25%;
+    top: 10%;
     left: 25%;
 
     box-shadow: 5px 5px 20px rgb(0, 0, 0);
