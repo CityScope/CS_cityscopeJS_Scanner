@@ -58,7 +58,7 @@ async function setup() {
     //create SVG for d3
 
     let svgParent = $(Grid_Parent);
-    var svgContainer = d3.select("body").append("svg")
+    d3.select("body").append("svg")
         .attr("width", svgParent.width())
         .attr("height", svgParent.height())
 
@@ -88,21 +88,21 @@ async function viz(jsonData) {
         //
         if (jsonData.grid[i] === null) {
             cells[i].style.backgroundColor = 'rgba(255,255,255,0.5)';
-            cells[i].innerHTML = 'road';
+            cells[i].innerHTML = ' ';
             //
         } else if (typeKey >= 0 && typeKey < 10) {
             cells[i].style.backgroundColor = 'rgba(242, 216, 46,1)';
-            cells[i].innerHTML = 'live ' + typeKey;
+            cells[i].innerHTML = 'L' + typeKey;
             //
         } else if (typeKey > 11 && typeKey < 20) {
             cells[i].style.backgroundColor = 'rgba(200, 100, 0,1)';
-            cells[i].innerHTML = 'work ' + typeKey;
+            cells[i].innerHTML = 'W' + typeKey;
             //
         } else if (typeKey > 20 && typeKey <= 21) {
             cells[i].style.backgroundColor = 'rgba(160,210, 77,1)';
-            cells[i].innerHTML = 'park';
+            cells[i].innerHTML = 'P';
         } else {
-            cells[i].innerHTML = 'no type';
+            cells[i].innerHTML = ' ';
 
         }
     }
