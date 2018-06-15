@@ -29,7 +29,7 @@ var typesArray = [];
 //default table name for cityIO
 cityIOtableName = "CityScopeJS";
 // media toggle 
-var mediaToggle = false;
+var mediaToggle = true;
 // Global var for GUI controls 
 var brightness = 0
 //make vid canvas
@@ -523,7 +523,6 @@ function UI() {
     var gui = new dat.GUI({ width: 300 });
 
     parm = {
-        webcam: false,
         mirror: false,
         brightness: 0,
         cityIO: false,
@@ -555,13 +554,6 @@ function UI() {
             cityIOstop();
             cityIOrun(sendRate);
         });
-
-    // webcam toggle
-    gui.add(parm, "webcam").name("Start webcam").onChange(function () {
-        let bool;
-        bool = !bool;
-        setupMedia(bool, false);
-    });
 
     // webcam toggle
     gui.add(parm, "mirror").name("mirror webcam").onChange(function () {
