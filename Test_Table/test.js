@@ -50,7 +50,6 @@ async function setup() {
             vizRaws.appendChild(vizCell);
             //cell sized in viz grid 
             let cellDims = (document.documentElement.clientWidth / gridSize).toString() + "px";
-            console.log(cellDims);
 
             vizCell.style.width = cellDims;
             vizCell.style.height = cellDims;
