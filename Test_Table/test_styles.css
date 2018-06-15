@@ -7,13 +7,15 @@ body {
     background-repeat: no-repeat;
     background-attachment: fixed;
     overflow: hidden;
-    background: linear-gradient(115deg, rgba(2,0,36,1) 47%, rgba(121,9,114,1) 97%);
+    /* background: linear-gradient(115deg, rgba(2,0,36,1) 47%, rgba(121,9,114,1) 97%); */
+    background: black;
+
 }
 
 .Grid_Parent{
     position: absolute;
-    top: 10%;
-    left: 25%;
+    /* top: 10%;
+    left: 25%; */
     box-shadow: 0px 0px 50px rgb(0, 0, 0);
 
 }
@@ -24,10 +26,10 @@ body {
 
 .vizCell{
     position: relative;
-    margin:1px;
+    margin:0px;
     pointer-events: none;
     border: 1px solid rgba(255, 255, 255, 0.25); 
     color: white;
-    font-family: 'Courier New', Courier, monospace;
-    font-size: 1vw;
+    font-family: Helvetica, sans-serif;
+    font-size: 2vw;
 }
