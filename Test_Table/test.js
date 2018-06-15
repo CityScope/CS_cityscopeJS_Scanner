@@ -88,19 +88,19 @@ async function viz(jsonData) {
         let typeKey = getKeyByValue(jsonData.objects.types, jsonData.grid[i]);
         //
         if (jsonData.grid[i] === null) {
-            cells[i].style.backgroundColor = 'rgba(255,255,255,0.1)';
+            cells[i].style.backgroundColor = 'rgba(255,255,255,0.5)';
             cells[i].innerHTML = 'road';
             //
         } else if (typeKey >= 0 && typeKey < 10) {
-            cells[i].style.backgroundColor = 'rgba(242, 216, 46,0.35)';
+            cells[i].style.backgroundColor = 'rgba(242, 216, 46,1)';
             cells[i].innerHTML = 'live ' + typeKey;
             //
         } else if (typeKey > 11 && typeKey < 20) {
-            cells[i].style.backgroundColor = 'rgba(200, 100, 0,0.35)';
+            cells[i].style.backgroundColor = 'rgba(200, 100, 0,1)';
             cells[i].innerHTML = 'work ' + typeKey;
             //
         } else if (typeKey > 20 && typeKey <= 21) {
-            cells[i].style.backgroundColor = 'rgba(100, 160, 77,0.35)';
+            cells[i].style.backgroundColor = 'rgba(160,210, 77,1)';
             cells[i].innerHTML = 'park';
         } else {
             cells[i].innerHTML = 'no type';
