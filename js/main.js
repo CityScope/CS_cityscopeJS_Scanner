@@ -210,8 +210,9 @@ function setupMedia(mediaToggle, mirrorVid) {
             //draw the image before applying filters 
             // vidCanvas2dContext.drawImage(video, 0, 0, width, height);
             //apply filter every frame !! COSTLY
-            brightnessCanvas(brightness, vidCanvas2dContext)
             vidCanvas2dContext.drawImage(video, 0, 0, width, height);
+
+            brightnessCanvas(brightness, vidCanvas2dContext)
         }
     }
 }

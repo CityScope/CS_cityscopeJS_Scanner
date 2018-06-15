@@ -25,6 +25,7 @@ async function getCityIO(URL) {
 }
 
 async function setup() {
+
     // const tables = await getCityIO(cityIOlist);
     // console.log(tables);
 
@@ -53,6 +54,15 @@ async function setup() {
             vizCell.style.height = cellDims;
         }
     }
+    //create SVG for d3
+
+    let svgParent = $(Grid_Parent);
+    var svgContainer = d3.select("body").append("svg")
+        .attr("width", svgParent.width())
+        .attr("height", svgParent.height())
+
+    //get the same pos. as the grid for SVG 
+    $("svg").css({ top: svgParent.position().top, left: svgParent.position().left, position: 'absolute' });
 }
 
 async function update() {
@@ -74,19 +84,19 @@ async function viz(jsonData) {
     for (let i = 0; i < cells.length; i++) {
         //get the key for this type 
         let typeKey = getKeyByValue(jsonData.objects.types, jsonData.grid[i]);
-
+        //
         if (jsonData.grid[i] === null) {
             cells[i].style.backgroundColor = 'rgba(0,0,0,0.25)';
             cells[i].innerHTML = 'no type';
-
+            //
         } else if (typeKey >= 0 && typeKey < 10) {
             cells[i].style.backgroundColor = 'rgba(242, 216, 46,0.35)';
             cells[i].innerHTML = 'live ' + typeKey;
-
+            //
         } else if (typeKey > 11 && typeKey < 20) {
             cells[i].style.backgroundColor = 'rgba(200, 100, 0,0.35)';
             cells[i].innerHTML = 'work ' + typeKey;
-
+            //
         } else if (typeKey > 20 && typeKey <= 21) {
             cells[i].style.backgroundColor = 'rgba(100, 160, 77,0.35)';
             cells[i].innerHTML = 'park';
@@ -98,6 +108,17 @@ function getKeyByValue(object, value) {
     return Object.keys(object).find(key => object[key] === value);
 }
 
+function anim(color) {
+    d3.select('svg').
+        append("circle").
+        attr("cx", 10).
+        attr("cy", 10).
+        attr("r", 2).
+        attr('stroke', color)
+
+    var circleTransition = d3.select("circle").transition();
+    circleTransition.attr("transform", "translate(150)").duration(10000);
+}
 
 //start applet 
 window.onload = setup();
