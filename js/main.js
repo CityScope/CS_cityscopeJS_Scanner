@@ -528,7 +528,10 @@ function UI() {
         cityIO: false,
         keySt: false,
         tableName: cityIOtableName,
-        sendRate: 1000
+        sendRate: 1000,
+        fe: function () {
+            window.open('https://cityio.media.mit.edu/', '_blank');
+        }
     }
 
     //cityIO table name 
@@ -576,6 +579,8 @@ function UI() {
         .onChange(function (bool) {
             keystoneUI(bool, gui);
         });
+
+    gui.add(parm, "fe").name("Test in cityIO >>")
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
