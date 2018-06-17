@@ -16,32 +16,50 @@ https://github.com/RELNO]
 
 // web-worker
 const CVworker = new Worker('js/CVwebworker.js');
+
 // grid pixels size var
 var gridSize = 40;
+
 // POST to cityIO rate in MS
 var sendRate = 1000;
+
 // make visual grid representation
 var vizGridArray = [];
+
 // global var for colors returning from webworker
 var pixelColArr = [];
+
 //types and codes for cityIO objects 
 var typesArray = [];
+
 //default table name for cityIO
 cityIOtableName = "CityScopeJS";
+
+//table location in the world 
+cityIOtableLat = 42.360357;
+cityIOtableLon = -71.087264;
+
 // media toggle 
 var mediaToggle = true;
+
 // Global var for GUI controls 
-var brightness = 0
+var brightness = 0;
+
 //make vid canvas
 var webcamCanvas = document.createElement('canvas');
+
 //another canvas for magnifying glass 
 var magGlassCanvas = document.createElement('canvas');
+
 //get main canvas context for scanning
 var vidCanvas2dContext = webcamCanvas.getContext('2d');
+
 //cityIO timer
 var cityIOtimer;
+
 //SVG element for keystone matrix 
 var svgKeystone;
+
 // load the SVGcdn to var 
 var svgCDN = 'http://www.w3.org/2000/svg'
 
@@ -119,9 +137,9 @@ var cityIOstruct =
             "physical_latitude": 42.360357,
             "nrows": 20,
             "rotation": 0,
-            "latitude": 42.360357,
+            "latitude": cityIOtableLat,
             "cellsize": 10,
-            "longitude": -71.087264
+            "longitude": cityIOtableLon
         },
         "owner": {
             "name": "Ariel Noyman",
@@ -516,74 +534,6 @@ function cityioPOST() {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
-// GUI 
-function UI() {
-
-    // dat.GUI
-    var gui = new dat.GUI({ width: 300 });
-
-    parm = {
-        mirror: false,
-        brightness: 0,
-        cityIO: false,
-        keySt: false,
-        tableName: cityIOtableName,
-        sendRate: 1000,
-        fe: function () {
-            window.open('https://cityio.media.mit.edu/', '_blank');
-        }
-    }
-
-    //cityIO table name 
-    gui.add(parm, 'tableName').name("table name").
-        onFinishChange(function (e) {
-            //delete old table name before making a new one
-            //to keep Yasushi happy 
-            fetch("https://cityio.media.mit.edu/api/table/clear/" +
-                cityIOtableName.toString()
-                , {
-                    method: "GET",
-                    mode: 'no-cors' // fix cors issue 
-                });
-            infoDiv("cityIO table name is now: " + e);
-            //get the new table name 
-            cityIOtableName = e;
-        });
-
-    //cityio send rate 
-    gui.add(parm, 'sendRate', 250, 2000).step(250).
-        name("cityIO send [ms]").onChange(function (d) {
-            sendRate = d;
-            cityIOstop();
-            cityIOrun(sendRate);
-        });
-
-    // webcam toggle
-    gui.add(parm, "mirror").name("mirror webcam").onChange(function () {
-        let bool;
-        bool = !bool;
-        setupMedia(true, bool);
-    });
-
-    //brightness control 
-    gui.add(parm, 'brightness', -100, 100).
-        name("brightness").onChange(function (i) {
-            brightness = i;
-            brightnessCanvas(i, vidCanvas2dContext)
-        });
-
-    // keystone toggle
-    gui.add(parm, "keySt")
-        .name("toggle Keystoning")
-        .listen()
-        .onChange(function (bool) {
-            keystoneUI(bool, gui);
-        });
-
-    gui.add(parm, "fe").name("Test in cityIO >>")
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function keystoneUI(bool, gui) {
 
@@ -708,6 +658,89 @@ function infoDiv(text) {
         }
     }
     return;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+// GUI 
+function UI() {
+
+    // dat.GUI
+    var gui = new dat.GUI({ width: 300 });
+
+    parm = {
+        mirror: false,
+        brightness: 0,
+        cityIO: false,
+        keySt: false,
+        tableName: cityIOtableName,
+        tableLAT: '42.360357',
+        tableLON: '-71.087264',
+        sendRate: 1000,
+        fe: function () {
+            window.open('https://cityio.media.mit.edu/', '_blank');
+        }
+    }
+
+    //cityIO table name 
+    gui.add(parm, 'tableName').name("table name").
+        onFinishChange(function (e) {
+            //delete old table name before making a new one
+            //to keep Yasushi happy 
+            fetch("https://cityio.media.mit.edu/api/table/clear/" +
+                cityIOtableName.toString()
+                , {
+                    method: "GET",
+                    mode: 'no-cors' // fix cors issue 
+                });
+            infoDiv("cityIO table name is now: " + e);
+            //get the new table name 
+            cityIOtableName = e;
+        });
+
+    //cityIO table LAT 
+    gui.add(parm, 'tableLAT').name("table Latitude").
+        onFinishChange(function (e) {
+            cityIOstruct.header.spatial.latitude = e;
+        });
+
+    //cityIO table LAT 
+    gui.add(parm, 'tableLON').name("table Longitude").
+        onFinishChange(function (e) {
+            cityIOstruct.header.spatial.longitude = e;
+        });
+
+    //cityio send rate 
+    gui.add(parm, 'sendRate', 250, 2000).step(250).
+        name("cityIO send [ms]").onChange(function (d) {
+            sendRate = d;
+            cityIOstop();
+            cityIOrun(sendRate);
+        });
+
+    // webcam toggle
+    gui.add(parm, "mirror").name("mirror webcam").onChange(function () {
+        let bool;
+        bool = !bool;
+        setupMedia(true, bool);
+    });
+
+    //brightness control 
+    gui.add(parm, 'brightness', -100, 100).
+        name("brightness").onChange(function (i) {
+            brightness = i;
+            brightnessCanvas(i, vidCanvas2dContext)
+        });
+
+    // keystone toggle
+    gui.add(parm, "keySt")
+        .name("toggle Keystoning")
+        .listen()
+        .onChange(function (bool) {
+            keystoneUI(bool, gui);
+        });
+
+    gui.add(parm, "fe").name("Test in cityIO >>")
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
