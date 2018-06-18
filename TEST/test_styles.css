@@ -1,0 +1,39 @@
+html {
+    height: 100%;
+}
+body {
+    height: 100%;
+    margin: 0;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    overflow: hidden;
+    /* background: linear-gradient(115deg, rgba(2,0,36,1) 47%, rgba(121,9,114,1) 97%); */
+    background: black;
+
+}
+
+.Grid_Parent{
+    position: absolute;
+    /* top: 10%;
+    left: 25%; */
+    box-shadow: 0px 0px 50px rgb(0, 0, 0);
+
+}
+
+.vizRaws{
+    float: left;
+}
+
+.vizCell{
+    position: relative;
+    margin:0px;
+    pointer-events: none;
+    color: black;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-weight: bolder;
+    text-align: center;
+    line-height: 250%;
+    font-size: 3vw;
+    box-shadow: 0px 0px 20px rgb(0, 0, 0);
+
+}
