@@ -24,8 +24,8 @@
       "2x2_1",
       "2x2_2",
       "2x2_3",
-      "2x2_4",
-      "2x2_5"
+      "BLACK",
+      "WHITE"
     ],
     "codes": [
       "1000000000000000",
@@ -64,9 +64,9 @@
       "nrows": 10,
       "physical_longitude": 0,
       "physical_latitude": 0,
-      "latitude": 0,
-      "cellsize": 10,
-      "longitude": 0
+      "latitude": 1,
+      "longitude": 1,
+      "cellsize": 10
     },
     "owner": {
       "name": "Ariel Noyman",

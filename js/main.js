@@ -1,15 +1,4 @@
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
-/* 
-CityScopeJS -- decoding 2d array of black and white lego bricks and sending to remote server.
-"@context": "https://github.com/CityScope/", "@type": "Person", "address": {
-"@type": "75 Amherst St, Cambridge, MA 02139", "addressLocality":
-"Cambridge", "addressRegion": "MA",}, 
-"jobTitle": "Research Scientist", "name": "Ariel Noyman",
-"alumniOf": "MIT", "url": "http://arielnoyman.com", 
-"https://www.linkedin.com/", "http://twitter.com/relno",
-https://github.com/RELNO]
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*/////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 {{ CityScopeJS }}
 Copyright (C) {{ 2018 }}  {{ Ariel Noyman }}
@@ -27,7 +16,18 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*/
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+CityScopeJS -- decoding 2d array of black and white LEGO bricks, parsing and sending to remote server.
+"@context": "https://github.com/CityScope/", "@type": "Person", "address": {
+"@type": "75 Amherst St, Cambridge, MA 02139", "addressLocality":
+"Cambridge", "addressRegion": "MA",}, 
+"jobTitle": "Research Scientist", "name": "Ariel Noyman",
+"alumniOf": "MIT", "url": "http://arielnoyman.com", 
+"https://www.linkedin.com/", "http://twitter.com/relno",
+https://github.com/RELNO]
+
+*/ ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Global VARS
@@ -73,17 +73,19 @@ var svgCDN = "http://www.w3.org/2000/svg";
 ///////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////
 
-var cityIOtableSettings;
+var cityIOdataStruct;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////// APP LOGIC ////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 async function start() {
-  cityIOtableSettings = await getSettings("./data/settings.json");
-  console.log(cityIOtableSettings);
-
   infoDiv("starting CityScopeJS applet");
+
+  infoDiv("getting JSON with table data");
+  cityIOdataStruct = await getSettings("./data/settings.json");
+  //send the table settings once to WW for init
+  CVworker.postMessage(["cityIOsetup", cityIOdataStruct]);
   //setup the scene
   setupCanvs();
   //call the media setup method at start
@@ -231,12 +233,12 @@ function brightnessCanvas(value, canvas) {
 //create the scanning transposed matrix
 function MatrixTransform(dstCorners) {
   // grid pixels size from settings
-  var gridSize = cityIOtableSettings.header.spatial.ncols * 4;
+  var gridSize = cityIOdataStruct.header.spatial.ncols * 4;
   infoDiv(
     "table size: " +
-      cityIOtableSettings.header.spatial.ncols +
+      cityIOdataStruct.header.spatial.ncols +
       " x " +
-      cityIOtableSettings.header.spatial.ncols
+      cityIOdataStruct.header.spatial.ncols
   );
 
   // a function to make an initial array of
@@ -312,62 +314,6 @@ function MatrixTransform(dstCorners) {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
-function vizGrid() {
-  //get grid size for viz from settings
-  var gridSize = cityIOtableSettings.header.spatial.ncols * 4;
-
-  // make the grid div parent
-  $("<DIV/>", {
-    id: "vizCellDivParent",
-    class: "vizCellDivParent"
-  }).appendTo("body");
-  //drag-able
-  $("#vizCellDivParent").draggable();
-
-  // make the visual rep of the now distorted grid
-  for (let i = 0; i < gridSize; i++) {
-    var vizRawsDiv = document.createElement("div");
-    vizRawsDiv.className = "vizRawsDiv";
-    vizCellDivParent.appendChild(vizRawsDiv);
-    for (let j = 0; j < gridSize; j++) {
-      var vizCell = document.createElement("div");
-      vizCell.className = "vizCell";
-      vizRawsDiv.appendChild(vizCell);
-      //cell sized in viz grid
-      let cellDims =
-        (document.documentElement.clientWidth / gridSize / 4).toString() + "px";
-      vizCell.style.width = cellDims;
-      vizCell.style.height = cellDims;
-
-      // get the divs to array
-      vizGridArray.push(vizCell);
-    }
-  }
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//color the visual grid base on the web-worker cv analysis
-CVworker.addEventListener(
-  "message",
-  function(e) {
-    pixelColArr = e.data;
-    for (let i = 0; i < vizGridArray.length; i++) {
-      if (pixelColArr[i] == 0) {
-        vizGridArray[i].style.background = "white";
-      } else if (pixelColArr[i] == 1) {
-        vizGridArray[i].style.background = "black";
-      } else {
-        //if color scanning is in the threshold area
-        vizGridArray[i].style.background = "magenta";
-      }
-    }
-  },
-  false
-);
-infoDiv("setting up webworker listener");
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
 function ColorPicker(matrixGridLocArray) {
   infoDiv("starting pixel scanner");
 
@@ -431,7 +377,7 @@ function ColorPicker(matrixGridLocArray) {
       );
     }
     //in every frame, send the scanned colors to web-worker for CV operation
-    CVworker.postMessage(scannedColorsArray);
+    CVworker.postMessage(["pixels", scannedColorsArray]);
 
     //recursively call this method
     requestAnimationFrame(function() {
@@ -439,6 +385,70 @@ function ColorPicker(matrixGridLocArray) {
     });
   }
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+//create viz. grid to show scanning results
+function vizGrid() {
+  //get grid size for viz from settings
+  var gridSize = cityIOdataStruct.header.spatial.ncols * 4;
+
+  // make the grid div parent
+  $("<DIV/>", {
+    id: "vizCellDivParent",
+    class: "vizCellDivParent"
+  }).appendTo("body");
+  //drag-able
+  $("#vizCellDivParent").draggable();
+
+  // make the visual rep of the now distorted grid
+  for (let i = 0; i < gridSize; i++) {
+    var vizRawsDiv = document.createElement("div");
+    vizRawsDiv.className = "vizRawsDiv";
+    vizCellDivParent.appendChild(vizRawsDiv);
+    for (let j = 0; j < gridSize; j++) {
+      var vizCell = document.createElement("div");
+      vizCell.className = "vizCell";
+      vizRawsDiv.appendChild(vizCell);
+      //cell sized in viz grid
+      let cellDims =
+        (document.documentElement.clientWidth / gridSize / 4).toString() + "px";
+      vizCell.style.width = cellDims;
+      vizCell.style.height = cellDims;
+
+      // get the divs to array
+      vizGridArray.push(vizCell);
+    }
+  }
+}
+
+//color the visual grid base on the web-worker cv analysis
+function updateVizGrid() {
+  for (let i = 0; i < vizGridArray.length; i++) {
+    if (pixelColArr[i] == 0) {
+      vizGridArray[i].style.background = "white";
+    } else if (pixelColArr[i] == 1) {
+      vizGridArray[i].style.background = "black";
+    } else {
+      //if color scanning is in the threshold area
+      vizGridArray[i].style.background = "magenta";
+    }
+  }
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Get data back form WEBworker
+infoDiv("setting up webworker listener");
+CVworker.addEventListener(
+  "message",
+  function(e) {
+    //get the WEBwroder msg and use its 1st item for types
+    typesArray = e.data[0];
+    //get the WEBwroder msg and use its 2nd item for viz the grid
+    pixelColArr = e.data[1];
+    updateVizGrid(pixelColArr);
+  },
+  false
+);
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 //cityIO
@@ -456,118 +466,34 @@ function cityIOstop() {
 }
 
 function cityIOpost() {
-  //reset typesArray var
-  typesArray = [];
+  //send to cityIO
+  cityIOdataStruct.grid = typesArray;
 
-  ///////////////////////////////////////////////////////////////////////////
-  ///////////////////////////////////////////////////////////////////////////
-  // THIS SHOULD GO TO WEBWORKER
-  ///////////////////////////////////////////////////////////////////////////
-  ///////////////////////////////////////////////////////////////////////////
+  //get table name from settings
+  let cityIOtableName = cityIOdataStruct.header.name;
+  let cityIOtableUrl =
+    "https://cityio.media.mit.edu/api/table/update/" +
+    cityIOtableName.toString();
 
-  // if new data is back from webworker with colors
-  if (pixelColArr.length > 1) {
-    // find this brick's type using the cv color info
-    // and by matching the 4x4 pixels to known types
-    // run through the 1D list of colors to reshape
-    //this into 4x4 matrices
-    for (
-      let j = 0;
-      j < pixelColArr.length;
-      j += Math.sqrt(pixelColArr.length) * 4
-    ) {
-      // x zero y zero top left going down on y in jumps of 4
-      for (let i = 0; i < Math.sqrt(pixelColArr.length); i = i + 4) {
-        //reshape to lists of 16 bits, or one brick [should be rewritten cleaner ]
-        thisBrick = [
-          //first row
-          pixelColArr[i + j],
-          pixelColArr[i + j + Math.sqrt(pixelColArr.length)],
-          pixelColArr[i + j + Math.sqrt(pixelColArr.length) * 2],
-          pixelColArr[i + j + Math.sqrt(pixelColArr.length) * 3],
-          //second row
-          pixelColArr[i + j + 1],
-          pixelColArr[i + j + 1 + Math.sqrt(pixelColArr.length)],
-          pixelColArr[i + j + 1 + Math.sqrt(pixelColArr.length) * 2],
-          pixelColArr[i + j + 1 + Math.sqrt(pixelColArr.length) * 3],
-          //third row
-          pixelColArr[i + j + 2],
-          pixelColArr[i + j + 2 + Math.sqrt(pixelColArr.length)],
-          pixelColArr[i + j + 2 + Math.sqrt(pixelColArr.length) * 2],
-          pixelColArr[i + j + 2 + Math.sqrt(pixelColArr.length) * 3],
-          //forth row
-          pixelColArr[i + j + 3],
-          pixelColArr[i + j + 3 + Math.sqrt(pixelColArr.length)],
-          pixelColArr[i + j + 3 + Math.sqrt(pixelColArr.length) * 2],
-          pixelColArr[i + j + 3 + Math.sqrt(pixelColArr.length) * 3]
-        ].toString();
-        //avoid new lines and commas for clear list
-        thisBrick = thisBrick.replace(/,/g, "");
-
-        //find the type for this bricks pattern in 'Codes'
-        typesArray.push(
-          cityIOtableSettings.objects.types[
-            cityIOtableSettings.objects.codes.indexOf(thisBrick)
-          ]
-        );
-      }
-    }
-
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
-
-    //send to cityIO
-    cityIOtableSettings.grid = typesArray;
-
-    //get table name from settings
-    let cityIOtableName = cityIOtableSettings.header.name;
-    let cityIOtableUrl =
-      "https://cityio.media.mit.edu/api/table/update/" +
-      cityIOtableName.toString();
-
-    fetch(cityIOtableUrl, {
-      method: "POST",
-      mode: "no-cors", // fix cors issue
-      body: JSON.stringify(cityIOtableSettings)
-    })
-      .then(
-        response => handleErrors(response),
-        infoDiv(
-          "OK! sent to cityIO for table '" +
-            cityIOtableName +
-            "' at " +
-            timeNow()
-        )
-      )
-      .catch(error => infoDiv(error));
-
-    function handleErrors(response) {
-      if (response.ok) {
-        infoDiv("cityIO response: " + response.ok);
-      }
-      return response;
-    }
-  }
-
-  /* AJAX method 
-  async function postCityIO(cityIOtableUrl) {
-    $.ajax({
-      url: cityIOtableUrl,
-      type: "POST",
-      data: JSON.stringify(cityIOstruct),
-      headers: {
-        "Access-Control-Allow-Origin": "*"
-      },
-      processData: false,
-      contentType: "application/json; charset=UTF-8",
-      complete: infoDiv(
+  fetch(cityIOtableUrl, {
+    method: "POST",
+    mode: "no-cors", // fix cors issue
+    body: JSON.stringify(cityIOdataStruct)
+  })
+    .then(
+      response => handleErrors(response),
+      infoDiv(
         "OK! sent to cityIO for table '" + cityIOtableName + "' at " + timeNow()
       )
-    });
+    )
+    .catch(error => infoDiv(error));
+
+  function handleErrors(response) {
+    if (response.ok) {
+      infoDiv("cityIO response: " + response.ok);
+    }
+    return response;
   }
-  */
 
   //calc this time
   function timeNow() {
