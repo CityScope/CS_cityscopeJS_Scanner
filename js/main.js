@@ -8,6 +8,25 @@ CityScopeJS -- decoding 2d array of black and white lego bricks and sending to r
 "alumniOf": "MIT", "url": "http://arielnoyman.com", 
 "https://www.linkedin.com/", "http://twitter.com/relno",
 https://github.com/RELNO]
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+{{ CityScopeJS }}
+Copyright (C) {{ 2018 }}  {{ Ariel Noyman }}
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 */
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -16,9 +35,6 @@ https://github.com/RELNO]
 
 // web-worker
 const CVworker = new Worker("js/CVwebworker.js");
-
-// grid pixels size var
-var gridSize = 40;
 
 // POST to cityIO rate in MS
 var sendRate = 1000;
@@ -56,12 +72,6 @@ var svgCDN = "http://www.w3.org/2000/svg";
 ///////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////
-//default table name for cityIO
-cityIOtableName = "TEST";
-
-//table location in the world
-cityIOtableLat = 0;
-cityIOtableLon = 0;
 
 var cityIOtableSettings;
 
@@ -79,13 +89,13 @@ async function start() {
   //call the media setup method at start
   setupMedia();
   //make the feedback grid viz
-  vizGrid();
+  // vizGrid();
   //make the UI
   UI();
   //send to cityIO
   cityIOinit(sendRate);
 
-  //On load, load settings from localStorage if exists
+  //if exists on load than load settings from localStorage
   if (loadSettings()) {
     infoDiv("found keystoning setup >>");
     infoDiv("...Loading prev. keystoning");
@@ -218,6 +228,15 @@ function brightnessCanvas(value, canvas) {
 
 //create the scanning transposed matrix
 function MatrixTransform(dstCorners) {
+  // grid pixels size from settings
+  var gridSize = cityIOtableSettings.header.spatial.ncols * 4;
+  infoDiv(
+    "table size: " +
+      cityIOtableSettings.header.spatial.ncols +
+      " x " +
+      cityIOtableSettings.header.spatial.ncols
+  );
+
   // a function to make an initial array of
   //evenly divided grid points to scan
   function scanArrayMaker() {
@@ -290,9 +309,10 @@ function MatrixTransform(dstCorners) {
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 function vizGrid() {
+  var gridSize = cityIOtableSettings.header.spatial.ncols * 4;
+
   // make the grid div parent
   $("<DIV/>", {
     id: "vizCellDivParent",
@@ -498,6 +518,8 @@ function cityIOpost() {
     //send to cityIO
     cityIOtableSettings.grid = typesArray;
 
+    //get table name from settings
+    let cityIOtableName = cityIOtableSettings.header.name;
     let cityIOtableUrl =
       "https://cityio.media.mit.edu/api/table/update/" +
       cityIOtableName.toString();
@@ -700,52 +722,12 @@ function UI() {
   parm = {
     mirror: false,
     brightness: 0,
-    cityIO: false,
     keySt: false,
-    tableName: cityIOtableName,
-    tableLAT: "42.360357",
-    tableLON: "-71.087264",
     sendRate: 1000,
     fe: function() {
       window.open("https://cityio.media.mit.edu/", "_blank");
     }
   };
-
-  //cityIO table name
-  gui
-    .add(parm, "tableName")
-    .name("table name")
-    .onFinishChange(function(e) {
-      //delete old table name before making a new one
-      //to keep Yasushi happy
-      fetch(
-        "https://cityio.media.mit.edu/api/table/clear/" +
-          cityIOtableName.toString(),
-        {
-          method: "GET",
-          mode: "no-cors" // fix cors issue
-        }
-      );
-      infoDiv("cityIO table name is now: " + e);
-      //get the new table name
-      cityIOtableName = e;
-    });
-
-  //cityIO table LAT
-  gui
-    .add(parm, "tableLAT")
-    .name("table Latitude")
-    .onFinishChange(function(e) {
-      cityIOstruct.header.spatial.latitude = e;
-    });
-
-  //cityIO table LAT
-  gui
-    .add(parm, "tableLON")
-    .name("table Longitude")
-    .onFinishChange(function(e) {
-      cityIOstruct.header.spatial.longitude = e;
-    });
 
   //cityio send rate
   gui

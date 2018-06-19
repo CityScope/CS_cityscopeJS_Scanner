@@ -53,21 +53,20 @@
     ]
   },
   "header": {
-    "name": "TEST",
+    "name": "CityScopeJS",
     "meta": {
-      "timestamp": 1528931550,
       "api_ver": 2
     },
     "longName": "TactileScopeMatrixCity",
     "block": ["type"],
     "spatial": {
-      "ncols": 20,
-      "nrows": 20,
-      "physical_longitude": -71.0894527,
-      "physical_latitude": 42.360357,
-      "latitude": 42.360357,
+      "ncols": 10,
+      "nrows": 10,
+      "physical_longitude": 0,
+      "physical_latitude": 0,
+      "latitude": 0,
       "cellsize": 10,
-      "longitude": -71.087264
+      "longitude": 0
     },
     "owner": {
       "name": "Ariel Noyman",
