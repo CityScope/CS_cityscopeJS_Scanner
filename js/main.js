@@ -313,6 +313,7 @@ function MatrixTransform(dstCorners) {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 function vizGrid() {
+  //get grid size for viz from settings
   var gridSize = cityIOtableSettings.header.spatial.ncols * 4;
 
   // make the grid div parent
@@ -657,7 +658,7 @@ function keystoneUI(bool, gui) {
       // when 2x4 locations were added
       if (clickArray.length == 8) {
         MatrixTransform(clickArray);
-        //save these keystone points
+        //save these keystone points to local storage
         saveSettings(clickArray);
         //reset the clicks array
         clickArray = [];
