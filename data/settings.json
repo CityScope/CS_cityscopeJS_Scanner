@@ -57,15 +57,16 @@
     "meta": {
       "api_ver": 2
     },
-    "longName": "TactileScopeMatrixCity",
+    "longName":
+      "°º¤ø,¸¸,ø¤º°`{{TactileScopeMatrixCity}}`°º¤ø,¸,ø¤°º¤ø,¸¸,ø¤º°`°º¤ø,¸",
     "block": ["type"],
     "spatial": {
       "ncols": 10,
       "nrows": 10,
       "physical_longitude": 0,
       "physical_latitude": 0,
-      "latitude": 1,
-      "longitude": 1,
+      "latitude": 42.3608,
+      "longitude": -71.08768,
       "cellsize": 10
     },
     "owner": {
