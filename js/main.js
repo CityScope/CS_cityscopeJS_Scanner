@@ -89,7 +89,7 @@ async function start() {
   //call the media setup method at start
   setupMedia();
   //make the feedback grid viz
-  // vizGrid();
+  vizGrid();
   //make the UI
   UI();
   //send to cityIO
@@ -100,6 +100,8 @@ async function start() {
     infoDiv("found keystoning setup >>");
     infoDiv("...Loading prev. keystoning");
     MatrixTransform(loadSettings());
+  } else {
+    infoDiv(">> Start by setting up keystone");
   }
 }
 
@@ -536,8 +538,7 @@ function cityIOpost() {
             cityIOtableName +
             "' at " +
             timeNow()
-        ),
-        console.log(cityIOtableSettings)
+        )
       )
       .catch(error => infoDiv(error));
 
