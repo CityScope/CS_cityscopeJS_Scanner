@@ -36,7 +36,6 @@ a {
 .webcamCanvas {
   z-index: -1;
   box-shadow: 5px 5px 35px rgb(0, 0, 0);
-  /* cursor: all-scroll; */
 }
 
 .info {
@@ -82,15 +81,16 @@ a {
   background-color: rgba(0, 0, 0, 0.5);
 }
 
+.dg.ac {
+  z-index: 1000 !important;
+}
+
 .vizRawsDiv {
   float: left;
 }
 
 .vizCell {
   position: relative;
-  /* margin:1px; */
+  margin: 1px;
   pointer-events: none;
-  /* border: 1px solid rgba(0, 0, 0, 0.603); */
-  /* width: 0.5rem;
-    height: 0.5rem;  */
 }

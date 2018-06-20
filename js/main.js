@@ -27,7 +27,7 @@ CityScopeJS -- decoding 2d array of black and white LEGO bricks, parsing and sen
 "https://www.linkedin.com/", "http://twitter.com/relno",
 https://github.com/RELNO]
 
-*/ ////////////////////////////////////////////////////////////////////////////////////////////////////////
+*/ ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Global VARS
@@ -87,6 +87,7 @@ async function start() {
     cityIOdataStruct = await loadSettingsFile(
       "./data/" + localStorage.getItem("settings_path")
     );
+    console.log(cityIOdataStruct);
   } else {
     infoDiv("getting local JSON with table data");
     cityIOdataStruct = await loadSettingsFile("./data/settings.json");
@@ -142,8 +143,8 @@ function setupCanvs() {
   webcamCanvas.id = "webcamCanvas";
   webcamCanvas.className = "webcamCanvas";
   //org. 960x720
-  webcamCanvas.width = 800;
-  webcamCanvas.height = 800;
+  webcamCanvas.width = window.innerHeight * 1.25;
+  webcamCanvas.height = window.innerHeight * 1.25 * 0.75;
   webcamCanvas.style.zIndex = 0;
   webcamCanvas.style.position = "absolute";
   webcamCanvas.style.border = "1px solid";
@@ -657,17 +658,24 @@ function UI() {
     mirror: false,
     brightness: 0,
     keySt: false,
-    sendRate: 1000,
     getJson: function() {
       document.getElementById("my_file").click();
       $("#my_file").change(function(e) {
         onChange(e);
       });
     },
-
+    sendRate: 1000,
     //test on cityIO
     fe: function() {
       window.open("https://cityio.media.mit.edu/", "_blank");
+    },
+
+    rawCityIO: function() {
+      window.open(
+        "https://cityio.media.mit.edu/api/table/" +
+          cityIOdataStruct.header.name,
+        "_blank"
+      );
     }
   };
 
@@ -712,7 +720,9 @@ function UI() {
   //upload settings
   gui.add(parm, "getJson").name("Upload Settings[JSON]");
   //cityIO link
-  gui.add(parm, "fe").name("Test in cityIO >>");
+  gui.add(parm, "rawCityIO").name("View raw API");
+  //cityIO link
+  gui.add(parm, "fe").name("View in cityIO");
 
   ///JSON uplaod functinos
 
