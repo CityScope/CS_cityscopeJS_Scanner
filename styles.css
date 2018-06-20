@@ -1,88 +1,96 @@
- html {
-    height: 100%;
+html {
+  height: 100%;
 }
+
+#my_file {
+  display: none;
+}
+
 body {
-    height: 100%;
-    margin: 0;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    overflow: hidden;
-    background: linear-gradient(115deg, rgba(2,0,36,1) 47%, rgba(121,9,114,1) 97%);
-    font-family:  Helvetica, sans-serif;
-    font-weight: 700;
-    font-size: 1vw;
-    color: white;
+  height: 100%;
+  margin: 0;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  overflow: hidden;
+  background: linear-gradient(
+    115deg,
+    rgba(2, 0, 36, 1) 47%,
+    rgba(121, 9, 114, 1) 97%
+  );
+  font-family: Helvetica, sans-serif;
+  font-weight: 700;
+  font-size: 1vw;
+  color: white;
 }
 a {
-    color: white;
+  color: white;
 }
 
 .logo {
-    top: 80%;
-    left: 80%;
-    position: fixed;
-    z-index: 1000;
-  }
-
-.webcamCanvas{
-    z-index: -1;
-    box-shadow: 5px 5px 35px rgb(0, 0, 0);
-    /* cursor: all-scroll; */
-
+  top: 80%;
+  left: 80%;
+  position: fixed;
+  z-index: 1000;
 }
 
-.info{
-    z-index: 10;
-    font-family:  Helvetica, sans-serif;
-    font-weight: 300;
-    position: fixed;
-    padding: 0.5rem;
-    left: 80vw;
-    top: 20rem;
-    height: 10rem;
-    max-width: 300px;
-    overflow-y: auto;
-    font-size: 0.75rem;
-    color: white;
-    box-shadow: 5px 5px 20px rgb(0, 0, 0);
-    cursor: all-scroll;
-    border: 3px solid black;
-    text-shadow: 1px 1px 1px rgb(0, 0, 0);
-    background-color: rgba(0, 0, 0, 0.5) ;
+.webcamCanvas {
+  z-index: -1;
+  box-shadow: 5px 5px 35px rgb(0, 0, 0);
+  /* cursor: all-scroll; */
 }
 
-.transformedMatrix{
-    border: 1px solid rgb(255, 0, 255);
-    width: 1px;
-    height: 1px;
-    position: fixed;
+.info {
+  z-index: 10;
+  font-family: Helvetica, sans-serif;
+  font-weight: 300;
+  position: fixed;
+  padding: 0.5rem;
+  left: 80vw;
+  top: 20rem;
+  height: 10rem;
+  max-width: 300px;
+  overflow-y: auto;
+  font-size: 0.75rem;
+  color: white;
+  box-shadow: 5px 5px 20px rgb(0, 0, 0);
+  cursor: all-scroll;
+  border: 3px solid black;
+  text-shadow: 1px 1px 1px rgb(0, 0, 0);
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
-.svgDiv{
-    position: fixed;
-    z-index: 1;
+.transformedMatrix {
+  border: 1px solid rgb(255, 0, 255);
+  width: 1px;
+  height: 1px;
+  position: fixed;
 }
 
-.vizCellDivParent{
-    z-index: 9;
-    position: fixed;
-    left: 10vw;
-    top: 20rem;
-    box-shadow: 5px 5px 20px rgb(0, 0, 0);
-    cursor: all-scroll;
-    border: 3px solid black;
-    background-color: rgba(0, 0, 0, 0.5);
+.svgDiv {
+  position: fixed;
+  z-index: 1;
 }
 
-.vizRawsDiv{
-    float: left;
+.vizCellDivParent {
+  z-index: 9;
+  position: fixed;
+  left: 10vw;
+  top: 20rem;
+  box-shadow: 5px 5px 20px rgb(0, 0, 0);
+  cursor: all-scroll;
+  border: 3px solid black;
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
-.vizCell{
-    position: relative;
-    /* margin:1px; */
-    pointer-events: none;
-    /* border: 1px solid rgba(0, 0, 0, 0.603); */
-    /* width: 0.5rem;
+.vizRawsDiv {
+  float: left;
+}
+
+.vizCell {
+  position: relative;
+  /* margin:1px; */
+  pointer-events: none;
+  /* border: 1px solid rgba(0, 0, 0, 0.603); */
+  /* width: 0.5rem;
     height: 0.5rem;  */
 }

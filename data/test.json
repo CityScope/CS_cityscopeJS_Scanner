@@ -1,0 +1,36 @@
+{
+  "grid": [],
+  "id": "",
+  "objects": {
+    "matrixMapping": [],
+    "types": ["type_0", "type_1", "type_2", "type_3", "type_4"],
+    "codes": [
+      "1000000000000000",
+      "0100000000000000",
+      "0010000000000000",
+      "0001000000000000",
+      "0000100000000000"
+    ]
+  },
+  "header": {
+    "name": "TEST",
+    "meta": {
+      "api_ver": 2
+    },
+    "longName": "-TEST-",
+    "block": ["type"],
+    "spatial": {
+      "ncols": 3,
+      "nrows": 3,
+      "physical_longitude": 0,
+      "physical_latitude": 0,
+      "latitude": 50,
+      "longitude": 50,
+      "cellsize": 10
+    },
+    "owner": {
+      "name": "Ariel Noyman",
+      "institute": "City Science MIT Media Lab"
+    }
+  }
+}

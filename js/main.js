@@ -81,9 +81,16 @@ var cityIOdataStruct;
 
 async function start() {
   infoDiv("starting CityScopeJS applet");
+  infoDiv("[?] Trying to find settings");
 
-  infoDiv("getting JSON with table data");
-  cityIOdataStruct = await getSettings("./data/settings.json");
+  if (localStorage.getItem("settings_path")) {
+    cityIOdataStruct = await loadSettingsFile(
+      "./data/" + localStorage.getItem("settings_path")
+    );
+  } else {
+    infoDiv("getting local JSON with table data");
+    cityIOdataStruct = await loadSettingsFile("./data/settings.json");
+  }
   //send the table settings once to WW for init
   CVworker.postMessage(["cityIOsetup", cityIOdataStruct]);
   //setup the scene
@@ -98,10 +105,9 @@ async function start() {
   cityIOinit(sendRate);
 
   //if exists on load than load settings from localStorage
-  if (loadSettings()) {
-    infoDiv("found keystoning setup >>");
-    infoDiv("...Loading prev. keystoning");
-    MatrixTransform(loadSettings());
+  if (loadSettings("CityScopeJS_keystone")) {
+    infoDiv("found keystoning setup...Loading prev. keystoning");
+    MatrixTransform(loadSettings("CityScopeJS_keystone"));
   } else {
     infoDiv(">> Start by setting up keystone");
   }
@@ -113,7 +119,7 @@ start();
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //get table settings from file
-async function getSettings(url) {
+async function loadSettingsFile(url) {
   // GET method
   return $.ajax({
     url: url,
@@ -585,7 +591,7 @@ function keystoneUI(bool, gui) {
       if (clickArray.length == 8) {
         MatrixTransform(clickArray);
         //save these keystone points to local storage
-        saveSettings(clickArray);
+        saveSettings("CityScopeJS_keystone", clickArray);
         //reset the clicks array
         clickArray = [];
         //turn off keystone toggle in gui
@@ -600,18 +606,18 @@ function keystoneUI(bool, gui) {
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
-//save keystone
+//save/load local storage
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-var saveSettings = function(clickArray) {
-  infoDiv("saving keystone to localStorage in 'CityScopeJS_keystone' key");
+var saveSettings = function(key, data) {
+  infoDiv("saving to localStorage in " + key + "key");
   //save to local storage
-  localStorage.setItem("CityScopeJS_keystone", JSON.stringify(clickArray));
+  localStorage.setItem(key, JSON.stringify(data));
 };
 //load settings if exist
-var loadSettings = function() {
-  if (localStorage.getItem("CityScopeJS_keystone")) {
-    var data = JSON.parse(localStorage.getItem("CityScopeJS_keystone"));
+var loadSettings = function(key) {
+  if (localStorage.getItem(key)) {
+    var data = JSON.parse(localStorage.getItem(key));
     return data;
   }
 };
@@ -645,13 +651,21 @@ function infoDiv(text) {
 // GUI
 function UI() {
   // dat.GUI
-  var gui = new dat.GUI({ width: 300 });
+  var gui = new dat.GUI({ width: 400 });
 
   parm = {
     mirror: false,
     brightness: 0,
     keySt: false,
     sendRate: 1000,
+    getJson: function() {
+      document.getElementById("my_file").click();
+      $("#my_file").change(function(e) {
+        onChange(e);
+      });
+    },
+
+    //test on cityIO
     fe: function() {
       window.open("https://cityio.media.mit.edu/", "_blank");
     }
@@ -695,6 +709,16 @@ function UI() {
     .onChange(function(bool) {
       keystoneUI(bool, gui);
     });
-
+  //upload settings
+  gui.add(parm, "getJson").name("Upload Settings[JSON]");
+  //cityIO link
   gui.add(parm, "fe").name("Test in cityIO >>");
+
+  ///JSON uplaod functinos
+
+  function onChange(event) {
+    console.log(event);
+    localStorage.setItem("settings_path", event.currentTarget.files["0"].name);
+    location.reload();
+  }
 }
