@@ -54,9 +54,6 @@ var brightness = 0;
 //make vid canvas
 var webcamCanvas = document.createElement("canvas");
 
-//another canvas for magnifying glass
-var magGlassCanvas = document.createElement("canvas");
-
 //get main canvas context for scanning
 var vidCanvas2dContext = webcamCanvas.getContext("2d");
 
@@ -87,32 +84,6 @@ async function start() {
   setupMedia();
   //make the UI
   UI();
-}
-
-///JSON uploadd functinos
-function onFileLoad(l) {
-  infoDiv("Setting JSON file...Loading...");
-  var file = event.target.files[0];
-  var reader = new FileReader();
-  let res = reader.readAsText(file);
-  reader.onload = function(e) {
-    res = e.target.result;
-    cityIOdataStruct = JSON.parse(res);
-    console.log(cityIOdataStruct);
-    //send the table settings once to WW for init
-    CVworker.postMessage(["cityIOsetup", cityIOdataStruct]);
-    // than, if exists on load than load settings from localStorage
-    if (loadSettings("CityScopeJS_keystone")) {
-      infoDiv("found keystoning setup...Loading prev. keystoning");
-      MatrixTransform(loadSettings("CityScopeJS_keystone"));
-      //viz feedback
-      vizGrid();
-      //send to cityIO
-      cityIOinit(sendRate);
-    } else {
-      infoDiv(">> Start by setting up keystone");
-    }
-  };
 }
 
 start();
@@ -514,29 +485,73 @@ function cityIOpost() {
 ///////////////////////////////////////UI + INTERACTION /////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function keystoneUI(bool, gui) {
-  if (bool) {
-    document.addEventListener("click", mouseKeystone);
-    infoDiv(
-      "starting keystone" +
-        "<p>" +
-        "NOTE: make sure to select the croners of the scanned area!"
-    );
-    //clear prev. svg contanier
-    $(svgKeystone).empty();
+function keystoneUI() {
+  infoDiv(
+    "starting keystone" +
+      "<p>" +
+      "NOTE: make sure to select the croners of the scanned area in this order: TOP-LEFT->TOP-RIGHT->BOTTOM-LEFT->BOTTOM-RIGHT"
+  );
+  magGlass("on");
+  let clickArray = [];
 
-    // mag. glass [WIP - should remove when off]
-    document.body.appendChild(magGlassCanvas);
+  //clear prev. svg contanier
+  $(svgKeystone).empty();
+
+  //collect 4 mouse clicks as corners of keystone
+  document.addEventListener("click", mouseKeystone);
+
+  // react to mouse events
+  function mouseKeystone(e) {
+    // only collect clicks that are in the canvas area
+    if (e.x < webcamCanvas.width && e.y < webcamCanvas.height) {
+      //pop. array of clicks
+      clickArray.push(e.x, e.y);
+      infoDiv(
+        "Mouse click " + clickArray.length / 2 + " at " + e.x + ", " + e.y
+      );
+      //viz points with svg
+      var keystonePt = document.createElementNS(svgCDN, "circle");
+      keystonePt.setAttributeNS(null, "cx", e.x);
+      keystonePt.setAttributeNS(null, "cy", e.y);
+      keystonePt.setAttributeNS(null, "r", 8);
+      keystonePt.setAttributeNS(null, "stroke", "#00b7f9");
+      keystonePt.setAttributeNS(null, "stroke-width", "2");
+      keystonePt.setAttributeNS(null, "fill-opacity", "0");
+      svgKeystone.appendChild(keystonePt);
+      // when 2x4 locations were added
+      if (clickArray.length >= 8) {
+        magGlass("off");
+        //save these keystone points to local storage
+        saveSettings("CityScopeJS_keystone", clickArray);
+        //reset the clicks array
+        clickArray = [];
+        // and stop keystone mouse clicks
+        document.removeEventListener("click", mouseKeystone);
+      }
+    }
+  }
+}
+
+function magGlass(bool) {
+  //another canvas for magnifying glass
+  var magGlassCanvas = document.createElement("canvas");
+  // mag. glass [WIP - should remove when off]
+  document.body.appendChild(magGlassCanvas);
+  if (bool == "off") {
+    console.log("off");
+    ctx = canvas.getContext("magGlassCanvas");
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    //remove whrn off
+  } else {
     magGlassCanvas.id = "magGlass";
     magGlassCanvas.className = "magGlassCanvas";
-    magWid = magGlassCanvas.width = 100;
+    let magWid = (magGlassCanvas.width = 100);
     magGlassCanvas.height = magWid;
     magGlassCanvas.style.zIndex = 100;
-    var magGlassCtx = magGlassCanvas.getContext("2d");
+    let magGlassCtx = magGlassCanvas.getContext("2d");
     //
     document.addEventListener("mousemove", function(e) {
       $("html,body").css("cursor", "crosshair");
-      // console.log(e.pageX, e.pageY);
       magGlassCtx.clearRect(0, 0, magWid, magWid);
       magGlassCtx.drawImage(
         webcamCanvas,
@@ -559,51 +574,6 @@ function keystoneUI(bool, gui) {
     document.addEventListener("mouseout", function() {
       magGlassCanvas.style.display = "none";
     });
-
-    //make room by hiding gui
-    gui.close();
-  } else {
-    document.removeEventListener("click", mouseKeystone);
-    magGlassCanvas.style.display = "none";
-  }
-  //flip bool
-  bool = !bool;
-  //collect 4 mouse clicks as corners of keystone
-  let clickArray = [];
-
-  // react to mouse events
-  function mouseKeystone(e) {
-    // only collect clicks that are in the canvas area
-    if (e.x < webcamCanvas.width && e.y < webcamCanvas.height) {
-      //pop. array of clicks
-      clickArray.push(e.x, e.y);
-      infoDiv(
-        "Mouse click " + clickArray.length / 2 + " at " + e.x + ", " + e.y
-      );
-      //viz points with svg
-      var keystonePt = document.createElementNS(svgCDN, "circle");
-      keystonePt.setAttributeNS(null, "cx", e.x);
-      keystonePt.setAttributeNS(null, "cy", e.y);
-      keystonePt.setAttributeNS(null, "r", 8);
-      keystonePt.setAttributeNS(null, "stroke", "#00b7f9");
-      keystonePt.setAttributeNS(null, "stroke-width", "2");
-      keystonePt.setAttributeNS(null, "fill-opacity", "0");
-      svgKeystone.appendChild(keystonePt);
-      // when 2x4 locations were added
-      if (clickArray.length == 8) {
-        MatrixTransform(clickArray);
-        //save these keystone points to local storage
-        saveSettings("CityScopeJS_keystone", clickArray);
-        //reset the clicks array
-        clickArray = [];
-        //turn off keystone toggle in gui
-        parm["keySt"] = false;
-        // and stop keystone mouse clicks
-        document.removeEventListener("click", mouseKeystone);
-        //open gui when done
-        gui.open();
-      }
-    }
   }
 }
 
@@ -658,7 +628,9 @@ function UI() {
   parm = {
     mirror: false,
     brightness: 0,
-    keySt: false,
+    keyStone: function() {
+      keystoneUI();
+    },
     getJson: function() {
       document.getElementById("my_file").click();
       $("#my_file").change(function(e) {
@@ -704,12 +676,9 @@ function UI() {
 
   // keystone toggle
   calibrateFolder
-    .add(parm, "keySt")
+    .add(parm, "keyStone")
     .name("toggle Keystoning")
-    .listen()
-    .onChange(function(bool) {
-      keystoneUI(bool, gui);
-    });
+    .listen();
 
   var cityioFolder = gui.addFolder("cityIO");
 
@@ -724,9 +693,37 @@ function UI() {
       cityIOinit(sendRate);
     });
   //upload settings
-  gui.add(parm, "getJson").name("Upload Settings [JSON]");
+  gui.add(parm, "getJson").name("Load settings file [JSON]");
   //cityIO link
   cityioFolder.add(parm, "rawCityIO").name("View raw API");
   //cityIO link
   cityioFolder.add(parm, "fe").name("View in cityIO dataviz");
+}
+
+///JSON loadd functinos
+function onFileLoad(l) {
+  infoDiv("Setting JSON file...Loading...");
+  var file = event.target.files[0];
+  var reader = new FileReader();
+  let res = reader.readAsText(file);
+  reader.onload = function(e) {
+    res = e.target.result;
+    cityIOdataStruct = JSON.parse(res);
+    infoDiv("found settings [JSON]...");
+
+    console.log(cityIOdataStruct);
+    //send the table settings once to WW for init
+    CVworker.postMessage(["cityIOsetup", cityIOdataStruct]);
+    // than, if exists, load settings from localStorage
+    if (loadSettings("CityScopeJS_keystone")) {
+      infoDiv("found keystoning setup...Loading prev. keystoning");
+      MatrixTransform(loadSettings("CityScopeJS_keystone"));
+      //and make div for viz feedback
+      vizGrid();
+    } else {
+      infoDiv(">> Start by setting up keystone");
+    }
+    //at last, start sending to cityIO
+    cityIOinit(sendRate);
+  };
 }

@@ -39,8 +39,8 @@ self.addEventListener(
     if (msg.data[0] == "pixels") {
       CV(msg.data[1]);
     } else if (msg.data[0] === "cityIOsetup") {
-      console.log("cityIOdataStruct");
       cityIOdataStruct = msg.data[1];
+      console.log("webWorker got settings for " + cityIOdataStruct.header.name);
     }
   },
   false
