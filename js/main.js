@@ -77,36 +77,48 @@ var cityIOdataStruct;
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 async function start() {
+  //init info div
+  infoDiv();
   infoDiv("starting CityScopeJS applet");
+  //make the UI
+  UI();
   //setup the scene
   setupCanvs();
   //call the media setup method at start
   setupMedia();
-  //make the UI
-  UI();
+}
+
+///JSON loadd functinos
+function onFileLoad(l) {
+  infoDiv("Setting JSON file...Loading...");
+  var file = event.target.files[0];
+  var reader = new FileReader();
+  let res = reader.readAsText(file);
+  reader.onload = function(e) {
+    res = e.target.result;
+    cityIOdataStruct = JSON.parse(res);
+    infoDiv("found settings [JSON]...");
+
+    console.log(cityIOdataStruct);
+    //send the table settings once to WW for init
+    CVworker.postMessage(["cityIOsetup", cityIOdataStruct]);
+    // than, if exists, load settings from localStorage
+    if (loadSettings("CityScopeJS_keystone")) {
+      infoDiv("found keystoning setup...Loading prev. keystoning");
+      MatrixTransform(loadSettings("CityScopeJS_keystone"));
+      //and make div for viz feedback
+    } else {
+      infoDiv(">> Start by setting up keystone");
+      keystoneUI();
+    }
+    //make viz grid
+    // vizGrid();
+    //at last, start sending to cityIO
+    cityIOinit(sendRate);
+  };
 }
 
 start();
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//get table settings from file
-async function loadSettingsFile(url) {
-  // GET method
-  return $.ajax({
-    url: url,
-    type: "GET",
-    success: function(d) {
-      return d;
-    },
-    // or error
-    error: function(e) {
-      console.log("GET error: " + e.status.toString());
-      infoDiv("GET error: " + e.status.toString());
-    }
-  });
-}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 // WEBCAM & MEDIA SETUP
@@ -523,6 +535,8 @@ function keystoneUI() {
         magGlass("off");
         //save these keystone points to local storage
         saveSettings("CityScopeJS_keystone", clickArray);
+        MatrixTransform(loadSettings("CityScopeJS_keystone"));
+
         //reset the clicks array
         clickArray = [];
         // and stop keystone mouse clicks
@@ -628,9 +642,6 @@ function UI() {
   parm = {
     mirror: false,
     brightness: 0,
-    keyStone: function() {
-      keystoneUI();
-    },
     getJson: function() {
       document.getElementById("my_file").click();
       $("#my_file").change(function(e) {
@@ -649,12 +660,18 @@ function UI() {
           cityIOdataStruct.header.name,
         "_blank"
       );
+    },
+    reset: function() {
+      localStorage.clear();
+      infoDiv("clearing and reseting");
+      location.reload(true);
     }
   };
 
+  //upload settings
+  gui.add(parm, "getJson").name("Load settings file [JSON]");
   //new calibrate folder
-  var calibrateFolder = gui.addFolder("calibrate");
-
+  var calibrateFolder = gui.addFolder("webcam");
   // webcam mirror
   calibrateFolder
     .add(parm, "mirror")
@@ -674,12 +691,6 @@ function UI() {
       brightnessCanvas(i, vidCanvas2dContext);
     });
 
-  // keystone toggle
-  calibrateFolder
-    .add(parm, "keyStone")
-    .name("toggle Keystoning")
-    .listen();
-
   var cityioFolder = gui.addFolder("cityIO");
 
   //cityio send rate
@@ -692,38 +703,11 @@ function UI() {
       cityIOstop();
       cityIOinit(sendRate);
     });
-  //upload settings
-  gui.add(parm, "getJson").name("Load settings file [JSON]");
+
   //cityIO link
   cityioFolder.add(parm, "rawCityIO").name("View raw API");
   //cityIO link
   cityioFolder.add(parm, "fe").name("View in cityIO dataviz");
-}
 
-///JSON loadd functinos
-function onFileLoad(l) {
-  infoDiv("Setting JSON file...Loading...");
-  var file = event.target.files[0];
-  var reader = new FileReader();
-  let res = reader.readAsText(file);
-  reader.onload = function(e) {
-    res = e.target.result;
-    cityIOdataStruct = JSON.parse(res);
-    infoDiv("found settings [JSON]...");
-
-    console.log(cityIOdataStruct);
-    //send the table settings once to WW for init
-    CVworker.postMessage(["cityIOsetup", cityIOdataStruct]);
-    // than, if exists, load settings from localStorage
-    if (loadSettings("CityScopeJS_keystone")) {
-      infoDiv("found keystoning setup...Loading prev. keystoning");
-      MatrixTransform(loadSettings("CityScopeJS_keystone"));
-      //and make div for viz feedback
-      vizGrid();
-    } else {
-      infoDiv(">> Start by setting up keystone");
-    }
-    //at last, start sending to cityIO
-    cityIOinit(sendRate);
-  };
+  gui.add(parm, "reset").name("Reset and clear Keystone");
 }
