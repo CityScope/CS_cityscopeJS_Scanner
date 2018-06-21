@@ -539,7 +539,7 @@ function magGlass(bool) {
   document.body.appendChild(magGlassCanvas);
   if (bool == "off") {
     console.log("off");
-    ctx = magGlassCanvas.getContext("magGlassCanvas");
+    ctx = magGlassCanvas.getContext("2d");
     ctx.clearRect(0, 0, magGlassCanvas.width, magGlassCanvas.height);
     //remove whrn off
   } else {
