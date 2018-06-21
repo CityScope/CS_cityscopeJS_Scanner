@@ -81,37 +81,38 @@ var cityIOdataStruct;
 
 async function start() {
   infoDiv("starting CityScopeJS applet");
-  infoDiv("[?] Trying to find settings");
-
-  if (localStorage.getItem("settings_path")) {
-    cityIOdataStruct = await loadSettingsFile(
-      "./data/" + localStorage.getItem("settings_path")
-    );
-    console.log(cityIOdataStruct);
-  } else {
-    infoDiv("getting local JSON with table data");
-    cityIOdataStruct = await loadSettingsFile("./data/settings.json");
-  }
-  //send the table settings once to WW for init
-  CVworker.postMessage(["cityIOsetup", cityIOdataStruct]);
   //setup the scene
   setupCanvs();
   //call the media setup method at start
   setupMedia();
-  //viz feedback
-  vizGrid();
   //make the UI
   UI();
-  //send to cityIO
-  cityIOinit(sendRate);
+}
 
-  //if exists on load than load settings from localStorage
-  if (loadSettings("CityScopeJS_keystone")) {
-    infoDiv("found keystoning setup...Loading prev. keystoning");
-    MatrixTransform(loadSettings("CityScopeJS_keystone"));
-  } else {
-    infoDiv(">> Start by setting up keystone");
-  }
+///JSON uploadd functinos
+function onFileLoad(l) {
+  infoDiv("Setting JSON file...Loading...");
+  var file = event.target.files[0];
+  var reader = new FileReader();
+  let res = reader.readAsText(file);
+  reader.onload = function(e) {
+    res = e.target.result;
+    cityIOdataStruct = JSON.parse(res);
+    console.log(cityIOdataStruct);
+    //send the table settings once to WW for init
+    CVworker.postMessage(["cityIOsetup", cityIOdataStruct]);
+    // than, if exists on load than load settings from localStorage
+    if (loadSettings("CityScopeJS_keystone")) {
+      infoDiv("found keystoning setup...Loading prev. keystoning");
+      MatrixTransform(loadSettings("CityScopeJS_keystone"));
+      //viz feedback
+      vizGrid();
+      //send to cityIO
+      cityIOinit(sendRate);
+    } else {
+      infoDiv(">> Start by setting up keystone");
+    }
+  };
 }
 
 start();
@@ -143,8 +144,8 @@ function setupCanvs() {
   webcamCanvas.id = "webcamCanvas";
   webcamCanvas.className = "webcamCanvas";
   //org. 960x720
-  webcamCanvas.width = window.innerHeight * 0.95;
-  webcamCanvas.height = window.innerHeight * 0.95;
+  webcamCanvas.width = Math.floor(window.innerHeight * 0.95);
+  webcamCanvas.height = Math.floor(window.innerHeight * 0.95);
   webcamCanvas.style.zIndex = 0;
   webcamCanvas.style.position = "absolute";
   webcamCanvas.style.border = "1px solid";
@@ -661,7 +662,7 @@ function UI() {
     getJson: function() {
       document.getElementById("my_file").click();
       $("#my_file").change(function(e) {
-        onChange(e);
+        onFileLoad(e);
       });
     },
     sendRate: 1000,
@@ -679,6 +680,7 @@ function UI() {
     }
   };
 
+  //new calibrate folder
   var calibrateFolder = gui.addFolder("calibrate");
 
   // webcam mirror
@@ -722,17 +724,9 @@ function UI() {
       cityIOinit(sendRate);
     });
   //upload settings
-  cityioFolder.add(parm, "getJson").name("Upload Settings [JSON]");
+  gui.add(parm, "getJson").name("Upload Settings [JSON]");
   //cityIO link
   cityioFolder.add(parm, "rawCityIO").name("View raw API");
   //cityIO link
   cityioFolder.add(parm, "fe").name("View in cityIO dataviz");
-
-  ///JSON uplaod functinos
-
-  function onChange(event) {
-    console.log(event);
-    localStorage.setItem("settings_path", event.currentTarget.files["0"].name);
-    location.reload();
-  }
 }
