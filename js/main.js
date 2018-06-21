@@ -489,10 +489,10 @@ function cityIOpost() {
     body: JSON.stringify(cityIOdataStruct)
   })
     .then(
-      response => handleErrors(response),
-      infoDiv(
-        "OK! sent to cityIO for table '" + cityIOtableName + "' at " + timeNow()
-      )
+      response => handleErrors(response)
+      // infoDiv(
+      //   "OK! sent to cityIO for table '" + cityIOtableName + "' at " + timeNow()
+      // )
     )
     .catch(error => infoDiv(error));
 
