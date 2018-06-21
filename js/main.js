@@ -665,6 +665,12 @@ function UI() {
       localStorage.clear();
       infoDiv("clearing and reseting");
       location.reload(true);
+    },
+    settingsExample: function() {
+      window.open(
+        "https://github.com/CityScope/CS_cityscopeJS/blob/master/data/settings.json",
+        "_blank"
+      );
     }
   };
 
@@ -704,6 +710,8 @@ function UI() {
       cityIOinit(sendRate);
     });
 
+  //link to raw settings
+  cityioFolder.add(parm, "settingsExample").name("Get settings example");
   //cityIO link
   cityioFolder.add(parm, "rawCityIO").name("View raw API");
   //cityIO link
