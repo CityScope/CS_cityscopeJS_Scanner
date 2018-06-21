@@ -20,7 +20,6 @@ body {
   font-family: Helvetica, sans-serif;
   font-weight: 700;
   font-size: 1vw;
-  color: white;
 }
 a {
   color: white;
@@ -35,7 +34,7 @@ a {
 
 .webcamCanvas {
   z-index: -1;
-  box-shadow: 5px 5px 35px rgb(0, 0, 0);
+  /* box-shadow: 5px 5px 35px rgb(0, 0, 0); */
 }
 
 .info {
@@ -91,6 +90,6 @@ a {
 
 .vizCell {
   position: relative;
-  margin: 1px;
+  /* margin: 1px; */
   pointer-events: none;
 }

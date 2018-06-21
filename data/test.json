@@ -3,13 +3,23 @@
   "id": "",
   "objects": {
     "matrixMapping": [],
-    "types": ["type_0", "type_1", "type_2", "type_3", "type_4"],
+    "types": [
+      "type_0",
+      "type_1",
+      "type_2",
+      "type_3",
+      "type_4",
+      "BLACK",
+      "WHITE"
+    ],
     "codes": [
       "1000000000000000",
       "0100000000000000",
       "0010000000000000",
       "0001000000000000",
-      "0000100000000000"
+      "0000100000000000",
+      "1111111111111111",
+      "0000000000000000"
     ]
   },
   "header": {
@@ -20,8 +30,8 @@
     "longName": "-TEST-",
     "block": ["type"],
     "spatial": {
-      "ncols": 3,
-      "nrows": 3,
+      "ncols": 20,
+      "nrows": 20,
       "physical_longitude": 0,
       "physical_latitude": 0,
       "latitude": 50,
