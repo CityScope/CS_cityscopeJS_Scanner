@@ -539,8 +539,8 @@ function magGlass(bool) {
   document.body.appendChild(magGlassCanvas);
   if (bool == "off") {
     console.log("off");
-    ctx = canvas.getContext("magGlassCanvas");
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx = magGlassCanvas.getContext("magGlassCanvas");
+    ctx.clearRect(0, 0, magGlassCanvas.width, magGlassCanvas.height);
     //remove whrn off
   } else {
     magGlassCanvas.id = "magGlass";
