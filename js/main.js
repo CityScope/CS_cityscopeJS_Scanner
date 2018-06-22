@@ -503,15 +503,13 @@ function keystoneUI() {
       "<p>" +
       "NOTE: make sure to select the croners of the scanned area in this order: TOP-LEFT->TOP-RIGHT->BOTTOM-LEFT->BOTTOM-RIGHT"
   );
-  magGlass("on");
+
+  //clear array
   let clickArray = [];
-
-  //clear prev. svg contanier
-  $(svgKeystone).empty();
-
   //collect 4 mouse clicks as corners of keystone
   document.addEventListener("click", mouseKeystone);
-
+  //turn on mag-glass efect
+  magGlass(true);
   // react to mouse events
   function mouseKeystone(e) {
     // only collect clicks that are in the canvas area
@@ -526,13 +524,13 @@ function keystoneUI() {
       keystonePt.setAttributeNS(null, "cx", e.x);
       keystonePt.setAttributeNS(null, "cy", e.y);
       keystonePt.setAttributeNS(null, "r", 8);
-      keystonePt.setAttributeNS(null, "stroke", "#00b7f9");
+      keystonePt.setAttributeNS(null, "stroke", "#f07");
       keystonePt.setAttributeNS(null, "stroke-width", "2");
       keystonePt.setAttributeNS(null, "fill-opacity", "0");
       svgKeystone.appendChild(keystonePt);
-      // when 2x4 locations were added
-      if (clickArray.length >= 8) {
-        magGlass("off");
+      // when 2x4 clicks were added
+      if (clickArray.length == 8) {
+        magGlass(false);
         //save these keystone points to local storage
         saveSettings("CityScopeJS_keystone", clickArray);
         MatrixTransform(loadSettings("CityScopeJS_keystone"));
@@ -542,55 +540,61 @@ function keystoneUI() {
         // and stop keystone mouse clicks
         document.removeEventListener("click", mouseKeystone);
       }
+    } else {
+      magGlass(false);
+    }
+  }
+
+  function magGlass(bool) {
+    //remove when off
+    if (bool === false) {
+      $("html,body").css("cursor", "auto");
+      $("#glsDiv").empty();
+      document.removeEventListener("mousemove", function() {});
+      document.removeEventListener("mouseout", function() {});
+    } else {
+      //mouse
+      $("html,body").css("cursor", "crosshair");
+      //make gls div
+      var glsDiv = document.createElement("div");
+      glsDiv.id = "glsDiv";
+      document.body.appendChild(glsDiv);
+      //another canvas for magnifying glass
+      var magGlassCanvas = document.createElement("canvas");
+      // mag. glass
+      glsDiv.appendChild(magGlassCanvas);
+      magGlassCanvas.id = "magGlass";
+      magGlassCanvas.className = "magGlassCanvas";
+      let magWid = (magGlassCanvas.width = 100);
+      magGlassCanvas.height = magWid;
+      magGlassCanvas.style.zIndex = 1;
+      let magGlassCtx = magGlassCanvas.getContext("2d");
+      document.addEventListener("mousemove", function(e) {
+        magGlassCtx.clearRect(0, 0, magWid, magWid);
+        magGlassCtx.drawImage(
+          webcamCanvas,
+          e.pageX - magWid / 16,
+          e.pageY - magWid / 16,
+          100,
+          100,
+          0,
+          0,
+          webcamCanvas.width,
+          webcamCanvas.height
+        );
+        magGlassCanvas.style.top = e.pageY - magWid / 2 + "px";
+        magGlassCanvas.style.left = e.pageX - magWid / 2 + "px";
+        magGlassCanvas.style.display = "block";
+        magGlassCanvas.style.position = "absolute";
+        magGlassCanvas.style.border = "2px black solid";
+      });
+
+      // document.addEventListener("mouseout", function() {
+      //   magGlassCanvas.style.display = "none";
+      // });
     }
   }
 }
-
-function magGlass(bool) {
-  //another canvas for magnifying glass
-  var magGlassCanvas = document.createElement("canvas");
-  // mag. glass [WIP - should remove when off]
-  document.body.appendChild(magGlassCanvas);
-  if (bool == "off") {
-    console.log("off");
-    ctx = magGlassCanvas.getContext("2d");
-    ctx.clearRect(0, 0, magGlassCanvas.width, magGlassCanvas.height);
-    //remove whrn off
-  } else {
-    magGlassCanvas.id = "magGlass";
-    magGlassCanvas.className = "magGlassCanvas";
-    let magWid = (magGlassCanvas.width = 100);
-    magGlassCanvas.height = magWid;
-    magGlassCanvas.style.zIndex = 100;
-    let magGlassCtx = magGlassCanvas.getContext("2d");
-    //
-    document.addEventListener("mousemove", function(e) {
-      $("html,body").css("cursor", "crosshair");
-      magGlassCtx.clearRect(0, 0, magWid, magWid);
-      magGlassCtx.drawImage(
-        webcamCanvas,
-        e.pageX - magWid / 16,
-        e.pageY - magWid / 16,
-        100,
-        100,
-        0,
-        0,
-        webcamCanvas.width,
-        webcamCanvas.height
-      );
-      magGlassCanvas.style.top = e.pageY - magWid / 2 + "px";
-      magGlassCanvas.style.left = e.pageX - magWid / 2 + "px";
-      magGlassCanvas.style.display = "block";
-      magGlassCanvas.style.position = "absolute";
-      magGlassCanvas.style.border = "2px black solid";
-    });
-
-    document.addEventListener("mouseout", function() {
-      magGlassCanvas.style.display = "none";
-    });
-  }
-}
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 //save/load local storage
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
