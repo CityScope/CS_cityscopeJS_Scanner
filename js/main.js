@@ -88,7 +88,7 @@ async function start() {
   setupMedia();
 }
 
-///JSON loadd functinos
+///JSON load functinos
 function onFileLoad(l) {
   infoDiv("Setting JSON file...Loading...");
   var file = event.target.files[0];
@@ -99,7 +99,7 @@ function onFileLoad(l) {
     cityIOdataStruct = JSON.parse(res);
     infoDiv("found settings [JSON]...");
 
-    console.log(cityIOdataStruct);
+    infoDiv("loaded cityIO struct: " + cityIOdataStruct.toString());
     //send the table settings once to WW for init
     CVworker.postMessage(["cityIOsetup", cityIOdataStruct]);
     // than, if exists, load settings from localStorage
@@ -112,7 +112,7 @@ function onFileLoad(l) {
       keystoneUI();
     }
     //make viz grid
-    // vizGrid();
+    vizGrid();
     //at last, start sending to cityIO
     cityIOinit(sendRate);
   };

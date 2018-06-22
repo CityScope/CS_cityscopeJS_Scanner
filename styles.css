@@ -34,7 +34,7 @@ a {
 
 .webcamCanvas {
   z-index: -1;
-  /* box-shadow: 5px 5px 35px rgb(0, 0, 0); */
+  box-shadow: 5px 5px 35px rgb(0, 0, 0);
 }
 
 .info {
@@ -43,7 +43,7 @@ a {
   font-weight: 300;
   position: fixed;
   padding: 0.5rem;
-  left: 80vw;
+  left: 60vw;
   top: 20rem;
   height: 10rem;
   max-width: 300px;
@@ -72,7 +72,7 @@ a {
 .vizCellDivParent {
   z-index: 9;
   position: fixed;
-  left: 10vw;
+  left: 70vw;
   top: 20rem;
   box-shadow: 5px 5px 20px rgb(0, 0, 0);
   cursor: all-scroll;
