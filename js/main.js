@@ -175,19 +175,7 @@ function setupMedia(mirrorVid) {
   //set auto paly video
   video.setAttribute("autoplay", true);
   window.vid = video;
-
-  // //get the webcam stream
-  // navigator.getUserMedia(
-  //   { video: true, audio: false },
-  //   function(stream) {
-  //     video.srcObject = stream;
-  //     track = stream.getTracks()[0];
-  //   },
-  //   function(e) {
-  //     infoDiv("Webcam issue!" + e);
-  //   }
-  // );
-
+  //get user webcam
   navigator.mediaDevices
     .getUserMedia({ audio: false, video: true })
     .then(function(stream) {
@@ -484,7 +472,7 @@ function cityIOpost() {
   //get table name from settings
   let cityIOtableName = cityIOdataStruct.header.name;
   let cityIOtableUrl =
-    "https://cityio.media.mit.edu/api/table/update/" +
+    "https://cityio.media.mit.edu/new/api/table/update/" +
     cityIOtableName.toString();
 
   fetch(cityIOtableUrl, {
@@ -680,7 +668,7 @@ function UI() {
 
     rawCityIO: function() {
       window.open(
-        "https://cityio.media.mit.edu/api/table/" +
+        "https://cityio.media.mit.edu/new/api/table/" +
           cityIOdataStruct.header.name,
         "_blank"
       );
