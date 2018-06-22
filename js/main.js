@@ -90,8 +90,8 @@ async function start() {
 
 ///JSON load functinos
 function onFileLoad(l) {
-  infoDiv("Setting JSON file...Loading...");
-  var file = event.target.files[0];
+  infoDiv("Trying to Load Setting JSON file...");
+  var file = l.target.files[0];
   var reader = new FileReader();
   let res = reader.readAsText(file);
   reader.onload = function(e) {
@@ -164,7 +164,7 @@ function setupMedia(mirrorVid) {
   video.addEventListener("loadedmetadata", function() {
     width = webcamCanvas.width;
     height = webcamCanvas.height;
-
+    //apply mirror video
     if (mirrorVid) {
       vidCanvas2dContext.translate(width, 0);
       vidCanvas2dContext.scale(-1, 1);
@@ -176,17 +176,37 @@ function setupMedia(mirrorVid) {
   video.setAttribute("autoplay", true);
   window.vid = video;
 
-  //get the webcam stream
-  navigator.getUserMedia(
-    { video: true, audio: false },
-    function(stream) {
-      video.srcObject = stream;
-      track = stream.getTracks()[0];
-    },
-    function(e) {
-      infoDiv("Webcam issue!" + e);
-    }
-  );
+  // //get the webcam stream
+  // navigator.getUserMedia(
+  //   { video: true, audio: false },
+  //   function(stream) {
+  //     video.srcObject = stream;
+  //     track = stream.getTracks()[0];
+  //   },
+  //   function(e) {
+  //     infoDiv("Webcam issue!" + e);
+  //   }
+  // );
+
+  navigator.mediaDevices
+    .getUserMedia({ audio: false, video: true })
+    .then(function(stream) {
+      // Older browsers may not have srcObject
+      if ("srcObject" in video) {
+        video.srcObject = stream;
+      } else {
+        // Avoid using this in new browsers, as it is going away.
+        video.src = window.URL.createObjectURL(stream);
+      }
+      video.onloadedmetadata = function(e) {
+        video.play();
+      };
+    })
+    .catch(function(err) {
+      console.log(err.name + ": " + err.message);
+    });
+
+  //loop fn.
   function loop() {
     //loop the video to canvas method
     requestAnimationFrame(loop);
