@@ -6,15 +6,10 @@
 var tableName = window.location.search.substring(1);
 let cityIOtableURL =
   "https://cityio.media.mit.edu/api/table/" + tableName.toString();
-let cityIOlist = "https://cityio.media.mit.edu/api/tables/list";
 
-if (cityIOlist.includes(cityIOtableURL)) {
-  //start applet
-  window.onload = setup();
-  window.setInterval("update()", 500);
-} else {
-  console.log("URL not found");
-}
+//start applet
+window.onload = setup();
+window.setInterval("update()", 500);
 
 var globalColors = [
   "#ED5066",
