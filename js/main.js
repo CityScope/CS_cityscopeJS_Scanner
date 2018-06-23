@@ -127,8 +127,8 @@ function setupCanvs() {
   webcamCanvas.id = "webcamCanvas";
   webcamCanvas.className = "webcamCanvas";
   //org. 960x720
-  webcamCanvas.width = Math.floor(window.innerHeight * 0.95);
-  webcamCanvas.height = Math.floor(window.innerHeight * 0.95);
+  webcamCanvas.width = Math.floor(window.innerHeight * 0.9);
+  webcamCanvas.height = Math.floor(window.innerHeight * 0.9);
   webcamCanvas.style.zIndex = 0;
   webcamCanvas.style.position = "absolute";
   webcamCanvas.style.border = "1px solid";
@@ -466,25 +466,31 @@ function cityIOstop() {
 }
 
 function cityIOpost() {
+  console.log("!", cityIOdataStruct);
+
+  //make a copy of the cityIO struct for manipulation
+  let cityIOpacket = JSON.parse(JSON.stringify(cityIOdataStruct));
   //send to cityIO
-  cityIOdataStruct.grid = typesArray;
+  cityIOpacket.grid = typesArray;
+  //remove brick codes from sent packet
+  delete cityIOpacket.objects.codes;
+  console.log(cityIOpacket);
 
   //get table name from settings
-  let cityIOtableName = cityIOdataStruct.header.name;
+  let cityIOtableName = cityIOpacket.header.name;
   let cityIOtableUrl =
-    "https://cityio.media.mit.edu/new/api/table/update/" +
+    "https://cityio.media.mit.edu/api/table/update/" +
     cityIOtableName.toString();
 
   fetch(cityIOtableUrl, {
     method: "POST",
     mode: "no-cors", // fix cors issue
-    body: JSON.stringify(cityIOdataStruct)
+    body: JSON.stringify(cityIOpacket)
   })
     .then(
       response => handleErrors(response),
       infoDiv("cityIO table '" + cityIOtableName + "' uploaded at " + timeNow())
     )
-
     .catch(error => infoDiv(error));
 
   function handleErrors(response) {
@@ -668,7 +674,7 @@ function UI() {
 
     rawCityIO: function() {
       window.open(
-        "https://cityio.media.mit.edu/new/api/table/" +
+        "https://cityio.media.mit.edu/api/table/" +
           cityIOdataStruct.header.name,
         "_blank"
       );

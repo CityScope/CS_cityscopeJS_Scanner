@@ -130,9 +130,13 @@ function CV(scannedPixels) {
         //before sending to cityIO, look for
         //the right type for this bricks pattern in 'Codes'
         typesArray.push(
-          cityIOdataStruct.objects.types[
-            cityIOdataStruct.objects.codes.indexOf(thisBrick)
-          ]
+          //!!!! send back the types
+          // cityIOdataStruct.objects.types[
+          //   cityIOdataStruct.objects.codes.indexOf(thisBrick)
+          // ]
+
+          //send back the location of this type in the types list
+          cityIOdataStruct.objects.codes.indexOf(thisBrick)
         );
       }
     }

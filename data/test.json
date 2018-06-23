@@ -2,15 +2,14 @@
   "grid": [],
   "id": "",
   "objects": {
-    "matrixMapping": [],
     "types": [
       "type_0",
       "type_1",
       "type_2",
       "type_3",
       "type_4",
-      "BLACK",
-      "WHITE"
+      "All_BLK",
+      "ALL_WHITE"
     ],
     "codes": [
       "1000000000000000",
@@ -30,12 +29,12 @@
     "longName": "-TEST-",
     "block": ["type"],
     "spatial": {
-      "ncols": 20,
-      "nrows": 20,
+      "ncols": 5,
+      "nrows": 5,
       "physical_longitude": 0,
       "physical_latitude": 0,
-      "latitude": 50,
-      "longitude": 50,
+      "latitude": 70,
+      "longitude": -70,
       "cellsize": 10
     },
     "owner": {
