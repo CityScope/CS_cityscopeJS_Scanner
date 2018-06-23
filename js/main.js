@@ -126,7 +126,7 @@ start();
 function setupCanvs() {
   webcamCanvas.id = "webcamCanvas";
   webcamCanvas.className = "webcamCanvas";
-  //org. 960x720
+  //MUST keep full numbers [WIP]
   webcamCanvas.width = Math.floor(window.innerHeight * 0.9);
   webcamCanvas.height = Math.floor(window.innerHeight * 0.9);
   webcamCanvas.style.zIndex = 0;
