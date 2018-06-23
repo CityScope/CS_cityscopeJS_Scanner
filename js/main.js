@@ -692,7 +692,8 @@ function UI() {
     },
     testTable: function() {
       window.open(
-        "/table/index.html?" + cityIOdataStruct.header.name,
+        "https://cityscope.media.mit.edu/CS_cityscopeJS/table/index.html?" +
+          cityIOdataStruct.header.name,
         "_blank"
       );
     }
@@ -700,6 +701,8 @@ function UI() {
 
   //upload settings
   gui.add(parm, "getJson").name("Load settings file [JSON]");
+  //or reset and restart
+  gui.add(parm, "reset").name("Reset and clear Keystone");
   //new calibrate folder
   var calibrateFolder = gui.addFolder("webcam");
   // webcam mirror
@@ -742,6 +745,4 @@ function UI() {
   cityioFolder.add(parm, "rawCityIO").name("View raw API");
   //cityIO link
   cityioFolder.add(parm, "fe").name("View on cityIO Dashboard");
-
-  gui.add(parm, "reset").name("Reset and clear Keystone");
 }
