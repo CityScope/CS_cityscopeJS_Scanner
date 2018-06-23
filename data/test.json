@@ -29,8 +29,8 @@
     "longName": "-TEST-",
     "block": ["type"],
     "spatial": {
-      "ncols": 5,
-      "nrows": 5,
+      "ncols": 15,
+      "nrows": 15,
       "physical_longitude": 0,
       "physical_latitude": 0,
       "latitude": 70,

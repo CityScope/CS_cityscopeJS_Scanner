@@ -1,0 +1,48 @@
+html {
+  height: 100%;
+}
+body {
+  height: 100%;
+  margin: 0;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  overflow: hidden;
+  background: black;
+}
+
+.table {
+  width: 800px;
+  height: 800px;
+  background: linear-gradient(
+    115deg,
+    rgba(2, 0, 36, 1) 47%,
+    rgba(121, 9, 114, 1) 97%
+  );
+  margin: auto;
+}
+.gridParentDiv {
+  position: relative;
+  top: 25%;
+  left: 25%;
+  width: 50%;
+}
+
+.vizRaws {
+  float: left;
+}
+
+.vizCell {
+  position: relative;
+  margin: 0 auto;
+
+  font-family: Arial, sans-serif;
+  font-weight: bolder;
+  text-align: center;
+  font-size: 1vw;
+}
+
+.shadow {
+  -moz-box-shadow: rgba(0, 0, 0, 0.8) 3px 3px 10px inset;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.8) 3px 3px 10px inset;
+  box-shadow: rgba(0, 0, 0, 0.8) 3px 3px 10px inset;
+}
