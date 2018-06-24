@@ -12,33 +12,55 @@ window.onload = setup();
 window.setInterval("update()", 500);
 
 var globalColors = [
-  "#ED5066",
-  "#A3BFA2",
-  "#F4827D",
+  "#CCD9CE",
   "#F4B99E",
+  "#F4827D",
   "#FDCAA2",
+  "#263C3A",
+  "#A5BBB9",
+  "#CCD9CE",
+  "#263C3A",
   "#F6ECD4",
   "#CCD9CE",
   "#A5BBB9",
   "#A3BFA2",
-  "#80ADA9",
   "#668a87",
+  "#ED5066",
+  "#F6ECD4",
+  "#F4B99E",
   "#405654",
   "#263C3A",
+  "#F4827D",
   "#263C3A",
-  "#14181a"
+  "#668a87",
+  "#FDCAA2",
+  "#F6ECD4",
+  "#80ADA9",
+  "#ED5066",
+  "#263C3A",
+  "#80ADA9",
+  "#ED5066",
+  "#F4827D",
+  "#A5BBB9",
+  "#668a87",
+  "#405654",
+  "#405654",
+  "#FDCAA2",
+  "#A3BFA2",
+  "#263C3A",
+  "#A3BFA2",
+  "#80ADA9"
 ];
 
 async function getCityIO(URL) {
   // GET method
   return $.ajax({
     url: URL,
-    dataType: "JSONP",
+    dataType: "JSON",
     callback: "jsonData",
     type: "GET",
     success: function(jsonData) {
-      console.log("got cityIO table at " + jsonData.timestamp);
-
+      console.log("got cityIO table at " + jsonData.meta.timestamp);
       return jsonData;
     },
     // or error
@@ -54,15 +76,25 @@ async function setup() {
   // get grid size
   let gridSize = cityIOjson.header.spatial.ncols;
   console.log("table size is", gridSize, "x", gridSize);
-  // make the grid div parent
+
+  // make the table div
   let tableDiv = document.createElement("div");
-  tableDiv.id = "table";
-  tableDiv.className = "table";
+  tableDiv.id = "tableDiv";
+  tableDiv.className = "tableDiv";
   document.body.appendChild(tableDiv);
+
+  // make the table text info div
+  let tableInfoDiv = document.createElement("div");
+  tableInfoDiv.id = "tableInfoDiv";
+  tableInfoDiv.className = "tableInfoDiv";
+  tableDiv.appendChild(tableInfoDiv);
+  tableInfoDiv.innerHTML = "CityScopeJS" + "</p>" + "Table '" + tableName + "'";
+
   //make the grid parent
   let gridParentDiv = document.createElement("div");
   gridParentDiv.className = "gridParentDiv";
   tableDiv.appendChild(gridParentDiv);
+
   //cell sized in viz grid
   let cellSize = (gridParentDiv.clientWidth / gridSize).toString() + "px";
   // make the visual rep of the now distorted grid
@@ -80,7 +112,7 @@ async function setup() {
       vizCell.style.height = cellSize;
     }
   }
-  Maptastic("table");
+  Maptastic("tableDiv");
 }
 
 async function update() {
@@ -95,8 +127,7 @@ async function viz(jsonData) {
     //get the key for this type
     let typeIndex = jsonData.grid[i];
     if (typeIndex == -1) {
-      cells[i].style.backgroundColor = "rgba(50, 50, 50, 1)";
-      globalColors[typeIndex];
+      cells[i].style.backgroundColor = "rgb(10,10,10)";
     } else {
       cells[i].innerHTML = jsonData.objects.types[typeIndex];
       cells[i].style.backgroundColor = globalColors[typeIndex];

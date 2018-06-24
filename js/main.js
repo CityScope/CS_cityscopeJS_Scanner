@@ -80,6 +80,7 @@ async function start() {
   //init info div
   infoDiv();
   infoDiv("starting CityScopeJS applet");
+  infoDiv("___________________________");
   //make the UI
   UI();
   //setup the scene
@@ -233,6 +234,7 @@ function brightnessCanvas(value, canvas) {
 
 //create the scanning transposed matrix
 function MatrixTransform(dstCorners) {
+  infoDiv("Computing Voxels and Math-Models...");
   // grid pixels size from settings
   var gridSize = cityIOdataStruct.header.spatial.ncols * 4;
   infoDiv(
@@ -700,7 +702,7 @@ function UI() {
   };
 
   //upload settings
-  gui.add(parm, "getJson").name("Load settings file [JSON]");
+  gui.add(parm, "getJson").name("Start here: Load settings [JSON]");
   //or reset and restart
   gui.add(parm, "reset").name("Reset and clear Keystone");
   //new calibrate folder

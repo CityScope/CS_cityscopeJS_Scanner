@@ -10,7 +10,7 @@ body {
   background: black;
 }
 
-.table {
+.tableDiv {
   width: 800px;
   height: 800px;
   background: linear-gradient(
@@ -20,6 +20,17 @@ body {
   );
   margin: auto;
 }
+
+.tableInfoDiv {
+  position: relative;
+  font-family: "Press Start 2P";
+  color: rgb(146, 0, 136);
+  font-size: 2vw;
+  text-shadow: 5px 5px 5px rgb(0, 0, 0);
+  top: 100vw;
+  left: 5vw;
+}
+
 .gridParentDiv {
   position: relative;
   top: 25%;
