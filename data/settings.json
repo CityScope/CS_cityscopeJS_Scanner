@@ -2,31 +2,6 @@
   "grid": [],
   "id": "",
   "objects": {
-    "matrixMapping": [],
-    "types": [
-      "type_0",
-      "type_1",
-      "type_2",
-      "type_3",
-      "type_4",
-      "type_5",
-      "type_6",
-      "type_7",
-      "type_8",
-      "type_9",
-      "type_10",
-      "type_11",
-      "type_12",
-      "type_13",
-      "type_14",
-      "type_15",
-      "2x2_0",
-      "2x2_1",
-      "2x2_2",
-      "2x2_3",
-      "BLACK",
-      "WHITE"
-    ],
     "codes": [
       "1000000000000000",
       "0100000000000000",
@@ -54,12 +29,34 @@
   },
   "header": {
     "name": "CityScopeJS",
-    "meta": {
-      "api_ver": 2
-    },
-    "longName":
-      "°º¤ø,¸¸,ø¤º°`{{TactileScopeMatrixCity}}`°º¤ø,¸,ø¤°º¤ø,¸¸,ø¤º°`°º¤ø,¸",
+    "longName": "°º¤ø,¸¸,ø¤º°`{{TactileScopeMatrixCity}}º¤ø,¸¸,ø¤º°`°º¤ø,¸",
     "block": ["type"],
+    "mapping": {
+      "type": {
+        "0": "type_0",
+        "1": "type_1",
+        "2": "type_2",
+        "3": "type_3",
+        "4": "type_4",
+        "5": "type_5",
+        "6": "type_6",
+        "7": "type_7",
+        "8": "type_8",
+        "9": "type_9",
+        "10": "type_10",
+        "11": "type_11",
+        "12": "type_12",
+        "13": "type_13",
+        "14": "type_14",
+        "15": "type_15",
+        "16": "2x2_0",
+        "17": "2x2_1",
+        "18": "2x2_2",
+        "19": "2x2_3",
+        "20": "BLACK",
+        "21": "WHITE"
+      }
+    },
     "spatial": {
       "ncols": 10,
       "nrows": 10,

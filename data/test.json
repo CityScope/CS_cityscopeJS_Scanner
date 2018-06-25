@@ -2,39 +2,32 @@
   "grid": [],
   "id": "",
   "objects": {
-    "types": [
-      "type_0",
-      "type_1",
-      "type_2",
-      "type_3",
-      "type_4",
-      "All_BLK",
-      "ALL_WHITE"
-    ],
     "codes": [
       "1000000000000000",
       "0100000000000000",
       "0010000000000000",
-      "0001000000000000",
-      "0000100000000000",
-      "1111111111111111",
-      "0000000000000000"
+      "0001000000000000"
     ]
   },
   "header": {
     "name": "TEST",
-    "meta": {
-      "api_ver": 2
-    },
-    "longName": "-TEST-",
+    "longName": "TEST",
     "block": ["type"],
+    "mapping": {
+      "type": {
+        "0": "type_0",
+        "1": "type_1",
+        "2": "type_2",
+        "3": "type_3"
+      }
+    },
     "spatial": {
-      "ncols": 15,
-      "nrows": 15,
+      "ncols": 5,
+      "nrows": 5,
       "physical_longitude": 0,
       "physical_latitude": 0,
-      "latitude": 70,
-      "longitude": -70,
+      "latitude": 0,
+      "longitude": 0,
       "cellsize": 10
     },
     "owner": {

@@ -478,6 +478,7 @@ function cityIOpost() {
   cityIOpacket.grid = typesArray;
   //remove brick codes from sent packet
   delete cityIOpacket.objects.codes;
+
   //get table name from settings
   let cityIOtableName = cityIOpacket.header.name;
   let cityIOtableUrl =
@@ -486,7 +487,7 @@ function cityIOpost() {
   //send to cityIO
   fetch(cityIOtableUrl, {
     method: "POST",
-    mode: "no-cors", // fix cors issue
+    // mode: "no-cors", // fix cors issue
     body: JSON.stringify(cityIOpacket)
   })
     .then(
@@ -497,7 +498,7 @@ function cityIOpost() {
 
   function handleErrors(response) {
     if (response.ok) {
-      infoDiv("cityIO response: " + response.ok);
+      // infoDiv("cityIO response: " + response.ok);
     }
     return response;
   }
