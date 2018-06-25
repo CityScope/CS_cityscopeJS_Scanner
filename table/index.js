@@ -60,7 +60,7 @@ async function getCityIO(URL) {
     callback: "jsonData",
     type: "GET",
     success: function(jsonData) {
-      console.log("got cityIO table at " + jsonData.meta.timestamp);
+      // console.log("got cityIO table at " + jsonData.meta.timestamp);
       return jsonData;
     },
     // or error
@@ -88,7 +88,14 @@ async function setup() {
   tableInfoDiv.id = "tableInfoDiv";
   tableInfoDiv.className = "tableInfoDiv";
   tableDiv.appendChild(tableInfoDiv);
-  tableInfoDiv.innerHTML = "CityScopeJS" + "</p>" + "Table '" + tableName + "'";
+  tableInfoDiv.innerHTML =
+    "<span style='font-size:2vw'>CityScopeJS</span>" +
+    "</p>" +
+    "Table id# '" +
+    tableName +
+    "'" +
+    "</p>" +
+    "CityScopeJS is a WIP platform aimed at making CityScope accessible though the ubiquity of web-enabled devices. CityScopeJS runs entirely in the browser, including CV, projection and spatial analysis.";
 
   //make the grid parent
   let gridParentDiv = document.createElement("div");
