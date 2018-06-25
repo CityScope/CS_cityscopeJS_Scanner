@@ -11,9 +11,9 @@ body {
 }
 
 .tableDiv {
-  width: 800px;
-  height: 800px;
-  background: linear-gradient(115deg, #f4827d, 20%, #ccd9ce 60%);
+  width: 1000px;
+  height: 1000px;
+  /* background: linear-gradient(115deg, #f4827d, 20%, #ccd9ce 60%); */
   margin: auto;
 }
 
@@ -21,9 +21,9 @@ body {
   position: fixed;
   font-family: "Press Start 2p";
   color: rgb(207, 207, 207);
-  font-size: 0.5vw;
+  font-size: 0.7vw;
   line-height: 1vw;
-  max-width: 30vw;
+  max-width: 25vw;
   text-shadow: 0px 0px 4px rgb(0, 0, 0);
   top: 85%;
   left: 5%;
@@ -32,11 +32,11 @@ body {
 
 @-webkit-keyframes colorchange {
   0% {
-    color: #f4827d;
+    color: #80ada9;
   }
 
   100% {
-    color: #ccd9ce;
+    color: #ed5066;
   }
 }
 
