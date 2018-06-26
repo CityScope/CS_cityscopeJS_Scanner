@@ -48,17 +48,20 @@ body {
 }
 
 .vizRaws {
+  position: relative;
   float: left;
 }
 
-.vizCell {
-  position: relative;
-  margin: 0 auto;
-
+.vizCellText {
   font-family: Arial, sans-serif;
   font-weight: bolder;
-  text-align: center;
   font-size: 1vw;
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translateY(-50%);
+  color: white;
+  text-shadow: 0px 0px 10px rgb(0, 0, 0);
 }
 
 .shadow {

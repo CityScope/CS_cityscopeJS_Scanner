@@ -1,7 +1,4 @@
 // to try https://dev.to/johnpaulada/synchronous-fetch-with-asyncawait
-// 0-9 housing
-// 10-19 Work
-// 20-21 green
 
 var tableName = window.location.search.substring(1);
 let cityIOtableURL =
@@ -117,6 +114,10 @@ async function setup() {
       rawDiv.appendChild(vizCell);
       vizCell.style.width = cellSize;
       vizCell.style.height = cellSize;
+      //text divs
+      var vizCellText = document.createElement("div");
+      vizCellText.className = "vizCellText";
+      vizCell.appendChild(vizCellText);
     }
   }
   Maptastic("tableDiv");
@@ -129,6 +130,7 @@ async function update() {
 
 async function viz(jsonData) {
   let cells = document.getElementsByClassName("vizCell");
+  let cellText = document.getElementsByClassName("vizCellText");
 
   for (let i = 0; i < cells.length; i++) {
     //get the key for this type
@@ -136,7 +138,8 @@ async function viz(jsonData) {
     if (typeIndex == -1) {
       cells[i].style.backgroundColor = "rgb(10,10,10)";
     } else {
-      cells[i].innerHTML = jsonData.header.mapping.type[typeIndex];
+      // cells[i].innerHTML = jsonData.header.mapping.type[typeIndex];
+      cellText[i].innerHTML = typeIndex;
       cells[i].style.backgroundColor = globalColors[typeIndex];
     }
   }
