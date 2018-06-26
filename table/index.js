@@ -137,6 +137,7 @@ async function viz(jsonData) {
     let typeIndex = jsonData.grid[i];
     if (typeIndex == -1) {
       cells[i].style.backgroundColor = "rgb(10,10,10)";
+      cellText[i].innerHTML = typeIndex;
     } else {
       // cells[i].innerHTML = jsonData.header.mapping.type[typeIndex];
       cellText[i].innerHTML = typeIndex;
