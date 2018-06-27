@@ -291,7 +291,7 @@ function MatrixTransform(dstCorners) {
   //distort each dot in the matrix to locations and make cubes
   for (let j = 0; j < vizGridLocArray.length; j++) {
     dstPt = perspT.transform(vizGridLocArray[j][0], vizGridLocArray[j][1]);
-    drawSVG(dstPt, "#f07", 2);
+    drawSVG(dstPt, "#f07", 1);
     //push these locs to an array for scanning
     matrixGridLocArray.push([Math.floor(dstPt[0]), Math.floor(dstPt[1])]);
   }
