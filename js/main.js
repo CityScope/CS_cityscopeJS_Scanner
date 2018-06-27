@@ -231,41 +231,34 @@ function brightnessCanvas(value, canvas) {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////SCAN LOGIC ////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
+// a function to make an initial array of
+//evenly divided grid points to scan
+function scanArrayMaker(gridSize) {
+  var scanArrayPt = [];
+  //get point in certain ratio
+  //to width divided by # of points
+  let ratioX = webcamCanvas.width / gridSize;
+  let ratioY = webcamCanvas.height / gridSize;
+  for (let i = 0; i < webcamCanvas.width + ratioX; i += ratioX) {
+    for (let j = 0; j < webcamCanvas.height + ratioY; j += ratioY) {
+      scanArrayPt.push([i, j]);
+      //viz the ref. points for debuging
+      // drawSVG([i, j], "black", 2);
+    }
+  }
+  return scanArrayPt;
+}
 
 //create the scanning transposed matrix
 function MatrixTransform(dstCorners) {
-  infoDiv("Computing Voxels and Math-Models...");
+  console.log(dstCorners);
+
   // grid pixels size from settings
   var gridSize = cityIOdataStruct.header.spatial.ncols * 4;
-  infoDiv(
-    "table size: " +
-      cityIOdataStruct.header.spatial.ncols +
-      " x " +
-      cityIOdataStruct.header.spatial.ncols
-  );
-
-  // a function to make an initial array of
-  //evenly divided grid points to scan
-  function scanArrayMaker() {
-    var vizGridLocArray = [];
-    //get point in certain ratio
-    //to width divided by # of points
-    let ratioX = webcamCanvas.width / gridSize;
-    let ratioY = webcamCanvas.height / gridSize;
-    for (let i = 0; i < webcamCanvas.width; i += ratioX) {
-      for (let j = 0; j < webcamCanvas.height; j += ratioY) {
-        vizGridLocArray.push([i + ratioX / 2, j + ratioY / 2]);
-      }
-    }
-    return vizGridLocArray;
-  }
-
-  infoDiv("Matrix Transformed 4 corners are at: " + dstCorners);
   //matrix Grid Location Array
   var matrixGridLocArray = [];
   // return a new visual Grid Locations Array
-  let vizGridLocArray = scanArrayMaker();
-
+  let vizGridLocArray = scanArrayMaker(gridSize);
   //set the reference points of the 4 edges of the canvas
   // to get 100% of the image/video in canvas
   //before distorting
@@ -279,7 +272,6 @@ function MatrixTransform(dstCorners) {
     webcamCanvas.width,
     webcamCanvas.height
   ];
-
   //method to get div position
   function getPos(el) {
     // yay readability
@@ -290,29 +282,40 @@ function MatrixTransform(dstCorners) {
     );
     return [lx, ly];
   }
-
   //var for the distorted points
   let dstPt;
   // use perspT lib to calculate transform matrix
   //and store the results of the 4 points dist. in var perspT
   let perspT;
   perspT = PerspT(srcCorners, dstCorners);
-
   //distort each dot in the matrix to locations and make cubes
   for (let j = 0; j < vizGridLocArray.length; j++) {
     dstPt = perspT.transform(vizGridLocArray[j][0], vizGridLocArray[j][1]);
-    //display with SVG
-    var scanPt = document.createElementNS(svgCDN, "circle");
-    scanPt.setAttributeNS(null, "cx", dstPt[0]);
-    scanPt.setAttributeNS(null, "cy", dstPt[1]);
-    scanPt.setAttributeNS(null, "r", 1);
-    scanPt.setAttributeNS(null, "fill", "#f07");
-    svgKeystone.appendChild(scanPt);
+    drawSVG(dstPt, "#f07", 2);
     //push these locs to an array for scanning
     matrixGridLocArray.push([Math.floor(dstPt[0]), Math.floor(dstPt[1])]);
   }
   ColorPicker(matrixGridLocArray);
   dstCorners = [];
+  //info
+  infoDiv("Computing Voxels and Math-Models...");
+  infoDiv(
+    "table size: " +
+      cityIOdataStruct.header.spatial.ncols +
+      " x " +
+      cityIOdataStruct.header.spatial.ncols
+  );
+  infoDiv("Matrix Transformed 4 corners are at: " + dstCorners);
+}
+
+function drawSVG(dstPt, color, size) {
+  //display with SVG
+  var scanPt = document.createElementNS(svgCDN, "circle", size);
+  scanPt.setAttributeNS(null, "cx", dstPt[0]);
+  scanPt.setAttributeNS(null, "cy", dstPt[1]);
+  scanPt.setAttributeNS(null, "r", size);
+  scanPt.setAttributeNS(null, "fill", color);
+  svgKeystone.appendChild(scanPt);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
