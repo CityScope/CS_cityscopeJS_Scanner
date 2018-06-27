@@ -529,7 +529,7 @@ function keystoneUI() {
   //collect 4 mouse clicks as corners of keystone
   document.addEventListener("click", mouseKeystone);
   //turn on mag-glass efect
-  magGlass(true);
+  // magGlass(true);
   // react to mouse events
   function mouseKeystone(e) {
     // only collect clicks that are in the canvas area
