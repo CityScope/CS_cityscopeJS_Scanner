@@ -101,6 +101,7 @@ async function setup() {
 
   //cell sized in viz grid
   let cellSize = (gridParentDiv.clientWidth / gridSize).toString() + "px";
+  let cellId = 0;
   // make the visual rep of the now distorted grid
   for (let i = 0; i < gridSize; i++) {
     var rawDiv = document.createElement("div");
@@ -111,6 +112,7 @@ async function setup() {
     for (let j = 0; j < gridSize; j++) {
       var vizCell = document.createElement("div");
       vizCell.className = "vizCell shadow";
+      vizCell.id = cellId;
       rawDiv.appendChild(vizCell);
       vizCell.style.width = cellSize;
       vizCell.style.height = cellSize;
@@ -118,6 +120,7 @@ async function setup() {
       var vizCellText = document.createElement("div");
       vizCellText.className = "vizCellText";
       vizCell.appendChild(vizCellText);
+      cellId++;
     }
   }
   Maptastic("tableDiv");
@@ -144,4 +147,24 @@ async function viz(jsonData) {
       cells[i].style.backgroundColor = globalColors[typeIndex];
     }
   }
+
+  // let grnArr = [];
+  // for (let i = 0; i < cells.length; i++) {
+  //   //get the key for this type
+  //   let typeIndex = jsonData.grid[i];
+  //   cellText[i].innerHTML = cells[i].id;
+  //   cells[i].style.backgroundColor = "white";
+  //   if (typeIndex >= 0 && typeIndex < 10) {
+  //     cells[i].style.backgroundColor = "gray";
+  //     grnArr.push(cells[i]);
+  //   }
+  // }
+
+  // for (let j = 0; j < grnArr.length; j++) {
+  //   // grnArr[j].innerHTML = "s";
+  //   //  Math.hypot();
+  //   console.log(grnArr[j]);
+  // }
+
+  // console.log(grnArr.length);
 }
