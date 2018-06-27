@@ -237,13 +237,13 @@ function scanArrayMaker(gridSize) {
   var scanArrayPt = [];
   //get point in certain ratio
   //to width divided by # of points
-  let ratioX = webcamCanvas.width / gridSize;
-  let ratioY = webcamCanvas.height / gridSize;
-  for (let i = 0; i < webcamCanvas.width + ratioX; i += ratioX) {
-    for (let j = 0; j < webcamCanvas.height + ratioY; j += ratioY) {
+  let ratioX = webcamCanvas.width / (gridSize - 1);
+  let ratioY = webcamCanvas.height / (gridSize - 1);
+  for (let i = 0; i <= webcamCanvas.width; i += ratioX) {
+    for (let j = 0; j <= webcamCanvas.height; j += ratioY) {
       scanArrayPt.push([i, j]);
-      //viz the ref. points for debuging
-      // drawSVG([i, j], "black", 2);
+      // viz the ref. points for debuging
+      // drawSVG([i, j], "white", 2);
     }
   }
   return scanArrayPt;
