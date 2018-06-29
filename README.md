@@ -28,7 +28,8 @@ watch this intro video [also, 80's theme music] to get to know how CityScopeJS i
 
 #### Running
 
-clone and run from any modern browser. Yes, IE7 on Windows XP might not work.
+[Click here to run CityScopeJS](https://cityscope.github.io/CS_citysc…)
+It should run from any modern browser with HTML5 support. Tested on Raspberry pi 2, Android and IPhone Yes, IE7 on Windows XP might not work.
 
 #### Setup
 
@@ -41,7 +42,7 @@ To create or test binary permutations, us this: `/Py_BinaryPermutations/py_bin.p
 
 CityScopeJS, also favorably known as _©® TactileScopeMatrixCityLEGOtizer ©®_ was invented during a warm, steamy but somehow cold summer night in December, 2013. My friend [Hackerman](https://www.youtube.com/watch?v=KEkrWRHCDQU) and I were riding [Jeremiah](https://www.youtube.com/watch?v=GBlWkNZph0s), our old faithful Trojan horse, across the Mohave dessert.
 
-![Alt Text](https://thumbs.gfycat.com/VariableRareKiskadee-size_restricted.gif)
+![Alt Text](https://media.giphy.com/media/oSYflamt3IEjm/giphy.gif)
 
 Since we were both holding on to Jeremiah's saddle, Hackerman was only able to write the code in 0.5 [parsecs](https://en.wikipedia.org/wiki/Parsec "Title"), using his [Nintendo PowerGlove](https://en.wikipedia.org/wiki/Power_Glove); After 6 hours of code-riding, CityScopeJS was developed, tested, QAed by NASA and SpaceX and was ready to [disrupt and make the world a better place.](https://www.youtube.com/watch?v=J-GVd_HLlps)
 
