@@ -51,6 +51,8 @@ The system has since won the Oscars, Turing Prize, 47 pending patents, a book an
 
 ---
 
-using @jlouthan matrix transformations.
+Credits: [Ariel Noyman](http://arielnoyman.com)
 
-#### [Project devs & contributors](https://github.com/CityScope/CS_cityscopeJS/graphs/contributors)
+[Project devs & contributors](https://github.com/CityScope/CS_cityscopeJS/graphs/contributors)
+
+using @jlouthan matrix transformations.
