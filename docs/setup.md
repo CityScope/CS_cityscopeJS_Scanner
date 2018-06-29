@@ -1,4 +1,4 @@
-#CityScopeJS Setup
+# CityScopeJS Setup
 
 #### Before starting
 
