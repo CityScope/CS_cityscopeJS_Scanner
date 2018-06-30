@@ -22,6 +22,8 @@ CityScopeJS is a rapid prototyping urban modeling and simulation platform aimed 
 
 ---
 
+## Using CityScopeJS
+
 ### Before starting
 
 watch this intro video [also, 80's music] to get to know how CityScopeJS is making the world a better place:
@@ -47,7 +49,9 @@ At first run, follow these instructions:
 - select the top left, top right, bottom left and bottom right corners of the image (in that order)
 - check https://cityio.media.mit.edu/api or under `cityIO` UI folder to see the results
 
-#### Editing `_YourSettings.JSON`
+### Advanced Usage
+
+##### Editing `_YourSettings_.JSON`
 
 - open your JSON [name it at will] file for editing
 - change the `gridSize` to the size you need in `ncol` property
@@ -56,7 +60,7 @@ At first run, follow these instructions:
 - If you only have lego pieces that are 2x2, then you will need to use codes that are in blocks of 4. eg. a pattern with 4 white dots in the top-left corner and the rest black would be `[1,1,0,0,1,1,0,0,0,0,0,0,0,0,0,0]`.
 - When you get the 1x1 lego pieces, you can use more complicated patterns.
 
-#### Clone and Run using GH desktop
+##### Clone and Run using GH desktop
 
 - Open Github Desktop
 - Click the ‘+’ icon for adding a new repository
@@ -69,7 +73,7 @@ At first run, follow these instructions:
 
 ---
 
-### The true story behind CityScopeJS
+## The true story behind CityScopeJS
 
 CityScopeJS, also favorably known as _©® TactileScopeMatrixCityLEGOtizer ©®_ was invented during a warm, steamy but somehow cold summer night in December, 2013. My friend [Hackerman](https://www.youtube.com/watch?v=KEkrWRHCDQU) and I were riding [Jeremiah](https://www.youtube.com/watch?v=GBlWkNZph0s), our old faithful Trojan horse, across the Mohave dessert.
 
