@@ -275,10 +275,12 @@ function scanArrayMaker(gridSize) {
 
 //create the scanning transposed matrix
 function MatrixTransform(dstCorners) {
-  console.log(dstCorners);
-
   // grid pixels size from settings
   var gridSize = cityIOdataStruct.header.spatial.ncols * 4;
+  //
+  var gridSizeCols = cityIOdataStruct.header.spatial.ncols * 4;
+  var gridSizeRows = cityIOdataStruct.header.spatial.nrows * 4;
+
   //matrix Grid Location Array
   var matrixGridLocArray = [];
   // return a new visual Grid Locations Array
@@ -322,7 +324,6 @@ function MatrixTransform(dstCorners) {
   ColorPicker(matrixGridLocArray);
   dstCorners = [];
   //info
-  infoDiv("Computing Voxels and Math-Models...");
   infoDiv(
     "table size: " +
       cityIOdataStruct.header.spatial.ncols +
@@ -656,7 +657,7 @@ function infoDiv(text) {
     $("#infoDiv").draggable();
   } else {
     // clear div if too much text
-    if (d.scrollHeight > 5000) {
+    if (d.scrollHeight > 2000) {
       d.innerHTML = null;
     } else {
       d.innerHTML += text.toString() + "<p></p>";
