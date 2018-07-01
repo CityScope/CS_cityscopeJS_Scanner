@@ -49,13 +49,15 @@ self.addEventListener(
 /////////////////////////////////////////////////////////////////
 //do CV on image data
 function CV(scannedPixels) {
+  //set threshold for unclear color
+  // between black and white
   let threshold = 5;
   //reset array
-  let pixelColArr = [];
+  let pixColArr = [];
   //reset types array
   let typesArray = [];
   //retun this msg to main thread
-  let msg = [];
+  let webworkerMsg = [];
 
   //sample 3 pixels [3x3 colors] each time
   for (let i = 0; i < scannedPixels.length; i++) {
@@ -83,46 +85,47 @@ function CV(scannedPixels) {
       //3rd color
       pixelCol = 2;
     }
-    pixelColArr.push(pixelCol);
+    pixColArr.push(pixelCol);
   }
 
   ///////////////////////////////////////////////////////////////////////////
 
-  // if new data is back from webworker with colors
-  if (pixelColArr.length > 1) {
+  // if we got any colors from the first part
+  if (pixColArr.length > 1) {
     // find this brick's type using the cv color info
     // and by matching the 4x4 pixels to known types
     // run through the 1D list of colors to reshape
     //this into 4x4 matrices
+
     for (
       let j = 0;
-      j < pixelColArr.length;
-      j += Math.sqrt(pixelColArr.length) * 4
+      j < pixColArr.length;
+      j += Math.sqrt(pixColArr.length) * 4
     ) {
       // x zero y zero top left going down on y in jumps of 4
-      for (let i = 0; i < Math.sqrt(pixelColArr.length); i = i + 4) {
-        //reshape to lists of 16 bits, or one brick [should be rewritten cleaner ]
+      for (let i = 0; i < Math.sqrt(pixColArr.length); i = i + 4) {
+        //reshape pixels to lists of 16 bits, or one brick [should be rewritten cleaner]
         thisBrick = [
           //first row
-          pixelColArr[i + j],
-          pixelColArr[i + j + Math.sqrt(pixelColArr.length)],
-          pixelColArr[i + j + Math.sqrt(pixelColArr.length) * 2],
-          pixelColArr[i + j + Math.sqrt(pixelColArr.length) * 3],
+          pixColArr[i + j],
+          pixColArr[i + j + Math.sqrt(pixColArr.length)],
+          pixColArr[i + j + Math.sqrt(pixColArr.length) * 2],
+          pixColArr[i + j + Math.sqrt(pixColArr.length) * 3],
           //second row
-          pixelColArr[i + j + 1],
-          pixelColArr[i + j + 1 + Math.sqrt(pixelColArr.length)],
-          pixelColArr[i + j + 1 + Math.sqrt(pixelColArr.length) * 2],
-          pixelColArr[i + j + 1 + Math.sqrt(pixelColArr.length) * 3],
+          pixColArr[i + j + 1],
+          pixColArr[i + j + 1 + Math.sqrt(pixColArr.length)],
+          pixColArr[i + j + 1 + Math.sqrt(pixColArr.length) * 2],
+          pixColArr[i + j + 1 + Math.sqrt(pixColArr.length) * 3],
           //third row
-          pixelColArr[i + j + 2],
-          pixelColArr[i + j + 2 + Math.sqrt(pixelColArr.length)],
-          pixelColArr[i + j + 2 + Math.sqrt(pixelColArr.length) * 2],
-          pixelColArr[i + j + 2 + Math.sqrt(pixelColArr.length) * 3],
+          pixColArr[i + j + 2],
+          pixColArr[i + j + 2 + Math.sqrt(pixColArr.length)],
+          pixColArr[i + j + 2 + Math.sqrt(pixColArr.length) * 2],
+          pixColArr[i + j + 2 + Math.sqrt(pixColArr.length) * 3],
           //forth row
-          pixelColArr[i + j + 3],
-          pixelColArr[i + j + 3 + Math.sqrt(pixelColArr.length)],
-          pixelColArr[i + j + 3 + Math.sqrt(pixelColArr.length) * 2],
-          pixelColArr[i + j + 3 + Math.sqrt(pixelColArr.length) * 3]
+          pixColArr[i + j + 3],
+          pixColArr[i + j + 3 + Math.sqrt(pixColArr.length)],
+          pixColArr[i + j + 3 + Math.sqrt(pixColArr.length) * 2],
+          pixColArr[i + j + 3 + Math.sqrt(pixColArr.length) * 3]
         ].toString();
         //avoid new lines and commas for clear list
         thisBrick = thisBrick.replace(/,/g, "");
@@ -130,11 +133,6 @@ function CV(scannedPixels) {
         //before sending to cityIO, look for
         //the right type for this bricks pattern in 'Codes'
         typesArray.push(
-          //!!!! send back the types
-          // cityIOdataStruct.objects.types[
-          //   cityIOdataStruct.objects.codes.indexOf(thisBrick)
-          // ]
-
           //send back the location of this type in the types list
           cityIOdataStruct.objects.codes.indexOf(thisBrick)
         );
@@ -145,7 +143,7 @@ function CV(scannedPixels) {
     //return 2 msgs  to main thread:
     // 1. the type found in cv
     // 2. colors for  visulaiztion & cityIO sending
-    msg.push(typesArray, pixelColArr);
-    self.postMessage(msg);
+    webworkerMsg.push(typesArray, pixColArr);
+    self.postMessage(webworkerMsg);
   }
 }

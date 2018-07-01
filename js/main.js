@@ -257,12 +257,12 @@ function contrastCanvas(contrast, canvas) {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 // a function to make an initial array of
 //evenly divided grid points to scan
-function scanArrayMaker(gridSize) {
+function scanArrayMaker(gridSizeCols, gridSizeRows) {
   var scanArrayPt = [];
   //get point in certain ratio
   //to width divided by # of points
-  let ratioX = webcamCanvas.width / (gridSize - 1);
-  let ratioY = webcamCanvas.height / (gridSize - 1);
+  let ratioX = webcamCanvas.width / (gridSizeCols - 1);
+  let ratioY = webcamCanvas.height / (gridSizeRows - 1);
   for (let i = 0; i <= webcamCanvas.width; i += ratioX) {
     for (let j = 0; j <= webcamCanvas.height; j += ratioY) {
       scanArrayPt.push([i, j]);
@@ -276,8 +276,6 @@ function scanArrayMaker(gridSize) {
 //create the scanning transposed matrix
 function MatrixTransform(dstCorners) {
   // grid pixels size from settings
-  var gridSize = cityIOdataStruct.header.spatial.ncols * 4;
-  //
   var gridSizeCols = cityIOdataStruct.header.spatial.ncols * 4;
   var gridSizeRows = cityIOdataStruct.header.spatial.nrows * 4;
 
@@ -286,7 +284,7 @@ function MatrixTransform(dstCorners) {
   //matrix Grid Location Array
   var matrixGridLocArray = [];
   // return a new visual Grid Locations Array
-  let vizGridLocArray = scanArrayMaker(gridSize);
+  let vizGridLocArray = scanArrayMaker(gridSizeCols, gridSizeRows);
   //set the reference points of the 4 edges of the canvas
   // to get 100% of the image/video in canvas
   //before distorting
@@ -323,6 +321,7 @@ function MatrixTransform(dstCorners) {
     //push these locs to an array for scanning
     matrixGridLocArray.push([Math.floor(dstPt[0]), Math.floor(dstPt[1])]);
   }
+  //send points to Color Scanner fn.
   ColorPicker(matrixGridLocArray);
   dstCorners = [];
   //info
@@ -412,7 +411,7 @@ function ColorPicker(matrixGridLocArray) {
     //in every frame, send the scanned colors to web-worker for CV operation
     CVworker.postMessage(["pixels", scannedColorsArray]);
 
-    //recursively call this method
+    //recursively call this method every frame
     requestAnimationFrame(function() {
       ColorPickerRecursive();
     });
@@ -422,8 +421,9 @@ function ColorPicker(matrixGridLocArray) {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 //create viz. grid to show scanning results
 function vizGrid() {
-  //get grid size for viz from settings
-  var gridSize = cityIOdataStruct.header.spatial.ncols * 4;
+  // grid pixels size from settings
+  var gridSizeCols = cityIOdataStruct.header.spatial.ncols * 4;
+  var gridSizeRows = cityIOdataStruct.header.spatial.nrows * 4;
 
   // make the grid div parent
   $("<DIV/>", {
@@ -434,17 +434,18 @@ function vizGrid() {
   $("#vizCellDivParent").draggable();
 
   // make the visual rep of the now distorted grid
-  for (let i = 0; i < gridSize; i++) {
+  for (let i = 0; i < gridSizeCols; i++) {
     var vizRawsDiv = document.createElement("div");
     vizRawsDiv.className = "vizRawsDiv";
     vizCellDivParent.appendChild(vizRawsDiv);
-    for (let j = 0; j < gridSize; j++) {
+    for (let j = 0; j < gridSizeRows; j++) {
       var vizCell = document.createElement("div");
       vizCell.className = "vizCell";
       vizRawsDiv.appendChild(vizCell);
       //cell sized in viz grid
       let cellDims =
-        (document.documentElement.clientWidth / gridSize / 4).toString() + "px";
+        (document.documentElement.clientWidth / gridSizeCols / 4).toString() +
+        "px";
       vizCell.style.width = cellDims;
       vizCell.style.height = cellDims;
 

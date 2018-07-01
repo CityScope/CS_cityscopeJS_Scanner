@@ -70,9 +70,13 @@ async function getCityIO(URL) {
 async function setup() {
   //call server once at start, just to setup the grid
   const cityIOjson = await getCityIO(cityIOtableURL);
+
   // get grid size
-  let gridSize = cityIOjson.header.spatial.ncols;
-  console.log("table size is", gridSize, "x", gridSize);
+
+  var gridSizeCols = cityIOjson.header.spatial.ncols;
+  var gridSizeRows = cityIOjson.header.spatial.nrows;
+
+  console.log("table size is", gridSizeCols, "x", gridSizeRows);
 
   // make the table div
   let tableDiv = document.createElement("div");
@@ -100,16 +104,16 @@ async function setup() {
   tableDiv.appendChild(gridParentDiv);
 
   //cell sized in viz grid
-  let cellSize = (gridParentDiv.clientWidth / gridSize).toString() + "px";
+  let cellSize = (gridParentDiv.clientWidth / gridSizeCols).toString() + "px";
   let cellId = 0;
   // make the visual rep of the now distorted grid
-  for (let i = 0; i < gridSize; i++) {
+  for (let i = 0; i < gridSizeCols; i++) {
     var rawDiv = document.createElement("div");
     gridParentDiv.appendChild(rawDiv);
     rawDiv.className = "vizRaws";
     rawDiv.style.width = cellSize;
     rawDiv.style.height = cellSize * i;
-    for (let j = 0; j < gridSize; j++) {
+    for (let j = 0; j < gridSizeRows; j++) {
       var vizCell = document.createElement("div");
       vizCell.className = "vizCell shadow";
       vizCell.id = cellId;
@@ -139,7 +143,7 @@ async function viz(jsonData) {
     //get the key for this type
     let typeIndex = jsonData.grid[i];
     if (typeIndex == -1) {
-      cells[i].style.backgroundColor = "rgb(10,10,10)";
+      cells[i].style.backgroundColor = "rgb(70,70,70)";
       cellText[i].innerHTML = typeIndex;
     } else {
       // cells[i].innerHTML = jsonData.header.mapping.type[typeIndex];
