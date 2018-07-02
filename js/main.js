@@ -261,15 +261,42 @@ function scanArrayMaker(gridSizeCols, gridSizeRows) {
   var scanArrayPt = [];
   //get point in certain ratio
   //to width divided by # of points
+
   let ratioX = webcamCanvas.width / (gridSizeCols - 1);
   let ratioY = webcamCanvas.height / (gridSizeRows - 1);
-  for (let i = 0; i <= webcamCanvas.width; i += ratioX) {
-    for (let j = 0; j <= webcamCanvas.height; j += ratioY) {
-      scanArrayPt.push([i, j]);
-      // viz the ref. points for debuging
-      // drawSVG([i, j], "white", 2);
+  // let counter = 0;
+  // for (let i = 0; i <= webcamCanvas.width; i += ratioX) {
+  //   for (let j = 0; j <= webcamCanvas.height; j += ratioY) {
+  //     scanArrayPt.push([i, j]);
+  //     // viz the ref. points for debuging
+  //     drawSVG([i, j], "green", 3);
+  //     textSVG([i, j], counter, 20);
+  //     counter++;
+  //   }
+  // }
+
+  console.log(gridSizeCols, gridSizeRows);
+  let counter = 0;
+  let c = 0;
+
+  for (let cols = 0; cols < webcamCanvas.height; cols += ratioY * 4) {
+    for (let rows = 0; rows < webcamCanvas.width; rows += ratioX * 4) {
+      drawSVG([rows, cols], "green", 10);
+      textSVG([rows - 3, cols - 3], counter, 50);
+
+      for (let j = 0; j < ratioY * 4; j += ratioY) {
+        for (let i = 0; i < ratioX * 4; i += ratioX) {
+          textSVG([rows + i, cols + j], c, 15);
+          drawSVG([rows + i, cols + j], "green", 1);
+          scanArrayPt.push([rows + i, cols + j]);
+
+          c++;
+        }
+      }
+      counter++;
     }
   }
+
   return scanArrayPt;
 }
 
@@ -283,6 +310,7 @@ function MatrixTransform(dstCorners) {
   var matrixGridLocArray = [];
   // return a new visual Grid Locations Array
   let vizGridLocArray = scanArrayMaker(gridSizeCols, gridSizeRows);
+
   //set the reference points of the 4 edges of the canvas
   // to get 100% of the image/video in canvas
   //before distorting
@@ -316,6 +344,7 @@ function MatrixTransform(dstCorners) {
   for (let j = 0; j < vizGridLocArray.length; j++) {
     dstPt = perspT.transform(vizGridLocArray[j][0], vizGridLocArray[j][1]);
     drawSVG(dstPt, "#f07", 1);
+    textSVG(dstPt, j, 12);
     //push these locs to an array for scanning
     matrixGridLocArray.push([Math.floor(dstPt[0]), Math.floor(dstPt[1])]);
   }
@@ -340,6 +369,15 @@ function drawSVG(dstPt, color, size) {
   scanPt.setAttributeNS(null, "r", size);
   scanPt.setAttributeNS(null, "fill", color);
   svgKeystone.appendChild(scanPt);
+}
+function textSVG(dstPt, txt, size) {
+  var newText = document.createElementNS(svgCDN, "text");
+  newText.setAttributeNS(null, "x", dstPt[0]);
+  newText.setAttributeNS(null, "y", dstPt[1]);
+  newText.setAttributeNS(null, "font-size", size);
+
+  newText.innerHTML = txt;
+  svgKeystone.appendChild(newText);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////

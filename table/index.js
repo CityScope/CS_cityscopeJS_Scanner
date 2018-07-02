@@ -75,6 +75,14 @@ async function setup() {
 
   var gridSizeCols = cityIOjson.header.spatial.ncols;
   var gridSizeRows = cityIOjson.header.spatial.nrows;
+  var cellSizeHandler = null;
+  //check for larger count of cols/rows to
+  //determain which sets cell size
+  if (gridSizeCols > gridSizeRows) {
+    cellSizeHandler = gridSizeCols;
+  } else {
+    cellSizeHandler = gridSizeRows;
+  }
 
   console.log("table size is", gridSizeCols, "x", gridSizeRows);
 
@@ -104,7 +112,8 @@ async function setup() {
   tableDiv.appendChild(gridParentDiv);
 
   //cell sized in viz grid
-  let cellSize = (gridParentDiv.clientWidth / gridSizeCols).toString() + "px";
+  let cellSize =
+    (gridParentDiv.clientWidth / cellSizeHandler).toString() + "px";
   let cellId = 0;
   // make the visual rep of the now distorted grid
   for (let i = 0; i < gridSizeCols; i++) {

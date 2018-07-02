@@ -78,8 +78,10 @@ function CV(scannedPixels) {
     // decide if pixel color should be black or white
     //based on avg function
     if (avg > 256 / 2 + threshold) {
+      //black
       pixelCol = 0;
     } else if (avg < 256 / 2 - threshold) {
+      //white
       pixelCol = 1;
     } else {
       //3rd color
@@ -103,7 +105,7 @@ function CV(scannedPixels) {
       thisCol += numColumns * 4
     ) {
       // x zero y zero top left going down on y in jumps of 4
-      for (let r = 0; r < 1; r = r + 4) {
+      for (let r = 0; r < numColumns; r = r + 8) {
         //reshape pixels to lists of 16 bits, or one brick [should be rewritten cleaner]
         let thisBrick = [
           //first row

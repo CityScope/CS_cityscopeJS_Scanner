@@ -42,9 +42,9 @@ body {
 
 .gridParentDiv {
   position: relative;
-  top: 25%;
-  left: 25%;
-  width: 50%;
+  /* top: 25%; */
+  /* left: 25%; */
+  /* max-width: 20%; */
 }
 
 .vizRaws {
