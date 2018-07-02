@@ -6,7 +6,6 @@ let cityIOtableURL =
 
 //start applet
 window.onload = setup();
-window.setInterval("update()", 500);
 
 var globalColors = [
   "#CCD9CE",
@@ -70,9 +69,7 @@ async function getCityIO(URL) {
 async function setup() {
   //call server once at start, just to setup the grid
   const cityIOjson = await getCityIO(cityIOtableURL);
-
   // get grid size
-
   var gridSizeCols = cityIOjson.header.spatial.ncols;
   var gridSizeRows = cityIOjson.header.spatial.nrows;
   var cellSizeHandler = null;
@@ -83,28 +80,12 @@ async function setup() {
   } else {
     cellSizeHandler = gridSizeRows;
   }
-
   console.log("table size is", gridSizeCols, "x", gridSizeRows);
-
   // make the table div
   let tableDiv = document.createElement("div");
   tableDiv.id = "tableDiv";
   tableDiv.className = "tableDiv";
   document.body.appendChild(tableDiv);
-
-  // make the table text info div
-  let tableInfoDiv = document.createElement("div");
-  tableInfoDiv.id = "tableInfoDiv";
-  tableInfoDiv.className = "tableInfoDiv";
-  tableDiv.appendChild(tableInfoDiv);
-  tableInfoDiv.innerHTML =
-    "<span style='font-size:2vw'>CityScopeJS</span>" +
-    "</p>" +
-    "Table id# '" +
-    tableName +
-    "'" +
-    "</p>" +
-    "CityScopeJS is a WIP platform aimed at making CityScope accessible though the ubiquity of web-enabled devices. CityScopeJS runs entirely in the browser, including CV, projection and spatial analysis.";
 
   //make the grid parent
   let gridParentDiv = document.createElement("div");
@@ -114,55 +95,17 @@ async function setup() {
   //cell sized in viz grid
   let cellSize =
     (gridParentDiv.clientWidth / cellSizeHandler).toString() + "px";
-  let cellId = 0;
-  // make the visual rep of the now distorted grid
-  for (let i = 0; i < gridSizeCols; i++) {
-    var rawDiv = document.createElement("div");
-    gridParentDiv.appendChild(rawDiv);
-    rawDiv.className = "vizRaws";
-    rawDiv.style.width = cellSize;
-    rawDiv.style.height = cellSize * i;
-    for (let j = 0; j < gridSizeRows; j++) {
-      console.log(i, j);
-
-      var vizCell = document.createElement("div");
-      vizCell.className = "vizCell shadow";
-      vizCell.id = cellId;
-      rawDiv.appendChild(vizCell);
-      vizCell.style.width = cellSize;
-      vizCell.style.height = cellSize;
-      //text divs
-      var vizCellText = document.createElement("div");
-      vizCellText.className = "vizCellText";
-      vizCell.appendChild(vizCellText);
-      cellId++;
-    }
-  }
+  //
+  window.setInterval("update()", 1000);
+  //
   Maptastic("tableDiv");
 }
 
 async function update() {
   const cityIOjson = await getCityIO(cityIOtableURL);
-  viz(cityIOjson);
+  renderUpdate(cityIOjson);
 }
 
-async function viz(jsonData) {
-  let cells = document.getElementsByClassName("vizCell");
-  let cellText = document.getElementsByClassName("vizCellText");
-
-  for (let i = 0; i < cells.length; i++) {
-    //get the key for this type
-    let typeIndex = jsonData.grid[i];
-    cellText[i].innerHTML = i;
-
-    if (typeIndex === -1) {
-      cellText[i].innerHTML = "null";
-      cells[i].style.backgroundColor = "rgb(70,70,70)";
-      cellText[i].innerHTML = typeIndex;
-    } else {
-      cellText[i].innerHTML = jsonData.header.mapping.type[typeIndex];
-      // cellText[i].innerHTML = typeIndex;
-      cells[i].style.backgroundColor = globalColors[typeIndex];
-    }
-  }
+async function renderUpdate(jsonData) {
+  console.log(jsonData);
 }

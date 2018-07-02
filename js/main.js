@@ -500,10 +500,12 @@ function webWorkerListen() {
   CVworker.addEventListener(
     "message",
     function(e) {
-      //get the WEBwroder msg and use its 1st item for types
+      //get the WEBwroder msg and use
+      //its 1st item for types
       typesArray = e.data[0];
 
-      //get the WEBwroder msg and use its 2nd item for viz the grid
+      //get the WEBwroder msg and use
+      //its 2nd item for viz the grid
       pixelColArr = e.data[1];
 
       updateVizGrid(pixelColArr);
