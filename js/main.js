@@ -262,8 +262,7 @@ function scanArrayMaker(gridSizeCols, gridSizeRows) {
   //get canvas ratio to divided by #-1 of points
   let ratioX = webcamCanvas.width / (gridSizeCols - 1);
   let ratioY = webcamCanvas.height / (gridSizeRows - 1);
-  console.log(gridSizeCols, gridSizeRows);
-  let counter = 0;
+  // let counter = 0;
   // let c = 0;
 
   for (let cols = 0; cols < webcamCanvas.height; cols += ratioY * 4) {
@@ -281,7 +280,7 @@ function scanArrayMaker(gridSizeCols, gridSizeRows) {
           scanArrayPt.push([rows + i, cols + j]);
         }
       }
-      counter++;
+      // counter++;
     }
   }
 

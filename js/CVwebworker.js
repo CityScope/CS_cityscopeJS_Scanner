@@ -107,7 +107,6 @@ function CV(scannedPixels) {
       //look for this bricks pattern in 'Codes' property
       typesArray.push(cityIOdataStruct.objects.codes.indexOf(thisBrick));
     }
-    console.log(typesArray);
     return typesArray;
   }
 
