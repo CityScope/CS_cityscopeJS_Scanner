@@ -90,43 +90,44 @@ function CV(scannedPixels) {
 
   ///////////////////////////////////////////////////////////////////////////
 
-  // if we got any colors from the first part
-  if (pixColArr.length > 1) {
-    // find this brick's type using the cv color info
+  function typesLookup(pixelColorArray) {
+    let numColumns = cityIOdataStruct.header.spatial.ncols;
+    // find this brick's type using the found color info
     // and by matching the 4x4 pixels to known types
     // run through the 1D list of colors to reshape
     //this into 4x4 matrices
 
     for (
-      let j = 0;
-      j < pixColArr.length;
-      j += Math.sqrt(pixColArr.length) * 4
+      let thisCol = 0;
+      thisCol < pixelColorArray.length;
+      thisCol += numColumns * 4
     ) {
       // x zero y zero top left going down on y in jumps of 4
-      for (let i = 0; i < Math.sqrt(pixColArr.length); i = i + 4) {
+      for (let r = 0; r < 1; r = r + 4) {
         //reshape pixels to lists of 16 bits, or one brick [should be rewritten cleaner]
-        thisBrick = [
+        let thisBrick = [
           //first row
-          pixColArr[i + j],
-          pixColArr[i + j + Math.sqrt(pixColArr.length)],
-          pixColArr[i + j + Math.sqrt(pixColArr.length) * 2],
-          pixColArr[i + j + Math.sqrt(pixColArr.length) * 3],
+          pixelColorArray[r + thisCol],
+          pixelColorArray[r + thisCol + numColumns],
+          pixelColorArray[r + thisCol + numColumns * 2],
+          pixelColorArray[r + thisCol + numColumns * 3],
           //second row
-          pixColArr[i + j + 1],
-          pixColArr[i + j + 1 + Math.sqrt(pixColArr.length)],
-          pixColArr[i + j + 1 + Math.sqrt(pixColArr.length) * 2],
-          pixColArr[i + j + 1 + Math.sqrt(pixColArr.length) * 3],
+          pixelColorArray[r + thisCol + 1],
+          pixelColorArray[r + thisCol + 1 + numColumns],
+          pixelColorArray[r + thisCol + 1 + numColumns * 2],
+          pixelColorArray[r + thisCol + 1 + numColumns * 3],
           //third row
-          pixColArr[i + j + 2],
-          pixColArr[i + j + 2 + Math.sqrt(pixColArr.length)],
-          pixColArr[i + j + 2 + Math.sqrt(pixColArr.length) * 2],
-          pixColArr[i + j + 2 + Math.sqrt(pixColArr.length) * 3],
+          pixelColorArray[r + thisCol + 2],
+          pixelColorArray[r + thisCol + 2 + numColumns],
+          pixelColorArray[r + thisCol + 2 + numColumns * 2],
+          pixelColorArray[r + thisCol + 2 + numColumns * 3],
           //forth row
-          pixColArr[i + j + 3],
-          pixColArr[i + j + 3 + Math.sqrt(pixColArr.length)],
-          pixColArr[i + j + 3 + Math.sqrt(pixColArr.length) * 2],
-          pixColArr[i + j + 3 + Math.sqrt(pixColArr.length) * 3]
+          pixelColorArray[r + thisCol + 3],
+          pixelColorArray[r + thisCol + 3 + numColumns],
+          pixelColorArray[r + thisCol + 3 + numColumns * 2],
+          pixelColorArray[r + thisCol + 3 + numColumns * 3]
         ].toString();
+
         //avoid new lines and commas for clear list
         thisBrick = thisBrick.replace(/,/g, "");
 
@@ -138,12 +139,13 @@ function CV(scannedPixels) {
         );
       }
     }
-
-    /////////////////////////////////////////////////////////////////
-    //return 2 msgs  to main thread:
-    // 1. the type found in cv
-    // 2. colors for  visulaiztion & cityIO sending
-    webworkerMsg.push(typesArray, pixColArr);
-    self.postMessage(webworkerMsg);
+    return typesArray;
   }
+
+  /////////////////////////////////////////////////////////////////
+  //return 2 msgs  to main thread:
+  // 1. the type found in cv
+  // 2. colors for  visulaiztion & cityIO sending
+  webworkerMsg.push(typesLookup(pixColArr), pixColArr);
+  self.postMessage(webworkerMsg);
 }

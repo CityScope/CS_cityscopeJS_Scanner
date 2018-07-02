@@ -114,6 +114,8 @@ async function setup() {
     rawDiv.style.width = cellSize;
     rawDiv.style.height = cellSize * i;
     for (let j = 0; j < gridSizeRows; j++) {
+      console.log(i, j);
+
       var vizCell = document.createElement("div");
       vizCell.className = "vizCell shadow";
       vizCell.id = cellId;
@@ -131,8 +133,8 @@ async function setup() {
 }
 
 async function update() {
-  const cityIOjsonNew = await getCityIO(cityIOtableURL);
-  viz(cityIOjsonNew);
+  const cityIOjson = await getCityIO(cityIOtableURL);
+  viz(cityIOjson);
 }
 
 async function viz(jsonData) {

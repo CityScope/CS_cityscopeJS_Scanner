@@ -279,8 +279,6 @@ function MatrixTransform(dstCorners) {
   var gridSizeCols = cityIOdataStruct.header.spatial.ncols * 4;
   var gridSizeRows = cityIOdataStruct.header.spatial.nrows * 4;
 
-  console.log(gridSizeCols, gridSizeRows);
-
   //matrix Grid Location Array
   var matrixGridLocArray = [];
   // return a new visual Grid Locations Array
