@@ -13,6 +13,10 @@ body {
 .tableDiv {
   width: 1000px;
   height: 1000px;
-  background: linear-gradient(115deg, #e100ff, 40%, #005e9c 80%);
+  background: linear-gradient(
+    115deg,
+    rgba(2, 0, 36, 1) 47%,
+    rgba(121, 9, 114, 1) 97%
+  );
   margin: auto;
 }

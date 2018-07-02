@@ -2,6 +2,7 @@ html {
   height: 100%;
 }
 
+/* hides native file loader for better UI */
 #my_file {
   display: none;
 }
@@ -78,21 +79,14 @@ a {
   cursor: all-scroll;
   border: 3px solid black;
   background-color: rgba(0, 0, 0, 0.5);
+  max-width: 25vw;
+  max-height: 5vw;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 2vw;
+  color: white;
 }
 
+/* GUI */
 .dg.ac {
   z-index: 1000 !important;
-}
-
-.vizRawsDiv {
-  float: left;
-}
-
-.vizCell {
-  position: relative;
-  /* margin: 1px; */
-  pointer-events: none;
-  font-family: "Courier New", Courier, monospace;
-  font-size: 0.8vw;
-  color: red;
 }

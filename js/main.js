@@ -444,10 +444,6 @@ function ColorPicker(matrixGridLocArray) {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 //create viz. grid to show scanning results
 function vizGrid() {
-  // grid pixels size from settings
-  var gridSizeCols = cityIOdataStruct.header.spatial.ncols * 4;
-  var gridSizeRows = cityIOdataStruct.header.spatial.nrows * 4;
-
   // make the grid div parent
   $("<DIV/>", {
     id: "vizCellDivParent",
@@ -455,42 +451,13 @@ function vizGrid() {
   }).appendTo("body");
   //drag-able
   $("#vizCellDivParent").draggable();
-
-  // make the visual rep of the now distorted grid
-  for (let i = 0; i < gridSizeCols; i++) {
-    var vizRawsDiv = document.createElement("div");
-    vizRawsDiv.className = "vizRawsDiv";
-    vizCellDivParent.appendChild(vizRawsDiv);
-    for (let j = 0; j < gridSizeRows; j++) {
-      var vizCell = document.createElement("div");
-      vizCell.className = "vizCell";
-      vizRawsDiv.appendChild(vizCell);
-      //cell sized in viz grid
-      let cellDims =
-        (document.documentElement.clientWidth / gridSizeCols / 4).toString() +
-        "px";
-      vizCell.style.width = cellDims;
-      vizCell.style.height = cellDims;
-      // get the divs to array for later update
-      vizGridArray.push(vizCell);
-
-      vizCell.innerHTML = (j + 1) * (i + 1) - 1;
-    }
-  }
 }
 
 //color the visual grid base on the web-worker cv analysis
-function updateVizGrid() {
-  for (let i = 0; i < vizGridArray.length; i++) {
-    if (pixelColArr[i] == 0) {
-      vizGridArray[i].style.background = "white";
-    } else if (pixelColArr[i] == 1) {
-      vizGridArray[i].style.background = "black";
-    } else {
-      //if color scanning is in the threshold area
-      vizGridArray[i].style.background = "magenta";
-    }
-  }
+function updateVizGrid(typesArray) {
+  let d;
+  d = document.getElementById("vizCellDivParent");
+  d.innerHTML = typesArray;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -500,7 +467,7 @@ function webWorkerListen() {
   CVworker.addEventListener(
     "message",
     function(e) {
-      //get the WEBwroder msg and use
+      //get the WEBwroker msg and use
       //its 1st item for types
       typesArray = e.data[0];
 
@@ -508,7 +475,7 @@ function webWorkerListen() {
       //its 2nd item for viz the grid
       pixelColArr = e.data[1];
 
-      updateVizGrid(pixelColArr);
+      updateVizGrid(typesArray);
     },
     false
   );
