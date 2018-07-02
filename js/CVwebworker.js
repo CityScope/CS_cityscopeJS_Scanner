@@ -93,58 +93,27 @@ function CV(scannedPixels) {
   ///////////////////////////////////////////////////////////////////////////
 
   function typesLookup(pixelColorArray) {
-    let numColumns = cityIOdataStruct.header.spatial.ncols;
     // find this brick's type using the found color info
-    // and by matching the 4x4 pixels to known types
-    // run through the 1D list of colors to reshape
-    //this into 4x4 matrices
-
-    for (
-      let thisCol = 0;
-      thisCol < pixelColorArray.length;
-      thisCol += numColumns * 4
-    ) {
-      // x zero y zero top left going down on y in jumps of 4
-      for (let r = 0; r < numColumns; r = r + 8) {
-        //reshape pixels to lists of 16 bits, or one brick [should be rewritten cleaner]
-        let thisBrick = [
-          //first row
-          pixelColorArray[r + thisCol],
-          pixelColorArray[r + thisCol + numColumns],
-          pixelColorArray[r + thisCol + numColumns * 2],
-          pixelColorArray[r + thisCol + numColumns * 3],
-          //second row
-          pixelColorArray[r + thisCol + 1],
-          pixelColorArray[r + thisCol + 1 + numColumns],
-          pixelColorArray[r + thisCol + 1 + numColumns * 2],
-          pixelColorArray[r + thisCol + 1 + numColumns * 3],
-          //third row
-          pixelColorArray[r + thisCol + 2],
-          pixelColorArray[r + thisCol + 2 + numColumns],
-          pixelColorArray[r + thisCol + 2 + numColumns * 2],
-          pixelColorArray[r + thisCol + 2 + numColumns * 3],
-          //forth row
-          pixelColorArray[r + thisCol + 3],
-          pixelColorArray[r + thisCol + 3 + numColumns],
-          pixelColorArray[r + thisCol + 3 + numColumns * 2],
-          pixelColorArray[r + thisCol + 3 + numColumns * 3]
-        ].toString();
-
-        //avoid new lines and commas for clear list
-        thisBrick = thisBrick.replace(/,/g, "");
-
-        //before sending to cityIO, look for
-        //the right type for this bricks pattern in 'Codes'
-        typesArray.push(
-          //send back the location of this type in the types list
-          cityIOdataStruct.objects.codes.indexOf(thisBrick)
-        );
+    // by matching the 16[4x4] pixels to known types
+    // by running through the 1D list of colors
+    for (let i = 0; i < pixColArr.length; i = i + 16) {
+      let thisBrick = [];
+      for (let j = 0; j < 16; j++) {
+        thisBrick.push(pixelColorArray[i + j]);
       }
+      //remove  new lines and commas for clear list
+      thisBrick = thisBrick.join("");
+      //before sending back to main thread for cityIO POST,
+      //look for this bricks pattern in 'Codes' property
+      typesArray.push(cityIOdataStruct.objects.codes.indexOf(thisBrick));
     }
+    console.log(typesArray);
     return typesArray;
   }
 
   /////////////////////////////////////////////////////////////////
+  //send back the location of this type in the types list
+
   //return 2 msgs  to main thread:
   // 1. the type found in cv
   // 2. colors for  visulaiztion & cityIO sending

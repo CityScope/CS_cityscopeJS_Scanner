@@ -153,33 +153,16 @@ async function viz(jsonData) {
   for (let i = 0; i < cells.length; i++) {
     //get the key for this type
     let typeIndex = jsonData.grid[i];
-    if (typeIndex == -1) {
+    cellText[i].innerHTML = i;
+
+    if (typeIndex === -1) {
+      cellText[i].innerHTML = "null";
       cells[i].style.backgroundColor = "rgb(70,70,70)";
       cellText[i].innerHTML = typeIndex;
     } else {
-      // cells[i].innerHTML = jsonData.header.mapping.type[typeIndex];
-      cellText[i].innerHTML = typeIndex;
+      cellText[i].innerHTML = jsonData.header.mapping.type[typeIndex];
+      // cellText[i].innerHTML = typeIndex;
       cells[i].style.backgroundColor = globalColors[typeIndex];
     }
   }
-
-  // let grnArr = [];
-  // for (let i = 0; i < cells.length; i++) {
-  //   //get the key for this type
-  //   let typeIndex = jsonData.grid[i];
-  //   cellText[i].innerHTML = cells[i].id;
-  //   cells[i].style.backgroundColor = "white";
-  //   if (typeIndex >= 0 && typeIndex < 10) {
-  //     cells[i].style.backgroundColor = "gray";
-  //     grnArr.push(cells[i]);
-  //   }
-  // }
-
-  // for (let j = 0; j < grnArr.length; j++) {
-  //   // grnArr[j].innerHTML = "s";
-  //   //  Math.hypot();
-  //   console.log(grnArr[j]);
-  // }
-
-  // console.log(grnArr.length);
 }

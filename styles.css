@@ -92,4 +92,7 @@ a {
   position: relative;
   /* margin: 1px; */
   pointer-events: none;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.8vw;
+  color: red;
 }

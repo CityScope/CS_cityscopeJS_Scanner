@@ -259,38 +259,26 @@ function contrastCanvas(contrast, canvas) {
 //evenly divided grid points to scan
 function scanArrayMaker(gridSizeCols, gridSizeRows) {
   var scanArrayPt = [];
-  //get point in certain ratio
-  //to width divided by # of points
-
+  //get canvas ratio to divided by #-1 of points
   let ratioX = webcamCanvas.width / (gridSizeCols - 1);
   let ratioY = webcamCanvas.height / (gridSizeRows - 1);
-  // let counter = 0;
-  // for (let i = 0; i <= webcamCanvas.width; i += ratioX) {
-  //   for (let j = 0; j <= webcamCanvas.height; j += ratioY) {
-  //     scanArrayPt.push([i, j]);
-  //     // viz the ref. points for debuging
-  //     drawSVG([i, j], "green", 3);
-  //     textSVG([i, j], counter, 20);
-  //     counter++;
-  //   }
-  // }
-
   console.log(gridSizeCols, gridSizeRows);
   let counter = 0;
-  let c = 0;
+  // let c = 0;
 
   for (let cols = 0; cols < webcamCanvas.height; cols += ratioY * 4) {
     for (let rows = 0; rows < webcamCanvas.width; rows += ratioX * 4) {
-      drawSVG([rows, cols], "green", 10);
-      textSVG([rows - 3, cols - 3], counter, 50);
+      //draw points if needed
+      // drawSVG([rows, cols], "green", 10);
+      // textSVG([rows, cols], counter, 60);
 
       for (let j = 0; j < ratioY * 4; j += ratioY) {
         for (let i = 0; i < ratioX * 4; i += ratioX) {
-          textSVG([rows + i, cols + j], c, 15);
-          drawSVG([rows + i, cols + j], "green", 1);
+          //draw points if needed
+          // textSVG([rows + i, cols + j], c, 5);
+          // drawSVG([rows + i, cols + j], "green", 1);
+          // c++;
           scanArrayPt.push([rows + i, cols + j]);
-
-          c++;
         }
       }
       counter++;
@@ -484,9 +472,10 @@ function vizGrid() {
         "px";
       vizCell.style.width = cellDims;
       vizCell.style.height = cellDims;
-
-      // get the divs to array
+      // get the divs to array for later update
       vizGridArray.push(vizCell);
+
+      vizCell.innerHTML = (j + 1) * (i + 1) - 1;
     }
   }
 }
@@ -517,6 +506,7 @@ function webWorkerListen() {
 
       //get the WEBwroder msg and use its 2nd item for viz the grid
       pixelColArr = e.data[1];
+
       updateVizGrid(pixelColArr);
     },
     false
