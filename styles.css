@@ -71,15 +71,16 @@ a {
 }
 
 .vizGridDiv {
+  width: 500px;
+  height: 500px;
   z-index: 9;
   position: fixed;
   left: 70vw;
-  top: 20rem;
+  top: 10rem;
   box-shadow: 5px 5px 20px rgb(0, 0, 0);
   cursor: all-scroll;
   border: 3px solid black;
   background-color: rgba(0, 0, 0, 0.5);
-
   font-family: "Courier New", Courier, monospace;
   font-size: 2vw;
   color: white;
