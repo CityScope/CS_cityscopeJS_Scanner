@@ -91,6 +91,8 @@ async function start() {
   //call the media setup method at start
   setupMedia();
   webWorkerListen();
+  //make viz grid
+  vizGrid();
   infoDiv("Waiting for setting file [JSON]...");
 }
 
@@ -118,7 +120,7 @@ function onFileLoad(l) {
       keystoneUI();
     }
     //make viz grid
-    vizGrid();
+    // vizGrid();
     //at last, start sending to cityIO
     cityIOinit(sendRate);
   };
@@ -330,8 +332,8 @@ function MatrixTransform(dstCorners) {
   //distort each dot in the matrix to locations and make cubes
   for (let j = 0; j < vizGridLocArray.length; j++) {
     dstPt = perspT.transform(vizGridLocArray[j][0], vizGridLocArray[j][1]);
-    drawSVG(dstPt, "#f07", 1);
-    textSVG(dstPt, j, 12);
+    svgCircle(dstPt, "#f07", 1);
+    svgText(dstPt, j, 12);
     //push these locs to an array for scanning
     matrixGridLocArray.push([Math.floor(dstPt[0]), Math.floor(dstPt[1])]);
   }
@@ -348,7 +350,7 @@ function MatrixTransform(dstCorners) {
   infoDiv("Matrix Transformed 4 corners are at: " + dstCorners);
 }
 
-function drawSVG(dstPt, color, size) {
+function svgCircle(dstPt, color, size) {
   //display with SVG
   var scanPt = document.createElementNS(svgCDN, "circle", size);
   scanPt.setAttributeNS(null, "cx", dstPt[0]);
@@ -357,7 +359,7 @@ function drawSVG(dstPt, color, size) {
   scanPt.setAttributeNS(null, "fill", color);
   svgKeystone.appendChild(scanPt);
 }
-function textSVG(dstPt, txt, size) {
+function svgText(dstPt, txt, size) {
   var newText = document.createElementNS(svgCDN, "text");
   newText.setAttributeNS(null, "x", dstPt[0]);
   newText.setAttributeNS(null, "y", dstPt[1]);
@@ -444,20 +446,38 @@ function ColorPicker(matrixGridLocArray) {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 //create viz. grid to show scanning results
 function vizGrid() {
-  // make the grid div parent
-  $("<DIV/>", {
-    id: "vizCellDivParent",
-    class: "vizCellDivParent"
-  }).appendTo("body");
+  vizGridDiv = document.createElement("div");
+  vizGridDiv.className = "vizGridDiv";
+  document.body.appendChild(vizGridDiv);
   //drag-able
-  $("#vizCellDivParent").draggable();
+  $(vizGridDiv).draggable();
+  //make svg container
+  let xmlns = "http://www.w3.org/2000/svg";
+  svgVizGrid = document.createElementNS(xmlns, "svg");
+  svgVizGrid.className = "svgVizGrid";
+  svgVizGrid.id = "svgVizGrid";
+
+  vizGridDiv.appendChild(svgVizGrid);
+
+  var vizCell = document.createElementNS(svgVizGrid, "rect");
+  vizCell.setAttributeNS(null, "x", "0");
+  vizCell.setAttributeNS(null, "y", "0");
+  vizCell.setAttributeNS(null, "height", "50");
+  vizCell.setAttributeNS(null, "width", "50");
+  vizCell.setAttributeNS(null, "fill", "white");
+  svgVizGrid.appendChild(vizCell);
+
+  var scanPt = document.createElementNS(svgVizGrid, "circle");
+  scanPt.setAttributeNS(null, "cx", 20);
+  scanPt.setAttributeNS(null, "cy", 20);
+  scanPt.setAttributeNS(null, "r", 20);
+  scanPt.setAttributeNS(null, "fill", "red");
+  svgVizGrid.appendChild(scanPt);
 }
 
 //color the visual grid base on the web-worker cv analysis
 function updateVizGrid(typesArray) {
-  let d;
-  d = document.getElementById("vizCellDivParent");
-  d.innerHTML = typesArray;
+  // console.log(typesArray);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////

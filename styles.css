@@ -70,7 +70,7 @@ a {
   z-index: 1;
 }
 
-.vizCellDivParent {
+.vizGridDiv {
   z-index: 9;
   position: fixed;
   left: 70vw;
@@ -79,11 +79,14 @@ a {
   cursor: all-scroll;
   border: 3px solid black;
   background-color: rgba(0, 0, 0, 0.5);
-  max-width: 25vw;
-  max-height: 5vw;
+
   font-family: "Courier New", Courier, monospace;
   font-size: 2vw;
   color: white;
+}
+
+.svgVizGrid {
+  z-index: 10;
 }
 
 /* GUI */
