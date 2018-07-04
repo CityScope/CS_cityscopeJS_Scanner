@@ -39,8 +39,8 @@ const CVworker = new Worker("js/CVwebworker.js");
 // POST to cityIO rate in MS
 var sendRate = 1000;
 
-// make visual grid representation
-var vizGridArray = [];
+//  visual grid array
+var svgPntsArray = [];
 
 // global var for colors returning from webworker
 var pixelColArr = [];
@@ -118,7 +118,7 @@ function onFileLoad(l) {
       keystoneUI();
     }
     //make viz grid
-    vizGrid();
+    // vizGrid();
     //at last, start sending to cityIO
     cityIOinit(sendRate);
   };
@@ -256,8 +256,8 @@ function contrastCanvas(contrast, canvas) {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////SCAN LOGIC ////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
-// a function to make an initial array of
-//evenly divided grid points to scan
+// a function to make the initial generic array of
+//evenly divided grid points before distorting
 function scanArrayMaker(gridSizeCols, gridSizeRows) {
   var scanArrayPt = [];
   //get canvas ratio to divided by #-1 of points
@@ -328,11 +328,14 @@ function MatrixTransform(dstCorners) {
   //and store the results of the 4 points dist. in var perspT
   let perspT;
   perspT = PerspT(srcCorners, dstCorners);
+
+  svgPntsArray = [];
   //distort each dot in the matrix to locations and make cubes
   for (let j = 0; j < vizGridLocArray.length; j++) {
     dstPt = perspT.transform(vizGridLocArray[j][0], vizGridLocArray[j][1]);
-    svgKeystone.appendChild(svgCircle(dstPt, "#f07", 1));
-    // svgKeystone.appendChild(svgText(dstPt, j, 12));
+    svgPntsArray.push(svgKeystone.appendChild(svgCircle(dstPt, "#f07", 1)));
+    //show text for each pixel
+    // svgKeystone.appendChild(svgText(dstPt, j, 8));
     //push these locs to an array for scanning
     matrixGridLocArray.push([Math.floor(dstPt[0]), Math.floor(dstPt[1])]);
   }
@@ -425,67 +428,22 @@ function ColorPicker(matrixGridLocArray) {
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
-//create viz. grid to show scanning results
-async function vizGrid() {
-  //load cols, rows from struct file
-  let cols = cityIOdataStruct.header.spatial.ncols;
-  let rows = cityIOdataStruct.header.spatial.nrows;
-  //
-  var vizGridDiv = document.createElement("div");
-  vizGridDiv.className = "vizGridDiv";
-  document.body.appendChild(vizGridDiv);
-  //dragable
-  $(vizGridDiv).draggable();
-  //make svg container
-  var svgVizGridSize = 400;
-  var svgVizGrid = document.createElementNS(svgCDN, "svg");
-  svgVizGrid.setAttribute(
-    "viewBox",
-    "0 0 " + svgVizGridSize + " " + svgVizGridSize
-  );
-
-  svgVizGrid.className = "svgVizGrid";
-  svgVizGrid.id = "svgVizGrid";
-  vizGridDiv.appendChild(svgVizGrid);
-
-  console.log(cols, rows);
-
-  //first two loops for the outer cell that
-  //contains a 4x4 array
-
-  let counter = 0;
-  for (let x = 0; x < svgVizGridSize; x += svgVizGridSize / cols) {
-    for (let y = 0; y < svgVizGridSize; y += svgVizGridSize / rows) {
-      //second two loops for 4x4 inner cell
-      for (
-        let i = 0;
-        i < svgVizGridSize / rows;
-        i += svgVizGridSize / rows / 4
-      ) {
-        for (
-          let j = 0;
-          j < svgVizGridSize / cols;
-          j += svgVizGridSize / cols / 4
-        ) {
-          //make rect
-          var vizCell = document.createElementNS(svgCDN, "rect");
-          vizCell.setAttributeNS(null, "x", x + i);
-          vizCell.setAttributeNS(null, "y", y + j);
-          vizCell.setAttributeNS(null, "height", svgVizGridSize / 4 / rows);
-          vizCell.setAttributeNS(null, "width", svgVizGridSize / 4 / cols);
-          vizCell.setAttributeNS(null, "fill", "white");
-          svgVizGrid.appendChild(vizCell);
-          svgVizGrid.appendChild(svgText([x + 5 + i, y + 10 + j], counter, 10));
-          counter++;
-        }
-      }
-    }
-  }
-}
 
 //color the visual grid base on the web-worker cv analysis
-function updateVizGrid(typesArray) {
-  // console.log(typesArray);
+function updateVizGrid(pixelColArr, typesArray) {
+  // console.log(pixelColArr, typesArray, svgPntsArray);
+  for (let i = 0; i < svgPntsArray.length; i++) {
+    if (pixelColArr[i] === 2) {
+      svgPntsArray[i].setAttribute("fill", "magenta");
+      svgPntsArray[i].setAttribute("r", "10");
+    } else if (pixelColArr[i] === 1) {
+      svgPntsArray[i].setAttribute("fill", "black");
+      svgPntsArray[i].setAttribute("r", "3");
+    } else {
+      svgPntsArray[i].setAttribute("fill", "white");
+      svgPntsArray[i].setAttribute("r", "3");
+    }
+  }
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -503,7 +461,7 @@ function webWorkerListen() {
       //its 2nd item for viz the grid
       pixelColArr = e.data[1];
 
-      updateVizGrid(typesArray);
+      updateVizGrid(pixelColArr, typesArray);
     },
     false
   );
