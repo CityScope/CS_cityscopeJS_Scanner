@@ -333,8 +333,9 @@ function MatrixTransform(dstCorners) {
   //distort each dot in the matrix to locations and make cubes
   for (let j = 0; j < vizGridLocArray.length; j++) {
     dstPt = perspT.transform(vizGridLocArray[j][0], vizGridLocArray[j][1]);
-    svgPntsArray.push(svgKeystone.appendChild(svgCircle(dstPt, "#f07", 1)));
-    //show text for each pixel
+    //create visuals points on canvas for ref and add to array
+    svgPntsArray.push(svgKeystone.appendChild(svgCircle(dstPt, "red", 1)));
+    //Optional: show text for each pixel
     // svgKeystone.appendChild(svgText(dstPt, j, 8));
     //push these locs to an array for scanning
     matrixGridLocArray.push([Math.floor(dstPt[0]), Math.floor(dstPt[1])]);
@@ -435,13 +436,13 @@ function updateVizGrid(pixelColArr, typesArray) {
   for (let i = 0; i < svgPntsArray.length; i++) {
     if (pixelColArr[i] === 2) {
       svgPntsArray[i].setAttribute("fill", "magenta");
-      svgPntsArray[i].setAttribute("r", "10");
+      svgPntsArray[i].setAttribute("r", "5");
     } else if (pixelColArr[i] === 1) {
       svgPntsArray[i].setAttribute("fill", "black");
-      svgPntsArray[i].setAttribute("r", "3");
+      svgPntsArray[i].setAttribute("r", "2");
     } else {
       svgPntsArray[i].setAttribute("fill", "white");
-      svgPntsArray[i].setAttribute("r", "3");
+      svgPntsArray[i].setAttribute("r", "2");
     }
   }
 }
