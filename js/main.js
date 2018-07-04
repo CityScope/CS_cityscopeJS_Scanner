@@ -427,39 +427,52 @@ function ColorPicker(matrixGridLocArray) {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 //create viz. grid to show scanning results
 async function vizGrid() {
+  //load cols, rows from struct file
+  let cols = cityIOdataStruct.header.spatial.ncols;
+  let rows = cityIOdataStruct.header.spatial.nrows;
+  //
   var vizGridDiv = document.createElement("div");
   vizGridDiv.className = "vizGridDiv";
   document.body.appendChild(vizGridDiv);
-  //drag-able
+  //dragable
   $(vizGridDiv).draggable();
   //make svg container
+  var svgVizGridSize = 400;
   var svgVizGrid = document.createElementNS(svgCDN, "svg");
-  svgVizGrid.setAttribute("viewBox", "0 0 500 500");
+  svgVizGrid.setAttribute(
+    "viewBox",
+    "0 0 " + svgVizGridSize + " " + svgVizGridSize
+  );
 
   svgVizGrid.className = "svgVizGrid";
   svgVizGrid.id = "svgVizGrid";
   vizGridDiv.appendChild(svgVizGrid);
 
-  //load cols, rows from struct file
-  let cols = cityIOdataStruct.header.spatial.ncols;
-  let rows = cityIOdataStruct.header.spatial.nrows;
-
   console.log(cols, rows);
 
   //first two loops for the outer cell that
   //contains a 4x4 array
+
   let counter = 0;
-  for (let y = 0; y < rows * 100; y += 100) {
-    for (let x = 0; x < cols * 100; x += 100) {
+  for (let x = 0; x < svgVizGridSize; x += svgVizGridSize / cols) {
+    for (let y = 0; y < svgVizGridSize; y += svgVizGridSize / rows) {
       //second two loops for 4x4 inner cell
-      for (let i = 0; i < 4 * 25; i += 25) {
-        for (let j = 0; j < 4 * 25; j += 25) {
+      for (
+        let i = 0;
+        i < svgVizGridSize / rows;
+        i += svgVizGridSize / rows / 4
+      ) {
+        for (
+          let j = 0;
+          j < svgVizGridSize / cols;
+          j += svgVizGridSize / cols / 4
+        ) {
           //make rect
           var vizCell = document.createElementNS(svgCDN, "rect");
           vizCell.setAttributeNS(null, "x", x + i);
           vizCell.setAttributeNS(null, "y", y + j);
-          vizCell.setAttributeNS(null, "height", "20");
-          vizCell.setAttributeNS(null, "width", "20");
+          vizCell.setAttributeNS(null, "height", svgVizGridSize / 4 / rows);
+          vizCell.setAttributeNS(null, "width", svgVizGridSize / 4 / cols);
           vizCell.setAttributeNS(null, "fill", "white");
           svgVizGrid.appendChild(vizCell);
           svgVizGrid.appendChild(svgText([x + 5 + i, y + 10 + j], counter, 10));
