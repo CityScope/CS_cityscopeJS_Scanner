@@ -55,10 +55,10 @@ var brightness = 0;
 var contrast = 0;
 
 //make vid canvas
-var webcamCanvas = document.createElement("canvas");
+var camCanvas = document.createElement("canvas");
 
 //get main canvas context for scanning
-var vidCanvas2dContext = webcamCanvas.getContext("2d");
+var vidCanvas2dContext = camCanvas.getContext("2d");
 
 //cityIO timer
 var cityIOtimer;
@@ -130,28 +130,28 @@ start();
 // WEBCAM & MEDIA SETUP
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 function setupCanvs() {
-  webcamCanvas.id = "webcamCanvas";
-  webcamCanvas.className = "webcamCanvas";
+  camCanvas.id = "webcamCanvas";
+  camCanvas.className = "webcamCanvas";
   //MUST keep full numbers [WIP]
-  webcamCanvas.width = Math.floor(window.innerHeight * 0.9);
-  webcamCanvas.height = Math.floor(window.innerHeight * 0.9);
-  webcamCanvas.style.zIndex = 0;
-  webcamCanvas.style.position = "absolute";
-  webcamCanvas.style.border = "1px solid";
-  document.body.appendChild(webcamCanvas);
+  camCanvas.width = Math.floor(window.innerHeight * 0.9);
+  camCanvas.height = Math.floor(window.innerHeight * 0.9);
+  camCanvas.style.zIndex = 0;
+  camCanvas.style.position = "absolute";
+  camCanvas.style.border = "1px solid";
+  document.body.appendChild(camCanvas);
 
   //SVG setup for later viz.
   var svgDiv = document.createElement("div");
   document.body.appendChild(svgDiv);
   svgDiv.id = "svgDiv";
-  svgDiv.width = webcamCanvas.width;
-  svgDiv.height = webcamCanvas.height;
+  svgDiv.width = camCanvas.width;
+  svgDiv.height = camCanvas.height;
   svgDiv.className = "svgDiv";
   svgKeystone = document.createElementNS(svgCDN, "svg");
   svgKeystone.className = "svgDiv";
   svgKeystone.id = "svgKeystone";
-  svgKeystone.setAttributeNS(null, "width", webcamCanvas.width);
-  svgKeystone.setAttributeNS(null, "height", webcamCanvas.height);
+  svgKeystone.setAttributeNS(null, "width", camCanvas.width);
+  svgKeystone.setAttributeNS(null, "height", camCanvas.height);
   svgDiv.appendChild(svgKeystone);
 }
 
@@ -169,8 +169,8 @@ function setupMedia(mirrorVid) {
   var height = 0;
   var video = document.createElement("video");
   video.addEventListener("loadedmetadata", function() {
-    width = webcamCanvas.width;
-    height = webcamCanvas.height;
+    width = camCanvas.width;
+    height = camCanvas.height;
     //apply mirror video
     if (mirrorVid) {
       vidCanvas2dContext.translate(width, 0);
@@ -214,15 +214,12 @@ function setupMedia(mirrorVid) {
   }
 }
 
+////////////////////
 // Brightness fn. for canvas video. UI for input.
+////////////////////
 function brightnessCanvas(value, canvas) {
   // Get the pixel data
-  var pixelData = canvas.getImageData(
-    0,
-    0,
-    webcamCanvas.width,
-    webcamCanvas.height
-  );
+  var pixelData = canvas.getImageData(0, 0, camCanvas.width, camCanvas.height);
   var pixelDataLen = pixelData.data.length;
   for (var i = 0; i < pixelDataLen; i += 4) {
     pixelData.data[i] += value;
@@ -233,13 +230,11 @@ function brightnessCanvas(value, canvas) {
   canvas.putImageData(pixelData, 0, 0);
 }
 
+////////////////////
+// contrast fn.
+////////////////////
 function contrastCanvas(contrast, canvas) {
-  var pixelData = canvas.getImageData(
-    0,
-    0,
-    webcamCanvas.width,
-    webcamCanvas.height
-  );
+  var pixelData = canvas.getImageData(0, 0, camCanvas.width, camCanvas.height);
   //input range [-100..100]
   var pixelDataLen = pixelData.data.length;
   contrast = contrast / 100 + 1; //convert to decimal & shift range: [0..2]
@@ -258,21 +253,27 @@ function contrastCanvas(contrast, canvas) {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 // a function to make the initial generic array of
 //evenly divided grid points before distorting
-function scanArrayMaker(gridSizeCols, gridSizeRows) {
+function scanArrayMaker(gridCols, gridRows) {
   var scanArrayPt = [];
   //get canvas ratio to divided by #-1 of points
-  let ratioX = webcamCanvas.width / (gridSizeCols - 1);
-  let ratioY = webcamCanvas.height / (gridSizeRows - 1);
-  // let counter = 0;
-  // let counter_inner = 0;
-  for (let cols = 0; cols < webcamCanvas.height; cols += ratioY * 4) {
-    for (let rows = 0; rows < webcamCanvas.width; rows += ratioX * 4) {
-      //draw points if needed
-      // svgCircle([rows, cols], "green", 10);
-      //  svgText([rows, cols], counter, 60);
+  let ratX = camCanvas.width / (gridCols - 1);
+  let ratY = camCanvas.height / (gridRows - 1);
+  var gapInGrid = (0 * camCanvas.width) / 100;
+  console.log(ratY);
 
-      for (let j = 0; j < ratioY * 4; j += ratioY) {
-        for (let i = 0; i < ratioX * 4; i += ratioX) {
+  let counter = 0;
+  // let counter_inner = 0;
+
+  for (let cols = 0; cols < camCanvas.height; cols += ratY * 4 + gapInGrid) {
+    for (let rows = 0; rows < camCanvas.width; rows += ratX * 4 + gapInGrid) {
+      //draw points if needed
+      svgKeystone.appendChild(
+        svgCircle([rows, cols], "green", 3),
+        svgText([rows, cols], counter, 15)
+      );
+
+      for (let j = 0; j < ratY * 4; j += ratY) {
+        for (let i = 0; i < ratX * 4; i += ratX) {
           //draw points if needed
           // svgText([rows + i, cols + j], counter_inner, 15);
           // svgCircle([rows + i, cols + j], "green", 1);
@@ -291,26 +292,26 @@ function scanArrayMaker(gridSizeCols, gridSizeRows) {
 //create the scanning transposed matrix
 function MatrixTransform(dstCorners) {
   // grid pixels size from settings
-  var gridSizeCols = cityIOdataStruct.header.spatial.ncols * 4;
-  var gridSizeRows = cityIOdataStruct.header.spatial.nrows * 4;
+  var gridCols = cityIOdataStruct.header.spatial.ncols * 4;
+  var gridRows = cityIOdataStruct.header.spatial.nrows * 4;
 
   //matrix Grid Location Array
   var matrixGridLocArray = [];
   // return a new visual Grid Locations Array
-  let vizGridLocArray = scanArrayMaker(gridSizeCols, gridSizeRows);
+  let vizGridLocArray = scanArrayMaker(gridCols, gridRows);
 
   //set the reference points of the 4 edges of the canvas
   // to get 100% of the image/video in canvas
   //before distorting
   srcCorners = [
-    getPos(webcamCanvas)[0],
-    getPos(webcamCanvas)[1],
-    webcamCanvas.width,
-    getPos(webcamCanvas)[1],
-    getPos(webcamCanvas)[0],
-    webcamCanvas.height,
-    webcamCanvas.width,
-    webcamCanvas.height
+    getPos(camCanvas)[0],
+    getPos(camCanvas)[1],
+    camCanvas.width,
+    getPos(camCanvas)[1],
+    getPos(camCanvas)[0],
+    camCanvas.height,
+    camCanvas.width,
+    camCanvas.height
   ];
   //method to get div position
   function getPos(el) {
@@ -542,7 +543,7 @@ function keystoneUI() {
   // react to mouse events
   function mouseKeystone(e) {
     // only collect clicks that are in the canvas area
-    if (e.x < webcamCanvas.width && e.y < webcamCanvas.height) {
+    if (e.x < camCanvas.width && e.y < camCanvas.height) {
       //pop. array of clicks
       clickArray.push(e.x, e.y);
       infoDiv(
@@ -592,15 +593,15 @@ function magGlass() {
   document.addEventListener("mousemove", function(e) {
     magGlassCtx.clearRect(0, 0, magWid, magWid);
     magGlassCtx.drawImage(
-      webcamCanvas,
+      camCanvas,
       e.pageX - magWid / 4,
       e.pageY - magWid / 4,
-      webcamCanvas.width,
-      webcamCanvas.width,
+      camCanvas.width,
+      camCanvas.width,
       0,
       0,
-      webcamCanvas.width * 2,
-      webcamCanvas.height * 2
+      camCanvas.width * 2,
+      camCanvas.height * 2
     );
     magGlassCanvas.style.top = e.pageY - magWid / 2 + "px";
     magGlassCanvas.style.left = e.pageX - magWid / 2 + "px";
