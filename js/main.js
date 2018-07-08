@@ -337,7 +337,9 @@ function MatrixTransform(dstCorners) {
   for (let j = 0; j < vizGridLocArray.length; j++) {
     dstPt = perspT.transform(vizGridLocArray[j][0], vizGridLocArray[j][1]);
     //create visuals points on canvas for ref and add to array
-    svgPntsArray.push(svgKeystone.appendChild(svgCircle(dstPt, "red", 1)));
+    svgPntsArray.push(
+      svgKeystone.appendChild(svgCircle(dstPt, "red", 1, 1, "#42adf4", 0.25))
+    );
     //Optional: show text for each pixel
     // svgKeystone.appendChild(svgText(dstPt, j, 8));
     //push these locs to an array for scanning
@@ -432,25 +434,6 @@ function ColorPicker(matrixGridLocArray) {
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//color the visual grid base on the web-worker cv analysis
-function updateVizGrid(pixelColArr, typesArray) {
-  // console.log(pixelColArr, typesArray, svgPntsArray);
-  for (let i = 0; i < svgPntsArray.length; i++) {
-    if (pixelColArr[i] === 2) {
-      svgPntsArray[i].setAttribute("fill", "magenta");
-      svgPntsArray[i].setAttribute("r", "5");
-    } else if (pixelColArr[i] === 1) {
-      svgPntsArray[i].setAttribute("fill", "black");
-      svgPntsArray[i].setAttribute("r", "2");
-    } else {
-      svgPntsArray[i].setAttribute("fill", "white");
-      svgPntsArray[i].setAttribute("r", "2");
-    }
-  }
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
 function webWorkerListen() {
   // Get data back form WEBworker
   infoDiv("starting WebWorker listener...");
@@ -469,6 +452,32 @@ function webWorkerListen() {
     },
     false
   );
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//color the visual grid base on the web-worker cv analysis
+function updateVizGrid(pixelColArr, typesArray) {
+  for (let i = 0; i < pixelColArr.length; i++) {
+    let pixType = typesArray[Math.floor(i / 16)];
+    if (pixType !== -1) {
+      svgPntsArray[i].setAttribute("stroke", "#59d0ff");
+      svgPntsArray[i].setAttribute("stroke-width", "1");
+    } else {
+      svgPntsArray[i].setAttribute("stroke", "#f442ee");
+      svgPntsArray[i].setAttribute("stroke-width", "1");
+    }
+    if (pixelColArr[i] === 2) {
+      svgPntsArray[i].setAttribute("fill", "magenta");
+      svgPntsArray[i].setAttribute("r", "4");
+    } else if (pixelColArr[i] === 1) {
+      svgPntsArray[i].setAttribute("fill", "black");
+      svgPntsArray[i].setAttribute("r", "2");
+    } else {
+      svgPntsArray[i].setAttribute("fill", "white");
+      svgPntsArray[i].setAttribute("r", "2");
+    }
+  }
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
