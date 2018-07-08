@@ -267,16 +267,18 @@ function scanArrayMaker(gridCols, gridRows) {
   for (let cols = 0; cols < camCanvas.height; cols += ratY * 4 + gapInGrid) {
     for (let rows = 0; rows < camCanvas.width; rows += ratX * 4 + gapInGrid) {
       //draw points if needed
-      svgKeystone.appendChild(
-        svgCircle([rows, cols], "green", 3),
-        svgText([rows, cols], counter, 15)
-      );
+      // svgKeystone.appendChild(
+      //   svgCircle([rows, cols], "green", 3),
+      //   svgText([rows, cols], counter, 15)
+      // );
 
       for (let j = 0; j < ratY * 4; j += ratY) {
         for (let i = 0; i < ratX * 4; i += ratX) {
           //draw points if needed
-          // svgText([rows + i, cols + j], counter_inner, 15);
-          // svgCircle([rows + i, cols + j], "green", 1);
+          // svgKeystone.appendChild(
+          //   svgText([rows + i, cols + j], counter_inner, 15),
+          //   svgCircle([rows + i, cols + j], "green", 1)
+          // );
           // counter_inner++;
           scanArrayPt.push([rows + i, cols + j]);
         }
@@ -534,38 +536,40 @@ function keystoneUI() {
       "NOTE: make sure to select the croners of the scanned area in this order: TOP-LEFT->TOP-RIGHT->BOTTOM-LEFT->BOTTOM-RIGHT"
   );
   //clear clicks array
-  let clickArray = [];
-  //collect 4 mouse clicks as corners of keystone
-  document.addEventListener("click", mouseKeystone);
+  let clkArr = [];
   //turn on mag-glass efect
   magGlass();
+  //collect 4 mouse clicks as corners of keystone
+  document.addEventListener("click", mouseKeystone);
 
   // react to mouse events
   function mouseKeystone(e) {
     // only collect clicks that are in the canvas area
     if (e.x < camCanvas.width && e.y < camCanvas.height) {
       //pop. array of clicks
-      clickArray.push(e.x, e.y);
-      infoDiv(
-        "Mouse click " + clickArray.length / 2 + " at " + e.x + ", " + e.y
-      );
+      clkArr.push(e.x, e.y);
+
+      infoDiv("Mouse click " + clkArr.length / 2 + " at " + e.x + ", " + e.y);
       //viz points with svg
-      var keystonePt = document.createElementNS(svgCDN, "circle");
-      keystonePt.setAttributeNS(null, "cx", e.x);
-      keystonePt.setAttributeNS(null, "cy", e.y);
-      keystonePt.setAttributeNS(null, "r", 8);
-      keystonePt.setAttributeNS(null, "stroke", "#f07");
-      keystonePt.setAttributeNS(null, "stroke-width", "1.5");
-      keystonePt.setAttributeNS(null, "fill-opacity", "0");
-      svgKeystone.appendChild(keystonePt);
+      svgKeystone.appendChild(
+        svgCircle([e.x, e.y], "none", 10, 0, "magenta", "1")
+      );
+
       // when 2x4 clicks were added
-      if (clickArray.length == 8) {
+      if (clkArr.length == 8) {
+        // svgKeystone.appendChild(
+        //   svgLine([clkArr[0], clkArr[1]], [clkArr[2], clkArr[3]]),
+        //   svgLine([clkArr[2], clkArr[3]], [clkArr[4], clkArr[5]]),
+        //   svgLine([clkArr[4], clkArr[5]], [clkArr[6], clkArr[7]]),
+        //   svgLine([clkArr[0], clkArr[1]], [clkArr[6], clkArr[7]])
+        // );
+
         //save these keystone points to local storage
-        saveSettings("CityScopeJS_keystone", clickArray);
+        saveSettings("CityScopeJS_keystone", clkArr);
         MatrixTransform(loadSettings("CityScopeJS_keystone"));
 
         //reset the clicks array
-        clickArray = [];
+        clkArr = [];
         // and stop keystone mouse clicks
         document.removeEventListener("click", mouseKeystone);
       }
@@ -573,6 +577,8 @@ function keystoneUI() {
   }
 }
 
+/////////////////////
+/////////////////////
 function magGlass() {
   //mouse
   $("html,body").css("cursor", "crosshair");
@@ -630,13 +636,28 @@ var loadSettings = function(key) {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function svgCircle(dstPt, color, size) {
+function svgLine(srcPt, dstPt) {
+  var line = document.createElementNS(svgCDN, "line");
+  line.setAttributeNS(null, "x1", srcPt[0]);
+  line.setAttributeNS(null, "y1", srcPt[1]);
+  line.setAttributeNS(null, "x2", dstPt[0]);
+  line.setAttributeNS(null, "y2", dstPt[1]);
+  line.setAttributeNS(null, "stroke", "#f35790");
+  line.setAttributeNS(null, "stroke-width", "1");
+  return line;
+}
+
+function svgCircle(dstPt, fillCol, size, fillOp, strkCol, strkWidth) {
   //display with SVG
-  var scanPt = document.createElementNS(svgCDN, "circle", size);
+  var scanPt = document.createElementNS(svgCDN, "circle");
   scanPt.setAttributeNS(null, "cx", dstPt[0]);
   scanPt.setAttributeNS(null, "cy", dstPt[1]);
+  scanPt.setAttributeNS(null, "fill", fillCol);
   scanPt.setAttributeNS(null, "r", size);
-  scanPt.setAttributeNS(null, "fill", color);
+  scanPt.setAttributeNS(null, "fill-opacity", fillOp);
+  scanPt.setAttributeNS(null, "stroke", strkCol);
+  scanPt.setAttributeNS(null, "stroke-width", strkWidth);
+
   return scanPt;
 }
 function svgText(dstPt, txt, size) {
