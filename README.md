@@ -32,7 +32,7 @@ watch this intro video [also, 80's music] to get to know how CityScopeJS is maki
 
 ### Running
 
-[Click here to run CityScopeJS](https://cityscope.github.io/CS_citysc…)
+[Click here to run CityScopeJS](https://cityscope.media.mit.edu/CS_cityscopeJS/)
 
 - CityScopeJS should run on any modern browser with HTML5 support. Tested on Raspberry pi 2, Android and IPhone Yes, IE7 on Windows XP might not work.
 - Clone is not necessary for common setup but please do clone and run locally before posting `issues`.
