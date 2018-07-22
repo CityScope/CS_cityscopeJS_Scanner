@@ -2,6 +2,7 @@ html {
   height: 100%;
 }
 
+/* hides native file loader for better UI */
 #my_file {
   display: none;
 }
@@ -46,6 +47,7 @@ a {
   left: 60vw;
   top: 20rem;
   height: 10rem;
+  min-width: 100px;
   max-width: 300px;
   overflow-y: auto;
   font-size: 0.75rem;
@@ -69,27 +71,27 @@ a {
   z-index: 1;
 }
 
-.vizCellDivParent {
+.vizGridDiv {
+  width: 500px;
+  height: 500px;
   z-index: 9;
   position: fixed;
   left: 70vw;
-  top: 20rem;
+  top: 10rem;
   box-shadow: 5px 5px 20px rgb(0, 0, 0);
   cursor: all-scroll;
   border: 3px solid black;
   background-color: rgba(0, 0, 0, 0.5);
+  font-family: "Courier New", Courier, monospace;
+  font-size: 2vw;
+  color: white;
 }
 
+.svgVizGrid {
+  z-index: 10;
+}
+
+/* GUI */
 .dg.ac {
   z-index: 1000 !important;
-}
-
-.vizRawsDiv {
-  float: left;
-}
-
-.vizCell {
-  position: relative;
-  /* margin: 1px; */
-  pointer-events: none;
 }

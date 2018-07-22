@@ -13,59 +13,10 @@ body {
 .tableDiv {
   width: 1000px;
   height: 1000px;
-  /* background: linear-gradient(115deg, #f4827d, 20%, #ccd9ce 60%); */
+  background: linear-gradient(
+    115deg,
+    rgba(2, 0, 36, 1) 47%,
+    rgba(121, 9, 114, 1) 97%
+  );
   margin: auto;
-}
-
-.tableInfoDiv {
-  position: fixed;
-  font-family: "Press Start 2p";
-  color: rgb(207, 207, 207);
-  font-size: 0.7vw;
-  line-height: 1vw;
-  max-width: 25vw;
-  text-shadow: 0px 0px 4px rgb(0, 0, 0);
-  top: 80%;
-  left: 1%;
-  -webkit-animation: colorchange 5s infinite alternate;
-}
-
-@-webkit-keyframes colorchange {
-  0% {
-    color: #80ada9;
-  }
-
-  100% {
-    color: #ed5066;
-  }
-}
-
-.gridParentDiv {
-  position: relative;
-  top: 25%;
-  left: 25%;
-  width: 50%;
-}
-
-.vizRaws {
-  position: relative;
-  float: left;
-}
-
-.vizCellText {
-  font-family: Arial, sans-serif;
-  font-weight: bolder;
-  font-size: 0.8vw;
-  position: relative;
-  top: 50%;
-  left: 50%;
-  transform: translateY(-50%);
-  color: white;
-  text-shadow: 0px 0px 10px rgb(0, 0, 0);
-}
-
-.shadow {
-  -moz-box-shadow: rgba(0, 0, 0, 0.8) 3px 3px 10px inset;
-  -webkit-box-shadow: rgba(0, 0, 0, 0.8) 3px 3px 10px inset;
-  box-shadow: rgba(0, 0, 0, 0.8) 3px 3px 10px inset;
 }

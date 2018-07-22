@@ -39,14 +39,17 @@ const CVworker = new Worker("js/CVwebworker.js");
 // POST to cityIO rate in MS
 var sendRate = 1000;
 
-// make visual grid representation
-var vizGridArray = [];
+//  visual grid array
+var svgPntsArray = [];
 
 // global var for colors returning from webworker
 var pixelColArr = [];
 
 //types and codes for cityIO objects
 var typesArray = [];
+
+///Cmpareable string to reduce sent rate
+var oldTypesArrayStr;
 
 // Global var for GUI controls
 var brightness = 0;
@@ -55,13 +58,16 @@ var brightness = 0;
 var contrast = 0;
 
 //make vid canvas
-var webcamCanvas = document.createElement("canvas");
+var camCanvas = document.createElement("canvas");
 
 //get main canvas context for scanning
-var vidCanvas2dContext = webcamCanvas.getContext("2d");
+var vidCanvas2dContext = camCanvas.getContext("2d");
 
 //cityIO timer
 var cityIOtimer;
+
+//animation frame frame holder
+var thisFrame;
 
 //SVG element for keystone matrix
 var svgKeystone;
@@ -118,7 +124,7 @@ function onFileLoad(l) {
       keystoneUI();
     }
     //make viz grid
-    vizGrid();
+    // vizGrid();
     //at last, start sending to cityIO
     cityIOinit(sendRate);
   };
@@ -130,27 +136,28 @@ start();
 // WEBCAM & MEDIA SETUP
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 function setupCanvs() {
-  webcamCanvas.id = "webcamCanvas";
-  webcamCanvas.className = "webcamCanvas";
+  camCanvas.id = "webcamCanvas";
+  camCanvas.className = "webcamCanvas";
   //MUST keep full numbers [WIP]
-  webcamCanvas.width = Math.floor(window.innerHeight * 0.9);
-  webcamCanvas.height = Math.floor(window.innerHeight * 0.9);
-  webcamCanvas.style.zIndex = 0;
-  webcamCanvas.style.position = "absolute";
-  webcamCanvas.style.border = "1px solid";
-  document.body.appendChild(webcamCanvas);
+  camCanvas.width = Math.floor(window.innerHeight * 0.9);
+  camCanvas.height = Math.floor(window.innerHeight * 0.9);
+  camCanvas.style.zIndex = 0;
+  camCanvas.style.position = "absolute";
+  camCanvas.style.border = "1px solid";
+  document.body.appendChild(camCanvas);
 
   //SVG setup for later viz.
   var svgDiv = document.createElement("div");
   document.body.appendChild(svgDiv);
   svgDiv.id = "svgDiv";
-  svgDiv.width = webcamCanvas.width;
-  svgDiv.height = webcamCanvas.height;
+  svgDiv.width = camCanvas.width;
+  svgDiv.height = camCanvas.height;
   svgDiv.className = "svgDiv";
   svgKeystone = document.createElementNS(svgCDN, "svg");
   svgKeystone.className = "svgDiv";
-  svgKeystone.setAttributeNS(null, "width", webcamCanvas.width);
-  svgKeystone.setAttributeNS(null, "height", webcamCanvas.height);
+  svgKeystone.id = "svgKeystone";
+  svgKeystone.setAttributeNS(null, "width", camCanvas.width);
+  svgKeystone.setAttributeNS(null, "height", camCanvas.height);
   svgDiv.appendChild(svgKeystone);
 }
 
@@ -168,8 +175,8 @@ function setupMedia(mirrorVid) {
   var height = 0;
   var video = document.createElement("video");
   video.addEventListener("loadedmetadata", function() {
-    width = webcamCanvas.width;
-    height = webcamCanvas.height;
+    width = camCanvas.width;
+    height = camCanvas.height;
     //apply mirror video
     if (mirrorVid) {
       vidCanvas2dContext.translate(width, 0);
@@ -213,15 +220,12 @@ function setupMedia(mirrorVid) {
   }
 }
 
+////////////////////
 // Brightness fn. for canvas video. UI for input.
+////////////////////
 function brightnessCanvas(value, canvas) {
   // Get the pixel data
-  var pixelData = canvas.getImageData(
-    0,
-    0,
-    webcamCanvas.width,
-    webcamCanvas.height
-  );
+  var pixelData = canvas.getImageData(0, 0, camCanvas.width, camCanvas.height);
   var pixelDataLen = pixelData.data.length;
   for (var i = 0; i < pixelDataLen; i += 4) {
     pixelData.data[i] += value;
@@ -232,13 +236,11 @@ function brightnessCanvas(value, canvas) {
   canvas.putImageData(pixelData, 0, 0);
 }
 
+////////////////////
+// contrast fn.
+////////////////////
 function contrastCanvas(contrast, canvas) {
-  var pixelData = canvas.getImageData(
-    0,
-    0,
-    webcamCanvas.width,
-    webcamCanvas.height
-  );
+  var pixelData = canvas.getImageData(0, 0, camCanvas.width, camCanvas.height);
   //input range [-100..100]
   var pixelDataLen = pixelData.data.length;
   contrast = contrast / 100 + 1; //convert to decimal & shift range: [0..2]
@@ -255,48 +257,68 @@ function contrastCanvas(contrast, canvas) {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////SCAN LOGIC ////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
-// a function to make an initial array of
-//evenly divided grid points to scan
-function scanArrayMaker(gridSize) {
+// a function to make the initial generic array of
+//evenly divided grid points before distorting
+function scanArrayMaker(gridCols, gridRows) {
   var scanArrayPt = [];
-  //get point in certain ratio
-  //to width divided by # of points
-  let ratioX = webcamCanvas.width / (gridSize - 1);
-  let ratioY = webcamCanvas.height / (gridSize - 1);
-  for (let i = 0; i <= webcamCanvas.width; i += ratioX) {
-    for (let j = 0; j <= webcamCanvas.height; j += ratioY) {
-      scanArrayPt.push([i, j]);
-      // viz the ref. points for debuging
-      // drawSVG([i, j], "white", 2);
+  //get canvas ratio to divided by #-1 of points
+  let ratX = camCanvas.width / (gridCols - 1);
+  let ratY = camCanvas.height / (gridRows - 1);
+  var gapInGrid = (0 * camCanvas.width) / 100;
+
+  // let counter = 0;
+  // let counter_inner = 0;
+
+  for (let cols = 0; cols < camCanvas.height; cols += ratY * 4 + gapInGrid) {
+    for (let rows = 0; rows < camCanvas.width; rows += ratX * 4 + gapInGrid) {
+      //draw points if needed
+      // svgKeystone.appendChild(
+      //   svgCircle([rows, cols], "green", 3),
+      //   svgText([rows, cols], counter, 15)
+      // );
+
+      for (let j = 0; j < ratY * 4; j += ratY) {
+        for (let i = 0; i < ratX * 4; i += ratX) {
+          //draw points if needed
+          // svgKeystone.appendChild(
+          //   svgText([rows + i, cols + j], counter_inner, 15),
+          //   svgCircle([rows + i, cols + j], "green", 1)
+          // );
+          // counter_inner++;
+          scanArrayPt.push([rows + i, cols + j]);
+        }
+      }
+      // counter++;
     }
   }
   return scanArrayPt;
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //create the scanning transposed matrix
 function MatrixTransform(dstCorners) {
   // grid pixels size from settings
-  var gridSize = cityIOdataStruct.header.spatial.ncols * 4;
-  //
-  var gridSizeCols = cityIOdataStruct.header.spatial.ncols * 4;
-  var gridSizeRows = cityIOdataStruct.header.spatial.nrows * 4;
+  var gridCols = cityIOdataStruct.header.spatial.ncols * 4;
+  var gridRows = cityIOdataStruct.header.spatial.nrows * 4;
 
   //matrix Grid Location Array
   var matrixGridLocArray = [];
   // return a new visual Grid Locations Array
-  let vizGridLocArray = scanArrayMaker(gridSize);
+  let vizGridLocArray = scanArrayMaker(gridCols, gridRows);
+
   //set the reference points of the 4 edges of the canvas
   // to get 100% of the image/video in canvas
   //before distorting
   srcCorners = [
-    getPos(webcamCanvas)[0],
-    getPos(webcamCanvas)[1],
-    webcamCanvas.width,
-    getPos(webcamCanvas)[1],
-    getPos(webcamCanvas)[0],
-    webcamCanvas.height,
-    webcamCanvas.width,
-    webcamCanvas.height
+    getPos(camCanvas)[0],
+    getPos(camCanvas)[1],
+    camCanvas.width,
+    getPos(camCanvas)[1],
+    getPos(camCanvas)[0],
+    camCanvas.height,
+    camCanvas.width,
+    camCanvas.height
   ];
   //method to get div position
   function getPos(el) {
@@ -314,13 +336,21 @@ function MatrixTransform(dstCorners) {
   //and store the results of the 4 points dist. in var perspT
   let perspT;
   perspT = PerspT(srcCorners, dstCorners);
+
+  svgPntsArray = [];
   //distort each dot in the matrix to locations and make cubes
   for (let j = 0; j < vizGridLocArray.length; j++) {
     dstPt = perspT.transform(vizGridLocArray[j][0], vizGridLocArray[j][1]);
-    drawSVG(dstPt, "#f07", 1);
+    //create visuals points on canvas for ref and add to array
+    svgPntsArray.push(
+      svgKeystone.appendChild(svgCircle(dstPt, "red", 1, 1, "#42adf4", 0.25))
+    );
+    //Optional: show text for each pixel
+    // svgKeystone.appendChild(svgText(dstPt, j, 8));
     //push these locs to an array for scanning
     matrixGridLocArray.push([Math.floor(dstPt[0]), Math.floor(dstPt[1])]);
   }
+  //send points to Color Scanner fn.
   ColorPicker(matrixGridLocArray);
   dstCorners = [];
   //info
@@ -333,16 +363,7 @@ function MatrixTransform(dstCorners) {
   infoDiv("Matrix Transformed 4 corners are at: " + dstCorners);
 }
 
-function drawSVG(dstPt, color, size) {
-  //display with SVG
-  var scanPt = document.createElementNS(svgCDN, "circle", size);
-  scanPt.setAttributeNS(null, "cx", dstPt[0]);
-  scanPt.setAttributeNS(null, "cy", dstPt[1]);
-  scanPt.setAttributeNS(null, "r", size);
-  scanPt.setAttributeNS(null, "fill", color);
-  svgKeystone.appendChild(scanPt);
-}
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 function ColorPicker(matrixGridLocArray) {
@@ -410,59 +431,10 @@ function ColorPicker(matrixGridLocArray) {
     //in every frame, send the scanned colors to web-worker for CV operation
     CVworker.postMessage(["pixels", scannedColorsArray]);
 
-    //recursively call this method
+    //recursively call this method every frame
     requestAnimationFrame(function() {
       ColorPickerRecursive();
     });
-  }
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
-//create viz. grid to show scanning results
-function vizGrid() {
-  //get grid size for viz from settings
-  var gridSize = cityIOdataStruct.header.spatial.ncols * 4;
-
-  // make the grid div parent
-  $("<DIV/>", {
-    id: "vizCellDivParent",
-    class: "vizCellDivParent"
-  }).appendTo("body");
-  //drag-able
-  $("#vizCellDivParent").draggable();
-
-  // make the visual rep of the now distorted grid
-  for (let i = 0; i < gridSize; i++) {
-    var vizRawsDiv = document.createElement("div");
-    vizRawsDiv.className = "vizRawsDiv";
-    vizCellDivParent.appendChild(vizRawsDiv);
-    for (let j = 0; j < gridSize; j++) {
-      var vizCell = document.createElement("div");
-      vizCell.className = "vizCell";
-      vizRawsDiv.appendChild(vizCell);
-      //cell sized in viz grid
-      let cellDims =
-        (document.documentElement.clientWidth / gridSize / 4).toString() + "px";
-      vizCell.style.width = cellDims;
-      vizCell.style.height = cellDims;
-
-      // get the divs to array
-      vizGridArray.push(vizCell);
-    }
-  }
-}
-
-//color the visual grid base on the web-worker cv analysis
-function updateVizGrid() {
-  for (let i = 0; i < vizGridArray.length; i++) {
-    if (pixelColArr[i] == 0) {
-      vizGridArray[i].style.background = "white";
-    } else if (pixelColArr[i] == 1) {
-      vizGridArray[i].style.background = "black";
-    } else {
-      //if color scanning is in the threshold area
-      vizGridArray[i].style.background = "magenta";
-    }
   }
 }
 
@@ -473,15 +445,67 @@ function webWorkerListen() {
   CVworker.addEventListener(
     "message",
     function(e) {
-      //get the WEBwroder msg and use its 1st item for types
+      //get the WEBwroker msg and use
+      //its 1st item for types
       typesArray = e.data[0];
 
-      //get the WEBwroder msg and use its 2nd item for viz the grid
+      //get the WEBwroder msg and use
+      //its 2nd item for viz the grid
       pixelColArr = e.data[1];
-      updateVizGrid(pixelColArr);
     },
     false
   );
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+//controls the viz updating
+function vizGridHandler(e) {
+  if (e === true) {
+    on();
+  } else if (e === false) {
+    cancelAnimationFrame(thisFrame);
+    renderVizGrid(pixelColArr, typesArray, false);
+  }
+
+  function on() {
+    thisFrame = requestAnimationFrame(on);
+    renderVizGrid(pixelColArr, typesArray, true);
+    return thisFrame;
+  }
+}
+
+////
+//color the visual grid base on the web-worker cv analysis
+function renderVizGrid(pixelColArr, typesArray, state) {
+  if (state) {
+    for (let i = 0; i < pixelColArr.length; i++) {
+      let pixType = typesArray[Math.floor(i / 16)];
+      if (pixType !== -1) {
+        svgPntsArray[i].setAttribute("stroke", "#59d0ff");
+        svgPntsArray[i].setAttribute("stroke-width", "1");
+      } else {
+        svgPntsArray[i].setAttribute("stroke", "");
+        svgPntsArray[i].setAttribute("stroke-width", "0");
+      }
+      if (pixelColArr[i] === 2) {
+        svgPntsArray[i].setAttribute("fill", "magenta");
+        svgPntsArray[i].setAttribute("r", "2");
+      } else if (pixelColArr[i] === 1) {
+        svgPntsArray[i].setAttribute("fill", "black");
+        svgPntsArray[i].setAttribute("r", "2");
+      } else {
+        svgPntsArray[i].setAttribute("fill", "white");
+        svgPntsArray[i].setAttribute("r", "2");
+      }
+    }
+  } else {
+    for (let i = 0; i < pixelColArr.length; i++) {
+      svgPntsArray[i].setAttribute("stroke", "");
+      svgPntsArray[i].setAttribute("stroke-width", "0");
+      svgPntsArray[i].setAttribute("fill", "");
+      svgPntsArray[i].setAttribute("r", "0");
+    }
+  }
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -500,6 +524,13 @@ function cityIOstop() {
 }
 
 function cityIOpost() {
+  //test for new data, else don't send
+  if (oldTypesArrayStr !== typesArray.toString()) {
+    oldTypesArrayStr = typesArray.toString();
+  } else {
+    infoDiv("No changes to Grid data, pausing CityIO POST");
+    return;
+  }
   //make a copy of the cityIO struct for manipulation
   let cityIOpacket = JSON.parse(JSON.stringify(cityIOdataStruct));
   //get the grid property from the scanner
@@ -549,38 +580,40 @@ function keystoneUI() {
       "NOTE: make sure to select the croners of the scanned area in this order: TOP-LEFT->TOP-RIGHT->BOTTOM-LEFT->BOTTOM-RIGHT"
   );
   //clear clicks array
-  let clickArray = [];
-  //collect 4 mouse clicks as corners of keystone
-  document.addEventListener("click", mouseKeystone);
+  let clkArr = [];
   //turn on mag-glass efect
   magGlass();
+  //collect 4 mouse clicks as corners of keystone
+  document.addEventListener("click", mouseKeystone);
 
   // react to mouse events
   function mouseKeystone(e) {
     // only collect clicks that are in the canvas area
-    if (e.x < webcamCanvas.width && e.y < webcamCanvas.height) {
+    if (e.x < camCanvas.width && e.y < camCanvas.height) {
       //pop. array of clicks
-      clickArray.push(e.x, e.y);
-      infoDiv(
-        "Mouse click " + clickArray.length / 2 + " at " + e.x + ", " + e.y
-      );
+      clkArr.push(e.x, e.y);
+
+      infoDiv("Mouse click " + clkArr.length / 2 + " at " + e.x + ", " + e.y);
       //viz points with svg
-      var keystonePt = document.createElementNS(svgCDN, "circle");
-      keystonePt.setAttributeNS(null, "cx", e.x);
-      keystonePt.setAttributeNS(null, "cy", e.y);
-      keystonePt.setAttributeNS(null, "r", 8);
-      keystonePt.setAttributeNS(null, "stroke", "#f07");
-      keystonePt.setAttributeNS(null, "stroke-width", "1.5");
-      keystonePt.setAttributeNS(null, "fill-opacity", "0");
-      svgKeystone.appendChild(keystonePt);
+      svgKeystone.appendChild(
+        svgCircle([e.x, e.y], "none", 10, 0, "magenta", "1")
+      );
+
       // when 2x4 clicks were added
-      if (clickArray.length == 8) {
+      if (clkArr.length == 8) {
+        // svgKeystone.appendChild(
+        //   svgLine([clkArr[0], clkArr[1]], [clkArr[2], clkArr[3]]),
+        //   svgLine([clkArr[2], clkArr[3]], [clkArr[4], clkArr[5]]),
+        //   svgLine([clkArr[4], clkArr[5]], [clkArr[6], clkArr[7]]),
+        //   svgLine([clkArr[0], clkArr[1]], [clkArr[6], clkArr[7]])
+        // );
+
         //save these keystone points to local storage
-        saveSettings("CityScopeJS_keystone", clickArray);
+        saveSettings("CityScopeJS_keystone", clkArr);
         MatrixTransform(loadSettings("CityScopeJS_keystone"));
 
         //reset the clicks array
-        clickArray = [];
+        clkArr = [];
         // and stop keystone mouse clicks
         document.removeEventListener("click", mouseKeystone);
       }
@@ -588,6 +621,8 @@ function keystoneUI() {
   }
 }
 
+/////////////////////
+/////////////////////
 function magGlass() {
   //mouse
   $("html,body").css("cursor", "crosshair");
@@ -608,15 +643,15 @@ function magGlass() {
   document.addEventListener("mousemove", function(e) {
     magGlassCtx.clearRect(0, 0, magWid, magWid);
     magGlassCtx.drawImage(
-      webcamCanvas,
+      camCanvas,
       e.pageX - magWid / 4,
       e.pageY - magWid / 4,
-      webcamCanvas.width,
-      webcamCanvas.width,
+      camCanvas.width,
+      camCanvas.width,
       0,
       0,
-      webcamCanvas.width * 2,
-      webcamCanvas.height * 2
+      camCanvas.width * 2,
+      camCanvas.height * 2
     );
     magGlassCanvas.style.top = e.pageY - magWid / 2 + "px";
     magGlassCanvas.style.left = e.pageX - magWid / 2 + "px";
@@ -642,6 +677,42 @@ var loadSettings = function(key) {
     return data;
   }
 };
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function svgLine(srcPt, dstPt) {
+  var line = document.createElementNS(svgCDN, "line");
+  line.setAttributeNS(null, "x1", srcPt[0]);
+  line.setAttributeNS(null, "y1", srcPt[1]);
+  line.setAttributeNS(null, "x2", dstPt[0]);
+  line.setAttributeNS(null, "y2", dstPt[1]);
+  line.setAttributeNS(null, "stroke", "#f35790");
+  line.setAttributeNS(null, "stroke-width", "1");
+  return line;
+}
+
+function svgCircle(dstPt, fillCol, size, fillOp, strkCol, strkWidth) {
+  //display with SVG
+  var scanPt = document.createElementNS(svgCDN, "circle");
+  scanPt.setAttributeNS(null, "cx", dstPt[0]);
+  scanPt.setAttributeNS(null, "cy", dstPt[1]);
+  scanPt.setAttributeNS(null, "fill", fillCol);
+  scanPt.setAttributeNS(null, "r", size);
+  scanPt.setAttributeNS(null, "fill-opacity", fillOp);
+  scanPt.setAttributeNS(null, "stroke", strkCol);
+  scanPt.setAttributeNS(null, "stroke-width", strkWidth);
+
+  return scanPt;
+}
+function svgText(dstPt, txt, size) {
+  var newText = document.createElementNS(svgCDN, "text");
+  newText.setAttributeNS(null, "x", dstPt[0]);
+  newText.setAttributeNS(null, "y", dstPt[1]);
+  newText.setAttributeNS(null, "font-size", size);
+
+  newText.innerHTML = txt;
+  return newText;
+}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -678,6 +749,7 @@ function UI() {
     mirror: false,
     brightness: 0,
     contrast: 0,
+    vis: false,
     getJson: function() {
       document.getElementById("my_file").click();
       $("#my_file").change(function(e) {
@@ -721,6 +793,13 @@ function UI() {
   gui.add(parm, "getJson").name("Start here: Load settings [JSON]");
   //or reset and restart
   gui.add(parm, "reset").name("Reset and clear Keystone");
+  //toggle vis on camera
+  gui
+    .add(parm, "vis")
+    .name("Toggle visual feedback")
+    .onChange(function(e) {
+      vizGridHandler(e);
+    });
   //new calibrate folder
   var calibrateFolder = gui.addFolder("webcam");
   // webcam mirror
@@ -775,7 +854,7 @@ function UI() {
 }
 
 //stats
-javascript: (function() {
+(function() {
   var script = document.createElement("script");
   script.onload = function() {
     var stats = new Stats();
