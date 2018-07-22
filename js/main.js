@@ -48,6 +48,9 @@ var pixelColArr = [];
 //types and codes for cityIO objects
 var typesArray = [];
 
+///Cmpareable string to reduce sent rate
+var oldTypesArrayStr;
+
 // Global var for GUI controls
 var brightness = 0;
 
@@ -499,6 +502,13 @@ function cityIOstop() {
 }
 
 function cityIOpost() {
+  //test for new data, else don't send
+  if (oldTypesArrayStr !== typesArray.toString()) {
+    oldTypesArrayStr = typesArray.toString();
+  } else {
+    infoDiv("No changes to Grid data, pausing CityIO POST");
+    return;
+  }
   //make a copy of the cityIO struct for manipulation
   let cityIOpacket = JSON.parse(JSON.stringify(cityIOdataStruct));
   //get the grid property from the scanner
