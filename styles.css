@@ -47,6 +47,7 @@ a {
   left: 60vw;
   top: 20rem;
   height: 10rem;
+  min-width: 100px;
   max-width: 300px;
   overflow-y: auto;
   font-size: 0.75rem;

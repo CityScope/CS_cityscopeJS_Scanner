@@ -66,6 +66,9 @@ var vidCanvas2dContext = camCanvas.getContext("2d");
 //cityIO timer
 var cityIOtimer;
 
+//animation frame frame holder
+var thisFrame;
+
 //SVG element for keystone matrix
 var svgKeystone;
 
@@ -456,32 +459,51 @@ function webWorkerListen() {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 //controls the viz updating
-function vizGridHandler() {
-  requestAnimationFrame(vizGridHandler);
-  renderVizGrid(pixelColArr, typesArray);
+function vizGridHandler(e) {
+  if (e === true) {
+    on();
+  } else if (e === false) {
+    cancelAnimationFrame(thisFrame);
+    renderVizGrid(pixelColArr, typesArray, false);
+  }
+
+  function on() {
+    thisFrame = requestAnimationFrame(on);
+    renderVizGrid(pixelColArr, typesArray, true);
+    return thisFrame;
+  }
 }
 
 ////
 //color the visual grid base on the web-worker cv analysis
-function renderVizGrid(pixelColArr, typesArray) {
-  for (let i = 0; i < pixelColArr.length; i++) {
-    let pixType = typesArray[Math.floor(i / 16)];
-    if (pixType !== -1) {
-      svgPntsArray[i].setAttribute("stroke", "#59d0ff");
-      svgPntsArray[i].setAttribute("stroke-width", "1");
-    } else {
+function renderVizGrid(pixelColArr, typesArray, state) {
+  if (state) {
+    for (let i = 0; i < pixelColArr.length; i++) {
+      let pixType = typesArray[Math.floor(i / 16)];
+      if (pixType !== -1) {
+        svgPntsArray[i].setAttribute("stroke", "#59d0ff");
+        svgPntsArray[i].setAttribute("stroke-width", "1");
+      } else {
+        svgPntsArray[i].setAttribute("stroke", "");
+        svgPntsArray[i].setAttribute("stroke-width", "0");
+      }
+      if (pixelColArr[i] === 2) {
+        svgPntsArray[i].setAttribute("fill", "magenta");
+        svgPntsArray[i].setAttribute("r", "2");
+      } else if (pixelColArr[i] === 1) {
+        svgPntsArray[i].setAttribute("fill", "black");
+        svgPntsArray[i].setAttribute("r", "2");
+      } else {
+        svgPntsArray[i].setAttribute("fill", "white");
+        svgPntsArray[i].setAttribute("r", "2");
+      }
+    }
+  } else {
+    for (let i = 0; i < pixelColArr.length; i++) {
       svgPntsArray[i].setAttribute("stroke", "");
       svgPntsArray[i].setAttribute("stroke-width", "0");
-    }
-    if (pixelColArr[i] === 2) {
-      svgPntsArray[i].setAttribute("fill", "magenta");
-      svgPntsArray[i].setAttribute("r", "2");
-    } else if (pixelColArr[i] === 1) {
-      svgPntsArray[i].setAttribute("fill", "black");
-      svgPntsArray[i].setAttribute("r", "2");
-    } else {
-      svgPntsArray[i].setAttribute("fill", "white");
-      svgPntsArray[i].setAttribute("r", "2");
+      svgPntsArray[i].setAttribute("fill", "");
+      svgPntsArray[i].setAttribute("r", "0");
     }
   }
 }
@@ -832,7 +854,7 @@ function UI() {
 }
 
 //stats
-javascript: (function() {
+(function() {
   var script = document.createElement("script");
   script.onload = function() {
     var stats = new Stats();
