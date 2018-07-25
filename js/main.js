@@ -779,14 +779,16 @@ function UI() {
         "https://github.com/CityScope/CS_cityscopeJS/blob/master/data/settings.json",
         "_blank"
       );
-    },
-    testTable: function() {
-      window.open(
-        "https://cityscope.media.mit.edu/CS_cityscopeJS/table/index.html?" +
-          cityIOdataStruct.header.name,
-        "_blank"
-      );
     }
+
+    //removed for now !
+    // testTable: function() {
+    //   window.open(
+    //     "https://cityscope.media.mit.edu/CS_cityscopeJS/table/index.html?" +
+    //       cityIOdataStruct.header.name,
+    //     "_blank"
+    //   );
+    // }
   };
 
   //upload settings
@@ -846,7 +848,7 @@ function UI() {
   //link to raw settings
   cityioFolder.add(parm, "settingsExample").name("View settings example");
   //link to raw settings
-  cityioFolder.add(parm, "testTable").name("See resulting table");
+  // cityioFolder.add(parm, "testTable").name("See resulting table");
   //cityIO link
   cityioFolder.add(parm, "rawCityIO").name("View raw API");
   //cityIO link
