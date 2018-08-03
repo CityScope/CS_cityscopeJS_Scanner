@@ -112,7 +112,7 @@ function onFileLoad(l) {
     infoDiv("found settings [JSON]...");
 
     infoDiv("loaded cityIO struct: " + cityIOdataStruct.toString());
-    //send the table settings once to WW for init
+    //send the table settings once to Webworker for init
     CVworker.postMessage(["cityIOsetup", cityIOdataStruct]);
     // than, if exists, load settings from localStorage
     if (loadSettings("CityScopeJS_keystone")) {
@@ -123,8 +123,6 @@ function onFileLoad(l) {
       infoDiv(">> Start by setting up keystone");
       keystoneUI();
     }
-    //make viz grid
-    // vizGrid();
     //at last, start sending to cityIO
     cityIOinit(sendRate);
   };
@@ -439,6 +437,80 @@ function ColorPicker(matrixGridLocArray) {
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
+let pts = [500, 500, 600, 200];
+SliderPicker(pts);
+
+function SliderPicker(sliderPts) {
+  let numScanPts = 10;
+  let sliderPntsArr = [];
+  let sliderColArr = [];
+  let accumLen;
+  infoDiv("starting slider scanner");
+
+  //find point on vector
+  function lenpoint(x1, y1, x2, y2, len) {
+    var dx = x2 - x1,
+      dy = y2 - y1;
+    var theta = Math.atan2(dy, dx);
+    var xp = len * Math.cos(theta),
+      yp = len * Math.sin(theta);
+    return [xp + x1, yp + y1];
+  }
+  //find length of slider and divide by #pts
+  var a = sliderPts[0] - sliderPts[2];
+  var b = sliderPts[1] - sliderPts[3];
+  var sliderLen = Math.sqrt(a * a + b * b) / numScanPts;
+
+  for (let i = 0; i < numScanPts; i++) {
+    let thisPt = lenpoint(
+      sliderPts[0],
+      sliderPts[1],
+      sliderPts[2],
+      sliderPts[3],
+      accumLen
+    );
+
+    sliderPntsArr.push(thisPt);
+
+    svgKeystone.appendChild(svgCircle(thisPt, "", 5, 1, "magenta", 1));
+    //add to len
+    accumLen = sliderLen * i;
+  }
+
+  console.log(sliderPntsArr);
+
+  sliderScanRecursive();
+  // inside recursive function
+  function sliderScanRecursive() {
+    sliderColArr = [];
+    // read relevant pixels from canvas
+    let sliderPixels = vidCanvas2dContext.getImageData(
+      sliderPts[0],
+      sliderPts[1],
+      sliderPts[2],
+      sliderPts[3]
+    );
+    //get the pixels
+    let pixelData = sliderPixels.data;
+    for (let i = 1; i < numScanPts; i++) {
+      pixLoc = sliderPntsArr[i][1] * sliderPntsArr[i][0] * 4;
+      // sample and push to array 3 pixels around to get better recognition
+      sliderColArr.push([
+        //the RGB of this pixel
+        pixelData[pixLoc],
+        pixelData[pixLoc + 1],
+        pixelData[pixLoc + 2]
+      ]);
+    }
+
+    //recursively call this method every frame
+    requestAnimationFrame(function() {
+      sliderScanRecursive();
+    });
+  }
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
 function webWorkerListen() {
   // Get data back form WEBworker
   infoDiv("starting WebWorker listener...");
@@ -531,6 +603,7 @@ function cityIOpost() {
     infoDiv("No changes to Grid data, pausing CityIO POST");
     return;
   }
+
   //make a copy of the cityIO struct for manipulation
   let cityIOpacket = JSON.parse(JSON.stringify(cityIOdataStruct));
   //get the grid property from the scanner
