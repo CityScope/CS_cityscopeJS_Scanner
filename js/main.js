@@ -110,18 +110,20 @@ function onFileLoad(l) {
     res = e.target.result;
     cityIOdataStruct = JSON.parse(res);
     infoDiv("found settings [JSON]...");
-
-    infoDiv("loaded cityIO struct: " + cityIOdataStruct.toString());
+    infoDiv("loaded cityIO settings: " + cityIOdataStruct.toString());
     //send the table settings once to Webworker for init
     CVworker.postMessage(["cityIOsetup", cityIOdataStruct]);
-    // than, if exists, load settings from localStorage
+    // than, if exists, load pos. settings from localStorage
     if (loadSettings("CityScopeJS_keystone")) {
       infoDiv("found keystoning setup...Loading prev. keystoning");
       MatrixTransform(loadSettings("CityScopeJS_keystone"));
-      //and make div for viz feedback
     } else {
       infoDiv(">> Start by setting up keystone");
       keystoneUI();
+    }
+    //test slider
+    if (cityIOdataStruct.objects.sliders) {
+      SliderPicker([100, 100, 200, 200], cityIOdataStruct.objects.sliders);
     }
     //at last, start sending to cityIO
     cityIOinit(sendRate);
@@ -437,69 +439,79 @@ function ColorPicker(matrixGridLocArray) {
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
-let pts = [500, 500, 600, 200];
-SliderPicker(pts);
+let pts = [400, 500, 600, 200];
+// SliderPicker(pts, 5);
+console.log(cityIOdataStruct);
 
-function SliderPicker(sliderPts) {
-  let numScanPts = 10;
+function SliderPicker(sliderPts, numScanPts) {
   let sliderPntsArr = [];
   let sliderColArr = [];
-  let accumLen;
-  infoDiv("starting slider scanner");
+  let sliderPtsSvgHolder = [];
+  let sliderLen;
+  let accumLen = 0;
+  infoDiv("Starting slider scanner");
 
-  //find point on vector
-  function lenpoint(x1, y1, x2, y2, len) {
-    var dx = x2 - x1,
-      dy = y2 - y1;
-    var theta = Math.atan2(dy, dx);
-    var xp = len * Math.cos(theta),
-      yp = len * Math.sin(theta);
-    return [xp + x1, yp + y1];
-  }
-  //find length of slider and divide by #pts
-  var a = sliderPts[0] - sliderPts[2];
-  var b = sliderPts[1] - sliderPts[3];
-  var sliderLen = Math.sqrt(a * a + b * b) / numScanPts;
+  //get the segment len
+  sliderLen = divideSliderVector(sliderPts);
 
-  for (let i = 0; i < numScanPts; i++) {
-    let thisPt = lenpoint(
+  for (let i = 0; i <= numScanPts; i++) {
+    let thisPt = ptOnVector(
       sliderPts[0],
       sliderPts[1],
       sliderPts[2],
       sliderPts[3],
       accumLen
     );
-
     sliderPntsArr.push(thisPt);
 
-    svgKeystone.appendChild(svgCircle(thisPt, "", 5, 1, "magenta", 1));
+    let vizPt = svgCircle(thisPt, "rgba(1, 1, 1, 0)", 5, 1, "black", 1);
+    sliderPtsSvgHolder.push(vizPt);
+    svgKeystone.appendChild(vizPt);
     //add to len
     accumLen = sliderLen * i;
   }
 
-  console.log(sliderPntsArr);
+  //returns a point on slider vector
+  function ptOnVector(x1, y1, x2, y2, len) {
+    var dx = x2 - x1;
+    var dy = y2 - y1;
+    var theta = Math.atan2(dy, dx);
+    var xp = len * Math.cos(theta);
+    var yp = len * Math.sin(theta);
+    return [xp + x1, yp + y1];
+  }
+
+  //find length of slider and divide by #pts
+  function divideSliderVector(sliderPts) {
+    var a = sliderPts[0] - sliderPts[2];
+    var b = sliderPts[1] - sliderPts[3];
+    var sliderLen = Math.sqrt(a * a + b * b) / numScanPts;
+    return sliderLen;
+  }
+
+  /////////////
 
   sliderScanRecursive();
   // inside recursive function
   function sliderScanRecursive() {
     sliderColArr = [];
-    // read relevant pixels from canvas
-    let sliderPixels = vidCanvas2dContext.getImageData(
-      sliderPts[0],
-      sliderPts[1],
-      sliderPts[2],
-      sliderPts[3]
-    );
-    //get the pixels
-    let pixelData = sliderPixels.data;
+
     for (let i = 1; i < numScanPts; i++) {
-      pixLoc = sliderPntsArr[i][1] * sliderPntsArr[i][0] * 4;
-      // sample and push to array 3 pixels around to get better recognition
+      var pixData = vidCanvas2dContext.getImageData(
+        sliderPntsArr[i][0],
+        sliderPntsArr[i][1],
+        1,
+        1
+      ).data;
+
+      sliderPtsSvgHolder[i].attributes[2].value =
+        "rgb(" + pixData[0] + "," + pixData[1] + "," + pixData[2] + ")";
+
       sliderColArr.push([
         //the RGB of this pixel
-        pixelData[pixLoc],
-        pixelData[pixLoc + 1],
-        pixelData[pixLoc + 2]
+        pixData[0],
+        pixData[1],
+        pixData[2]
       ]);
     }
 
