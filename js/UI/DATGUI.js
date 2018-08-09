@@ -1,20 +1,22 @@
 import * as dat from "dat.gui";
+import { onFileLoad } from "../TOOLS";
 
-// GUI
 export function datGUI() {
   // dat.GUI
   var gui = new dat.GUI({ width: 400 });
-
   let parm = {
     mirror: false,
     brightness: 0,
     contrast: 0,
     vis: false,
     getJson: function() {
-      let fileClick = document.getElementById("my_file").click();
-      fileClick.onChange(function(e) {
+      let fileClick = document.getElementById("my_file");
+      console.log(fileClick);
+      fileClick.click();
+      //do somthing with the file
+      fileClick.onchange = function(e) {
         onFileLoad(e);
-      });
+      };
     },
     sendRate: 1000,
     //test on cityIO
@@ -40,15 +42,6 @@ export function datGUI() {
         "_blank"
       );
     }
-
-    //removed for now !
-    // testTable: function() {
-    //   window.open(
-    //     "https://cityscope.media.mit.edu/CS_cityscopeJS/table/index.html?" +
-    //       cityIOdataStruct.header.name,
-    //     "_blank"
-    //   );
-    // }
   };
 
   //upload settings
@@ -98,8 +91,6 @@ export function datGUI() {
 
   //link to raw settings
   cityioFolder.add(parm, "settingsExample").name("View settings example");
-  //link to raw settings
-  // cityioFolder.add(parm, "testTable").name("See resulting table");
   //cityIO link
   cityioFolder.add(parm, "rawCityIO").name("View raw API");
   //cityIO link
