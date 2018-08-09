@@ -31,9 +31,15 @@ https://github.com/RELNO]
 
 import "babel-polyfill";
 import { init_ui } from "./UI/INIT_UI";
+import { makeInfoDiv, UpdateInfoDiv } from "./UI/InfoDiv";
+export let infoDiv;
 
 async function init() {
+  //init info div
+  infoDiv = makeInfoDiv();
+  UpdateInfoDiv(infoDiv, ">>> Starting CityScopeJS applet");
   init_ui();
+
   // infoDiv(d, "Waiting for setting file [JSON]...");
 
   // webWorkerListen();

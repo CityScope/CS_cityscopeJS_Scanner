@@ -43,9 +43,6 @@ a {
   font-family: Helvetica, sans-serif;
   font-weight: 300;
   position: fixed;
-  padding: 0.5rem;
-  left: 60vw;
-  top: 20rem;
   height: 10rem;
   min-width: 100px;
   max-width: 300px;

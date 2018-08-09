@@ -1,21 +1,6 @@
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export function setupCanvs() {
+export function setupSVG() {
   // load the SVGcdn to var
   var svgCDN = "http://www.w3.org/2000/svg";
-  //make vid canvas
-  var camCanvas = document.createElement("canvas");
-
-  camCanvas.id = "webcamCanvas";
-  camCanvas.className = "webcamCanvas";
-  //MUST keep full numbers [WIP]
-  camCanvas.width = Math.floor(window.innerHeight * 0.9);
-  camCanvas.height = Math.floor(window.innerHeight * 0.9);
-  camCanvas.style.zIndex = 0;
-  camCanvas.style.position = "absolute";
-  camCanvas.style.border = "1px solid";
-  document.body.appendChild(camCanvas);
-
   //SVG setup for later viz.
   var svgDiv = document.createElement("div");
   document.body.appendChild(svgDiv);

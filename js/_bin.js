@@ -28,6 +28,3 @@ var thisFrame;
 //SVG element for keystone matrix
 var svgKeystone;
 var cityIOdataStruct;
-
-//get main canvas context for scanning
-var vidCanvas2dContext = camCanvas.getContext("2d");

@@ -53,7 +53,7 @@ function keystoneUI() {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //stats
-(function() {
+export function stats() {
   var script = document.createElement("script");
   script.onload = function() {
     var stats = new Stats();
@@ -65,7 +65,7 @@ function keystoneUI() {
   };
   script.src = "//rawgit.com/mrdoob/stats.js/master/build/stats.min.js";
   document.head.appendChild(script);
-})();
+}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
