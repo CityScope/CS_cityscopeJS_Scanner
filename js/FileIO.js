@@ -1,13 +1,14 @@
-import { CVwebworkerPath } from "./CV/CVwebworker";
-
+import { keystoneUI } from "./UI/KeyStoneUI";
+import { cityIOinit } from "./CITYIO/cityio";
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //save/load local storage
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
-export var saveSettings = function(key, data) {
-  infoDiv("saving to localStorage in " + key + "key");
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+var saveSettings = function(key, data) {
+  console.log("saving to localStorage in " + key + "key");
   //save to local storage
   localStorage.setItem(key, JSON.stringify(data));
 };
+
 //load settings if exist
 var loadSettings = function(key) {
   if (localStorage.getItem(key)) {
@@ -16,36 +17,31 @@ var loadSettings = function(key) {
   }
 };
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-///JSON load functinos
+///JSON load function
 export function onFileLoad(l) {
-  // infoDiv("Trying to Load Setting JSON file...");
+  // POST to cityIO rate in MS
+  var sendRate = 1000;
+  // console.log("Trying to Load Setting JSON file...");
   var file = l.target.files[0];
   var reader = new FileReader();
   let res = reader.readAsText(file);
   reader.onload = function(e) {
     res = e.target.result;
     var cityIOdataStruct = JSON.parse(res);
-    console.log(cityIOdataStruct);
+    console.log("found settings [JSON]..." + cityIOdataStruct.toString());
 
-    // infoDiv("found settings [JSON]...");
-    // infoDiv("loaded cityIO settings: " + cityIOdataStruct.toString());
-
-    // send the table settings once to Webworker for init
+    // send the table settings once to Web worker for init
     CVworker.postMessage(["cityIOsetup", cityIOdataStruct]);
     // than, if exists, load pos. settings from localStorage
     if (loadSettings("CityScopeJS_keystone")) {
-      // infoDiv("found keystoning setup...Loading prev. keystoning");
+      console.log("found key stoning setup...Loading last key stoning");
       MatrixTransform(loadSettings("CityScopeJS_keystone"));
     } else {
-      // infoDiv(">> Start by setting up keystone");
       keystoneUI();
     }
-    //test slider
-    if (cityIOdataStruct.objects.sliders) {
-      SliderPicker([100, 100, 200, 200], cityIOdataStruct.objects.sliders);
-    }
+
     //at last, start sending to cityIO
     cityIOinit(sendRate);
   };

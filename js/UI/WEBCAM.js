@@ -15,7 +15,7 @@ function setupWebCamCanvas() {
   camCanvas.style.position = "absolute";
   // camCanvas.style.border = "1px solid";
   document.body.appendChild(camCanvas);
-
+  window.camCanvas = camCanvas;
   return camCanvas;
 }
 
@@ -30,7 +30,7 @@ export function setupWebcam() {
   var camCanvas = setupWebCamCanvas();
   //get main canvas context for scanning
   var vidCanvas2dContext = camCanvas.getContext("2d");
-  // infoDiv("starting video");
+  // console.log("starting video");
   //Video loop setup call video mesh creator
   var width = 0;
   var height = 0;

@@ -1,5 +1,5 @@
 function ColorPicker(matrixGridLocArray) {
-  infoDiv("starting pixel scanner");
+  console.log("starting pixel scanner");
 
   // call a looping method that scans the grid
   // [this is a hack, so this function could be called

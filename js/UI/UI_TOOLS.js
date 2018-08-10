@@ -1,56 +1,4 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////UI + INTERACTION /////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-function keystoneUI() {
-  infoDiv(
-    "starting keystone" +
-      "<p>" +
-      "NOTE: make sure to select the croners of the scanned area in this order: TOP-LEFT->TOP-RIGHT->BOTTOM-LEFT->BOTTOM-RIGHT"
-  );
-  //clear clicks array
-  let clkArr = [];
-  //turn on mag-glass efect
-  magGlass();
-  //collect 4 mouse clicks as corners of keystone
-  document.addEventListener("click", mouseKeystone);
-
-  // react to mouse events
-  function mouseKeystone(e) {
-    // only collect clicks that are in the canvas area
-    if (e.x < camCanvas.width && e.y < camCanvas.height) {
-      //pop. array of clicks
-      clkArr.push(e.x, e.y);
-
-      infoDiv("Mouse click " + clkArr.length / 2 + " at " + e.x + ", " + e.y);
-      //viz points with svg
-      svgKeystone.appendChild(
-        svgCircle([e.x, e.y], "none", 10, 0, "magenta", "1")
-      );
-
-      // when 2x4 clicks were added
-      if (clkArr.length == 8) {
-        // svgKeystone.appendChild(
-        //   svgLine([clkArr[0], clkArr[1]], [clkArr[2], clkArr[3]]),
-        //   svgLine([clkArr[2], clkArr[3]], [clkArr[4], clkArr[5]]),
-        //   svgLine([clkArr[4], clkArr[5]], [clkArr[6], clkArr[7]]),
-        //   svgLine([clkArr[0], clkArr[1]], [clkArr[6], clkArr[7]])
-        // );
-
-        //save these keystone points to local storage
-        saveSettings("CityScopeJS_keystone", clkArr);
-        MatrixTransform(loadSettings("CityScopeJS_keystone"));
-
-        //reset the clicks array
-        clkArr = [];
-        // and stop keystone mouse clicks
-        document.removeEventListener("click", mouseKeystone);
-      }
-    }
-  }
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //stats
 export function stats() {
@@ -69,7 +17,7 @@ export function stats() {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function magGlass() {
+export function magGlass() {
   //make gls div
   var glsDiv = document.createElement("div");
   glsDiv.id = "glsDiv";
@@ -107,7 +55,7 @@ function magGlass() {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function svgLine(srcPt, dstPt) {
+export function svgLine(srcPt, dstPt) {
   var line = document.createElementNS(svgCDN, "line");
   line.setAttributeNS(null, "x1", srcPt[0]);
   line.setAttributeNS(null, "y1", srcPt[1]);
@@ -118,7 +66,7 @@ function svgLine(srcPt, dstPt) {
   return line;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
-function svgCircle(dstPt, fillCol, size, fillOp, strkCol, strkWidth) {
+export function svgCircle(dstPt, fillCol, size, fillOp, strkCol, strkWidth) {
   //display with SVG
   var scanPt = document.createElementNS(svgCDN, "circle");
   scanPt.setAttributeNS(null, "cx", dstPt[0]);
@@ -132,7 +80,7 @@ function svgCircle(dstPt, fillCol, size, fillOp, strkCol, strkWidth) {
   return scanPt;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
-function svgText(dstPt, txt, size) {
+export function svgText(dstPt, txt, size) {
   var newText = document.createElementNS(svgCDN, "text");
   newText.setAttributeNS(null, "x", dstPt[0]);
   newText.setAttributeNS(null, "y", dstPt[1]);
@@ -144,7 +92,7 @@ function svgText(dstPt, txt, size) {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 //color the visual grid base on the web-worker cv analysis
-function renderVizGrid(pixelColArr, typesArray, state) {
+export function renderVizGrid(pixelColArr, typesArray, state) {
   if (state) {
     for (let i = 0; i < pixelColArr.length; i++) {
       let pixType = typesArray[Math.floor(i / 16)];
@@ -177,8 +125,8 @@ function renderVizGrid(pixelColArr, typesArray, state) {
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
-//controls the viz updating
-function vizGridHandler(e) {
+//controls if to update grid visuals
+export function vizGridHandler(e) {
   if (e === true) {
     on();
   } else if (e === false) {

@@ -1,3 +1,8 @@
+// HOW TO RUN?
+if (cityIOdataStruct.objects.sliders) {
+  SliderPicker([100, 100, 200, 200], cityIOdataStruct.objects.sliders);
+}
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 let pts = [400, 500, 600, 200];
 // SliderPicker(pts, 5);
@@ -9,7 +14,7 @@ function SliderPicker(sliderPts, numScanPts) {
   let sliderPtsSvgHolder = [];
   let sliderLen;
   let accumLen = 0;
-  infoDiv("Starting slider scanner");
+  console.log("Starting slider scanner");
 
   //get the segment len
   sliderLen = divideSliderVector(sliderPts);

@@ -31,15 +31,18 @@ https://github.com/RELNO]
 
 import "babel-polyfill";
 import { init_ui } from "./UI/INIT_UI";
-import { makeInfoDiv, UpdateInfoDiv } from "./UI/InfoDiv";
 
 async function init() {
-  //init info div
-  let infoDiv = makeInfoDiv();
-  UpdateInfoDiv(infoDiv, ">>> Starting CityScopeJS applet");
+  //declare WebWorker globally
+  window.CVworker = new Worker("./CV/CVwebworker.js");
+
+  //init UI
+  console.log(">>> Starting CityScopeJS applet");
   init_ui();
-  // infoDiv(d, "Waiting for setting file [JSON]...");
-  // webWorkerListen();
+  console.log("Waiting for your settings file [JSON]...");
 }
 
-init();
+//start app after HTML load
+window.onload = function() {
+  init();
+};

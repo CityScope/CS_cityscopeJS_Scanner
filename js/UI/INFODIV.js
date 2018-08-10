@@ -12,7 +12,7 @@ export function makeInfoDiv() {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //make info div [on screen console] or add text to it
-export function UpdateInfoDiv(infoDiv, text) {
+export function UpdateinfoDiv(infoDiv, text) {
   // clear div if too much text
   if (infoDiv.scrollHeight > 2000) {
     infoDiv.innerHTML = null;

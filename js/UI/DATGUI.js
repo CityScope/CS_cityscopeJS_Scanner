@@ -1,5 +1,5 @@
 import * as dat from "dat.gui";
-import { onFileLoad } from "../TOOLS";
+import { onFileLoad } from "../FileIO";
 
 export function datGUI() {
   // dat.GUI
@@ -9,9 +9,9 @@ export function datGUI() {
     brightness: 0,
     contrast: 0,
     vis: false,
+
     getJson: function() {
       let fileClick = document.getElementById("my_file");
-      console.log(fileClick);
       fileClick.click();
       //do somthing with the file
       fileClick.onchange = function(e) {
@@ -33,14 +33,8 @@ export function datGUI() {
     },
     reset: function() {
       localStorage.clear();
-      infoDiv("clearing and reseting");
+      console.log("clearing and reseting");
       location.reload(true);
-    },
-    settingsExample: function() {
-      window.open(
-        "https://github.com/CityScope/CS_cityscopeJS/blob/master/data/settings.json",
-        "_blank"
-      );
     }
   };
 
@@ -89,8 +83,6 @@ export function datGUI() {
       cityIOinit(sendRate);
     });
 
-  //link to raw settings
-  cityioFolder.add(parm, "settingsExample").name("View settings example");
   //cityIO link
   cityioFolder.add(parm, "rawCityIO").name("View raw API");
   //cityIO link

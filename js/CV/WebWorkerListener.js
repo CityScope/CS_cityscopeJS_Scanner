@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 function webWorkerListen() {
   // Get data back form WEBworker
-  infoDiv("starting WebWorker listener...");
+  console.log("starting WebWorker listener...");
   CVworker.addEventListener(
     "message",
     function(e) {

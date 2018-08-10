@@ -57,11 +57,11 @@ function MatrixTransform(dstCorners) {
   ColorPicker(matrixGridLocArray);
   dstCorners = [];
   //info
-  infoDiv(
+  console.log(
     "table size: " +
       cityIOdataStruct.header.spatial.ncols +
       " x " +
       cityIOdataStruct.header.spatial.ncols
   );
-  infoDiv("Matrix Transformed 4 corners are at: " + dstCorners);
+  console.log("Matrix Transformed 4 corners are at: " + dstCorners);
 }

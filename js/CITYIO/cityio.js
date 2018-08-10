@@ -5,20 +5,19 @@
 // method to get the scanned data, look for matching brick 'types'
 // and send the results back to cityIO server for other apps to use
 
-function cityIOinit(sendRate) {
-  cityIOtimer = window.setInterval("cityIOpost()", sendRate);
+export function cityIOinit(sendRate) {
+  var cityIOtimer = window.setInterval(cityIOpost, sendRate);
 }
 
-function cityIOstop() {
-  clearInterval(cityIOtimer);
-}
-
+///Comparable string to reduce sent rate
+var oldTypesArrayStr;
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
 function cityIOpost() {
-  //test for new data, else don't send
+  //test oldTypesArrayStr for new data, else don't send
   if (oldTypesArrayStr !== typesArray.toString()) {
     oldTypesArrayStr = typesArray.toString();
   } else {
-    infoDiv("No changes to Grid data, pausing CityIO POST");
+    console.log("No changes to Grid data, pausing CityIO POST");
     return;
   }
 
@@ -42,13 +41,15 @@ function cityIOpost() {
   })
     .then(
       response => handleErrors(response),
-      infoDiv("cityIO table '" + cityIOtableName + "' uploaded at " + timeNow())
+      console.log(
+        "cityIO table '" + cityIOtableName + "' uploaded at " + timeNow()
+      )
     )
-    .catch(error => infoDiv(error));
+    .catch(error => console.log(error));
 
   function handleErrors(response) {
     if (response.ok) {
-      // infoDiv("cityIO response: " + response.ok);
+      // console.log("cityIO response: " + response.ok);
     }
     return response;
   }
@@ -58,4 +59,10 @@ function cityIOpost() {
     var d = Date.now();
     return new Date(d);
   }
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function cityIOstop() {
+  clearInterval(cityIOtimer);
 }
