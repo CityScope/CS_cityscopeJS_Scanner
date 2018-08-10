@@ -1,3 +1,6 @@
+//Import Storage class
+import "../Storage";
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function makeInfoDiv() {
@@ -12,7 +15,8 @@ export function makeInfoDiv() {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //make info div [on screen console] or add text to it
-export function UpdateinfoDiv(infoDiv, text) {
+export function UpdateinfoDiv(text) {
+  var infoDiv = Storage.infoDiv;
   // clear div if too much text
   if (infoDiv.scrollHeight > 2000) {
     infoDiv.innerHTML = null;

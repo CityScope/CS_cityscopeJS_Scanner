@@ -1,5 +1,6 @@
 import * as dat from "dat.gui";
 import { onFileLoad } from "../FileIO";
+import { vizGridHandler } from "../UI/UItools";
 
 export function datGUI() {
   // dat.GUI

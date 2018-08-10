@@ -38,31 +38,25 @@ export function MatrixTransform(dstCorners) {
   let perspTres;
   perspTres = PerspT(srcCorners, dstCorners);
 
+  var svgPntsArray = [];
   var svgKeystone = document.querySelector("#svgKeystone");
 
-  var svgPntsArray = [];
   //distort each dot in the matrix to locations and make cubes
   for (let j = 0; j < vizGridLocArray.length; j++) {
     dstPt = perspTres.transform(vizGridLocArray[j][0], vizGridLocArray[j][1]);
+    //push these locs to an array for scanning
+    matrixGridLocArray.push([Math.floor(dstPt[0]), Math.floor(dstPt[1])]);
+
     //create visuals points on canvas for ref and add to array
     svgPntsArray.push(
       svgKeystone.appendChild(svgCircle(dstPt, "red", 1, 1, "#42adf4", 0.25))
     );
     //Optional: show text for each pixel
     // svgKeystone.appendChild(svgText(dstPt, j, 8));
-    //push these locs to an array for scanning
-    matrixGridLocArray.push([Math.floor(dstPt[0]), Math.floor(dstPt[1])]);
   }
   //send points to Color Scanner fn.
   ColorPicker(matrixGridLocArray);
   dstCorners = [];
-  //info
-  console.log(
-    "table size: " +
-      cityIOdataStruct.header.spatial.ncols +
-      " x " +
-      cityIOdataStruct.header.spatial.ncols
-  );
   console.log("Matrix Transformed 4 corners are at: " + dstCorners);
 }
 

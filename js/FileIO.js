@@ -43,7 +43,7 @@ export var saveSettings = function(key, data) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //load settings if exist
-var loadSettings = function(key) {
+export var loadSettings = function(key) {
   if (localStorage.getItem(key)) {
     var data = JSON.parse(localStorage.getItem(key));
     return data;

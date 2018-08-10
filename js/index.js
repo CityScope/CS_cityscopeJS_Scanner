@@ -33,8 +33,12 @@ import "babel-polyfill";
 import { setupWebcam } from "./UI/Webcam";
 import { datGUI } from "./UI/DATGUI";
 import { setupSVG } from "./ui/UItools";
+import { makeInfoDiv } from "./UI/InfoDiv";
+//Import Storage class
+import "./Storage";
 
 async function init() {
+  Storage.infoDiv = makeInfoDiv();
   //declare WebWorker as global
   window.CVworker = new Worker("./CV/CVwebworker.js");
   //init UI

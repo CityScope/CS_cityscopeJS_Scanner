@@ -1,3 +1,5 @@
+import {} from "module";
+
 export function setupSVG() {
   // load the SVGcdn to var
   var svgCDN = "http://www.w3.org/2000/svg";
@@ -116,8 +118,33 @@ export function svgText(dstPt, txt, size) {
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
+//controls if to update grid visuals
+export function vizGridHandler(e) {
+  //check if we already have grid data
+  if (window.pixelColArr) {
+    let pixelColArr = window.pixelColArr;
+    let typesArray = window.typesArray;
+
+    if (pixelColArr) {
+      if (e === true) {
+        on();
+      } else if (e === false) {
+        cancelAnimationFrame(thisFrame);
+        renderVizGrid(pixelColArr, typesArray, false);
+      }
+
+      function on() {
+        var thisFrame = requestAnimationFrame(on);
+        renderVizGrid(pixelColArr, typesArray, true);
+        return thisFrame;
+      }
+    }
+  }
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
 //color the visual grid base on the web-worker cv analysis
-export function renderVizGrid(pixelColArr, typesArray, state) {
+function renderVizGrid(pixelColArr, typesArray, state) {
   if (state) {
     for (let i = 0; i < pixelColArr.length; i++) {
       let pixType = typesArray[Math.floor(i / 16)];
@@ -140,28 +167,13 @@ export function renderVizGrid(pixelColArr, typesArray, state) {
       }
     }
   } else {
+    //delete all and clear visuals
     for (let i = 0; i < pixelColArr.length; i++) {
       svgPntsArray[i].setAttribute("stroke", "");
       svgPntsArray[i].setAttribute("stroke-width", "0");
       svgPntsArray[i].setAttribute("fill", "");
       svgPntsArray[i].setAttribute("r", "0");
     }
-  }
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
-//controls if to update grid visuals
-export function vizGridHandler(e) {
-  if (e === true) {
-    on();
-  } else if (e === false) {
-    cancelAnimationFrame(thisFrame);
-    renderVizGrid(pixelColArr, typesArray, false);
-  }
-
-  function on() {
-    thisFrame = requestAnimationFrame(on);
-    renderVizGrid(pixelColArr, typesArray, true);
-    return thisFrame;
+    return;
   }
 }

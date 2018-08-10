@@ -1,5 +1,5 @@
 import { magGlass, svgCircle } from "./UItools";
-import { saveSettings } from "../FileIO";
+import { saveSettings, loadSettings } from "../FileIO";
 import { MatrixTransform } from "../CV/MatrixTransform";
 
 export function keystoneUI() {
