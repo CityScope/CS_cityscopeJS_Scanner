@@ -3,7 +3,7 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 // a function to make the initial generic array of
 //evenly divided grid points before distorting
-function scanArrayMaker(gridCols, gridRows) {
+export function scanArrayMaker(gridCols, gridRows) {
   var scanArrayPt = [];
   //get canvas ratio to divided by #-1 of points
   let ratX = camCanvas.width / (gridCols - 1);

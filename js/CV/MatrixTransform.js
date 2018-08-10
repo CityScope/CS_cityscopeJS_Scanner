@@ -1,6 +1,13 @@
+import { scanArrayMaker } from "./ScannerMaker";
+var PerspT = require("perspective-transform");
+import { svgCircle } from "../UI/UItools";
+import { ColorPicker } from "./ColorPicker";
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 //create the scanning transposed matrix
-function MatrixTransform(dstCorners) {
+export function MatrixTransform(dstCorners) {
+  var cityIOdataStruct = window.cityIOdataStruct;
+
   // grid pixels size from settings
   var gridCols = cityIOdataStruct.header.spatial.ncols * 4;
   var gridRows = cityIOdataStruct.header.spatial.nrows * 4;
@@ -13,7 +20,7 @@ function MatrixTransform(dstCorners) {
   //set the reference points of the 4 edges of the canvas
   // to get 100% of the image/video in canvas
   //before distorting
-  srcCorners = [
+  var srcCorners = [
     getPos(camCanvas)[0],
     getPos(camCanvas)[1],
     camCanvas.width,
@@ -23,27 +30,20 @@ function MatrixTransform(dstCorners) {
     camCanvas.width,
     camCanvas.height
   ];
-  //method to get div position
-  function getPos(el) {
-    // yay readability
-    for (
-      var lx = 0, ly = 0;
-      el != null;
-      lx += el.offsetLeft, ly += el.offsetTop, el = el.offsetParent
-    );
-    return [lx, ly];
-  }
+
   //var for the distorted points
   let dstPt;
   // use perspT lib to calculate transform matrix
   //and store the results of the 4 points dist. in var perspT
-  let perspT;
-  perspT = PerspT(srcCorners, dstCorners);
+  let perspTres;
+  perspTres = PerspT(srcCorners, dstCorners);
 
-  svgPntsArray = [];
+  var svgKeystone = document.querySelector("#svgKeystone");
+
+  var svgPntsArray = [];
   //distort each dot in the matrix to locations and make cubes
   for (let j = 0; j < vizGridLocArray.length; j++) {
-    dstPt = perspT.transform(vizGridLocArray[j][0], vizGridLocArray[j][1]);
+    dstPt = perspTres.transform(vizGridLocArray[j][0], vizGridLocArray[j][1]);
     //create visuals points on canvas for ref and add to array
     svgPntsArray.push(
       svgKeystone.appendChild(svgCircle(dstPt, "red", 1, 1, "#42adf4", 0.25))
@@ -64,4 +64,15 @@ function MatrixTransform(dstCorners) {
       cityIOdataStruct.header.spatial.ncols
   );
   console.log("Matrix Transformed 4 corners are at: " + dstCorners);
+}
+
+//method to get div position
+function getPos(el) {
+  // yay readability
+  for (
+    var lx = 0, ly = 0;
+    el != null;
+    lx += el.offsetLeft, ly += el.offsetTop, el = el.offsetParent
+  );
+  return [lx, ly];
 }

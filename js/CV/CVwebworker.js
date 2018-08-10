@@ -84,7 +84,7 @@ function CV(scannedPixels) {
 
   //return 2 msgs  to main thread:
   // 1. the type found in cv
-  // 2. colors for  visulaiztion & cityIO sending
+  // 2. colors for  visualization & cityIO sending
   webworkerMsg.push(typesLookup(pixColArr), pixColArr);
   self.postMessage(webworkerMsg);
 }

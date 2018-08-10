@@ -30,15 +30,21 @@ https://github.com/RELNO]
 */ ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import "babel-polyfill";
-import { init_ui } from "./UI/INIT_UI";
+import { setupWebcam } from "./UI/Webcam";
+import { datGUI } from "./UI/DATGUI";
+import { setupSVG } from "./ui/UItools";
 
 async function init() {
-  //declare WebWorker globally
+  //declare WebWorker as global
   window.CVworker = new Worker("./CV/CVwebworker.js");
-
   //init UI
   console.log(">>> Starting CityScopeJS applet");
-  init_ui();
+
+  //setup and start webcam
+  setupWebcam();
+  //make the UI
+  setupSVG();
+  datGUI();
   console.log("Waiting for your settings file [JSON]...");
 }
 

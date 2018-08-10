@@ -13,6 +13,7 @@ export function cityIOinit(sendRate) {
 var oldTypesArrayStr;
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 function cityIOpost() {
+  var typesArray = window.typesArray;
   //test oldTypesArrayStr for new data, else don't send
   if (oldTypesArrayStr !== typesArray.toString()) {
     oldTypesArrayStr = typesArray.toString();

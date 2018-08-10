@@ -1,3 +1,22 @@
+export function setupSVG() {
+  // load the SVGcdn to var
+  var svgCDN = "http://www.w3.org/2000/svg";
+  //SVG setup for later viz.
+  var svgDiv = document.createElement("div");
+  document.body.appendChild(svgDiv);
+  svgDiv.id = "svgDiv";
+  svgDiv.width = camCanvas.width;
+  svgDiv.height = camCanvas.height;
+  svgDiv.className = "svgDiv";
+  var svgKeystone = document.createElementNS(svgCDN, "svg");
+  svgKeystone.id = "svgKeystone";
+  svgKeystone.setAttributeNS(null, "width", camCanvas.width);
+  svgKeystone.setAttributeNS(null, "height", camCanvas.height);
+  svgDiv.appendChild(svgKeystone);
+
+  return svgKeystone;
+}
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //stats
@@ -56,6 +75,8 @@ export function magGlass() {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function svgLine(srcPt, dstPt) {
+  var svgCDN = "http://www.w3.org/2000/svg";
+
   var line = document.createElementNS(svgCDN, "line");
   line.setAttributeNS(null, "x1", srcPt[0]);
   line.setAttributeNS(null, "y1", srcPt[1]);
@@ -67,6 +88,8 @@ export function svgLine(srcPt, dstPt) {
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 export function svgCircle(dstPt, fillCol, size, fillOp, strkCol, strkWidth) {
+  var svgCDN = "http://www.w3.org/2000/svg";
+
   //display with SVG
   var scanPt = document.createElementNS(svgCDN, "circle");
   scanPt.setAttributeNS(null, "cx", dstPt[0]);
@@ -81,6 +104,8 @@ export function svgCircle(dstPt, fillCol, size, fillOp, strkCol, strkWidth) {
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 export function svgText(dstPt, txt, size) {
+  var svgCDN = "http://www.w3.org/2000/svg";
+
   var newText = document.createElementNS(svgCDN, "text");
   newText.setAttributeNS(null, "x", dstPt[0]);
   newText.setAttributeNS(null, "y", dstPt[1]);

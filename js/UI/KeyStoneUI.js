@@ -1,9 +1,13 @@
-import { magGlass, svgCircle } from "./UI_TOOLS";
+import { magGlass, svgCircle } from "./UItools";
+import { saveSettings } from "../FileIO";
+import { MatrixTransform } from "../CV/MatrixTransform";
 
 export function keystoneUI() {
   console.log(
     "starting keystone: make sure to select the corners of the scanned area in this order: TOP-LEFT->TOP-RIGHT->BOTTOM-LEFT->BOTTOM-RIGHT"
   );
+  //
+  var svgKeystone = window.svgKeystone;
   //clear clicks array
   let clkArr = [];
   //turn on mag-glass effect
@@ -17,7 +21,6 @@ export function keystoneUI() {
     if (e.x < camCanvas.width && e.y < camCanvas.height) {
       //pop. array of clicks
       clkArr.push(e.x, e.y);
-
       console.log(
         "Mouse click " + clkArr.length / 2 + " at " + e.x + ", " + e.y
       );
@@ -28,12 +31,10 @@ export function keystoneUI() {
 
       // when 2x4 clicks were added
       if (clkArr.length == 8) {
-        //save these keystone points to local storage
+        //save these settings for next load
         saveSettings("CityScopeJS_keystone", clkArr);
+        //call the matrix transform function
         MatrixTransform(loadSettings("CityScopeJS_keystone"));
-
-        //reset the clicks array
-        clkArr = [];
         // and stop keystone mouse clicks
         document.removeEventListener("click", mouseKeystone);
       }

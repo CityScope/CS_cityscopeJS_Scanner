@@ -1,5 +1,31 @@
-function ColorPicker(matrixGridLocArray) {
+import { cityIOinit } from "../CITYIO/cityio";
+import { webWorkerListener } from "./WebWorkerListener";
+
+/*    
+get the pixel location at the center of the grid cell div
+and match it to the pixel location in the PixelBuffer linear list
++----------------------+
+|0     ||3     ||6     |
+|      ||prev. ||      |
+|      ||pixel ||      |
++----------------------+
++----------------------+
+|1     ||4     ||7     |
+|      ||this  ||      |
+|      ||pixel ||      |
++----------------------+
++----------------------+
+|2     ||5     ||8     |
+|      ||next  ||      |
+|      ||pixel ||      |
++----------------------+
+*/
+
+export function ColorPicker(matrixGridLocArray) {
   console.log("starting pixel scanner");
+
+  //start the WW listener before initial send
+  webWorkerListener();
 
   // call a looping method that scans the grid
   // [this is a hack, so this function could be called
@@ -11,6 +37,7 @@ function ColorPicker(matrixGridLocArray) {
     // empty color array for web-worker
     let scannedColorsArray = [];
     // read all pixels from canvas
+    var vidCanvas2dContext = camCanvas.getContext("2d");
     let pixelArray = vidCanvas2dContext.getImageData(
       0,
       0,
@@ -20,27 +47,7 @@ function ColorPicker(matrixGridLocArray) {
     //get the pixels
     let pixelData = pixelArray.data;
     for (let i = 0; i < matrixGridLocArray.length; i++) {
-      // get the pixel location at the center of the grid cell div
-      // and match it to the pixel location in the PixelBuffer linear list
-      /*            
-            +----------------------+
-            |0     ||3     ||6     |
-            |      ||prev. ||      |
-            |      ||pixel ||      |
-            +----------------------+
-            +----------------------+
-            |1     ||4     ||7     |
-            |      ||this  ||      |
-            |      ||pixel ||      |
-            +----------------------+
-            +----------------------+
-            |2     ||5     ||8     |
-            |      ||next  ||      |
-            |      ||pixel ||      |
-            +----------------------+
-            */
-
-      pixLoc =
+      var pixLoc =
         (matrixGridLocArray[i][1] * innerWidth + matrixGridLocArray[i][0]) * 4;
       // sample and push to array 3 pixels around to get better recognition
       scannedColorsArray.push(
@@ -68,4 +75,10 @@ function ColorPicker(matrixGridLocArray) {
       ColorPickerRecursive();
     });
   }
+
+  // POST to cityIO rate in MS
+  var sendRate = 1000;
+
+  //at last, start sending to cityIO
+  cityIOinit(sendRate);
 }

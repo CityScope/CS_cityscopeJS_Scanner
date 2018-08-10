@@ -2,25 +2,6 @@
 // WEBCAM & MEDIA SETUP
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function setupWebCamCanvas() {
-  //make vid canvas
-  var camCanvas = document.createElement("canvas");
-
-  camCanvas.id = "webcamCanvas";
-  camCanvas.className = "webcamCanvas";
-  //MUST keep full numbers [WIP]
-  camCanvas.width = Math.floor(window.innerHeight);
-  camCanvas.height = Math.floor(window.innerHeight);
-  camCanvas.style.zIndex = 0;
-  camCanvas.style.position = "absolute";
-  // camCanvas.style.border = "1px solid";
-  document.body.appendChild(camCanvas);
-  window.camCanvas = camCanvas;
-  return camCanvas;
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 //setup the camera device
 export function setupWebcam() {
   // Global var for GUI controls
@@ -112,3 +93,20 @@ function contrastCanvas(contrast, canvas) {
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function setupWebCamCanvas() {
+  //make vid canvas
+  var camCanvas = document.createElement("canvas");
+
+  camCanvas.id = "webcamCanvas";
+  camCanvas.className = "webcamCanvas";
+  //MUST keep full numbers [WIP]
+  camCanvas.width = Math.floor(window.innerHeight);
+  camCanvas.height = Math.floor(window.innerHeight);
+  camCanvas.style.zIndex = 0;
+  camCanvas.style.position = "absolute";
+  // camCanvas.style.border = "1px solid";
+  document.body.appendChild(camCanvas);
+  window.camCanvas = camCanvas;
+  return camCanvas;
+}
