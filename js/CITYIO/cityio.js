@@ -6,7 +6,7 @@
 // and send the results back to cityIO server for other apps to use
 
 export function cityIOinit(sendRate) {
-  var cityIOtimer = window.setInterval(cityIOpost, sendRate);
+  window.setInterval(cityIOpost, sendRate);
 }
 
 ///Comparable string to reduce sent rate

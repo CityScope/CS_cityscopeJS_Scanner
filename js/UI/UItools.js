@@ -1,6 +1,10 @@
-import {} from "module";
+//Import Storage class
+import "../Storage";
 
 export function setupSVG() {
+  var camCanvas = Storage.camCanvas;
+  console.log(camCanvas);
+
   // load the SVGcdn to var
   var svgCDN = "http://www.w3.org/2000/svg";
   //SVG setup for later viz.

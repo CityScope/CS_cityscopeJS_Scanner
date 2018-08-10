@@ -1,4 +1,6 @@
 import { UpdateinfoDiv } from "./InfoDiv";
+//Import Storage class
+import "../Storage";
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 // WEBCAM & MEDIA SETUP
@@ -6,8 +8,6 @@ import { UpdateinfoDiv } from "./InfoDiv";
 
 //setup the camera device
 export function setupWebcam() {
-  UpdateinfoDiv("Setting up Webcam...");
-
   // Global var for GUI controls
   var brightness = 0;
   // Global var for GUI controls
@@ -111,6 +111,6 @@ function setupWebCamCanvas() {
   camCanvas.style.position = "absolute";
   // camCanvas.style.border = "1px solid";
   document.body.appendChild(camCanvas);
-  window.camCanvas = camCanvas;
+  Storage.camCanvas = camCanvas;
   return camCanvas;
 }

@@ -38,7 +38,9 @@ import { makeInfoDiv } from "./UI/InfoDiv";
 import "./Storage";
 
 async function init() {
-  Storage.infoDiv = makeInfoDiv();
+  // Storage.infoDiv = makeInfoDiv();
+  // UpdateinfoDiv("Setting up Webcam...");
+
   //declare WebWorker as global
   window.CVworker = new Worker("./CV/CVwebworker.js");
   //init UI

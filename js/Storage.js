@@ -3,15 +3,15 @@
 
 class Storage {
   constructor() {
-    this._infoDiv = "non";
+    this._camCanvas = "null";
   }
 
-  get infoDiv() {
-    return this._holder;
+  get camCanvas() {
+    return this._camCanvas;
   }
 
-  set infoDiv(value) {
-    this._holder = value;
+  set camCanvas(value) {
+    this._camCanvas = value;
   }
 }
 
