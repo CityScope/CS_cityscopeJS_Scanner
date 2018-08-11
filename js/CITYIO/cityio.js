@@ -23,7 +23,7 @@ function cityIOpost() {
   }
 
   //make a copy of the cityIO struct for manipulation
-  let cityIOpacket = JSON.parse(JSON.stringify(cityIOdataStruct));
+  let cityIOpacket = JSON.parse(JSON.stringify(Storage.cityIOdataStruct));
   //get the grid property from the scanner
   cityIOpacket.grid = typesArray;
   //remove brick codes from sent packet

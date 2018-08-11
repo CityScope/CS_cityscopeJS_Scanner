@@ -6,6 +6,7 @@ class Storage {
     this._camCanvas = null;
     this._typesArray = [];
     this._pixelColArr = [];
+    this._cityIOdataStruct = "";
   }
   //erb cam canvas
   get camCanvas() {
@@ -32,6 +33,15 @@ class Storage {
 
   set pixelColArr(value) {
     this.pixelColArr = value;
+  }
+
+  //pixelColArr
+  get cityIOdataStruct() {
+    return this._cityIOdataStruct;
+  }
+
+  set cityIOdataStruct(value) {
+    this.cityIOdataStruct = value;
   }
 }
 

@@ -1,5 +1,6 @@
 import { keystoneUI } from "./UI/KeyStoneUI";
 import { MatrixTransform } from "./CV/MatrixTransform";
+import "./Storage";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //save/load local storage
@@ -13,7 +14,8 @@ export function onFileLoad(l) {
   let res = reader.readAsText(file);
   reader.onload = function(e) {
     res = e.target.result;
-    window.cityIOdataStruct = JSON.parse(res);
+    //store cityIOdataStruct in Storage
+    var cityIOdataStruct = (Storage.cityIOdataStruct = JSON.parse(res));
     console.log("found settings [JSON]..." + cityIOdataStruct.toString());
 
     // send the table settings once to Web worker for init
@@ -25,7 +27,6 @@ export function onFileLoad(l) {
       MatrixTransform(loadSettings("CityScopeJS_keystone"));
     } else {
       console.log("no ket stone was found, starting new one..");
-
       //save these keystone points to local storage
       keystoneUI();
     }

@@ -7,15 +7,17 @@ import "../Storage";
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 //create the scanning transposed matrix
 export function MatrixTransform(dstCorners) {
+  //get canvas from Storage
   var camCanvas = Storage.camCanvas;
-  var cityIOdataStruct = window.cityIOdataStruct;
+  var cityIOdataStruct = Storage.cityIOdataStruct;
 
-  // grid pixels size from settings
+  //amount of grid pixels from settings JSON
   var gridCols = cityIOdataStruct.header.spatial.ncols * 4;
   var gridRows = cityIOdataStruct.header.spatial.nrows * 4;
 
   //matrix Grid Location Array
   var matrixGridLocArray = [];
+
   // return a new visual Grid Locations Array
   let vizGridLocArray = scanArrayMaker(gridCols, gridRows);
 
