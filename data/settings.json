@@ -30,7 +30,7 @@
   },
   "header": {
     "name": "CityScopeJS",
-    "longName": "°º¤ø,¸¸,ø¤º°`{{TactileScopeMatrixCity}}º¤ø,¸¸,ø¤º°`°º¤ø,¸",
+    "longName": "CityScopeJS",
     "block": ["type"],
     "mapping": {
       "type": {
@@ -59,12 +59,12 @@
       }
     },
     "spatial": {
-      "ncols": 10,
-      "nrows": 10,
+      "ncols": 15,
+      "nrows": 15,
       "physical_longitude": 0,
       "physical_latitude": 0,
-      "latitude": 42.3608,
-      "longitude": -71.08768,
+      "latitude": 50,
+      "longitude": 50,
       "cellsize": 10
     },
     "owner": {

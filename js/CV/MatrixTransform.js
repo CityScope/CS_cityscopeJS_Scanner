@@ -51,10 +51,11 @@ export function MatrixTransform(dstCorners) {
     //push these locs to an array for scanning
     matrixGridLocArray.push([Math.floor(dstPt[0]), Math.floor(dstPt[1])]);
 
+    //TAKE OUT FROM HERE
     //create visuals points on canvas for ref and add to array
     svgPntsArray.push(
       svgKeystone.appendChild(
-        svgCircle(dstPt, "#ffffff", 1, 1, "#000000", 0.25)
+        svgCircle(dstPt, "magenta", 1, 1, "#000000", 0.25)
       )
     );
     //save to Storage class
@@ -64,8 +65,8 @@ export function MatrixTransform(dstCorners) {
   }
   //send points to Color Scanner fn.
   ColorPicker(matrixGridLocArray);
-  dstCorners = [];
   console.log("Matrix Transformed 4 corners are at: " + dstCorners);
+  dstCorners = [];
 }
 
 //method to get div position

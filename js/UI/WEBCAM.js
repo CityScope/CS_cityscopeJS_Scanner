@@ -107,11 +107,11 @@ function setupWebCamCanvas() {
   camCanvas.className = "webcamCanvas";
 
   //MUST keep full numbers [WIP]
-  camCanvas.width = Math.floor(window.innerHeight);
+  camCanvas.width = Math.floor(window.innerWidth);
   camCanvas.height = Math.floor(window.innerHeight);
+  //
   camCanvas.style.zIndex = 0;
   camCanvas.style.position = "absolute";
-  // camCanvas.style.border = "1px solid";
   document.body.appendChild(camCanvas);
   return camCanvas;
 }

@@ -3,7 +3,6 @@ import "../Storage";
 
 export function setupSVG() {
   var camCanvas = Storage.camCanvas;
-  console.log("saved vam canvas to storage");
 
   // load the SVGcdn to var
   var svgCDN = "http://www.w3.org/2000/svg";
@@ -25,41 +24,47 @@ export function setupSVG() {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function magGlass() {
-  var camCanvas = Storage.camCanvas;
-  //make gls div
-  var glsDiv = document.createElement("div");
-  glsDiv.id = "glsDiv";
-  document.body.appendChild(glsDiv);
-  //another canvas for magnifying glass
-  var magGlassCanvas = document.createElement("canvas");
-  // mag. glass
-  glsDiv.appendChild(magGlassCanvas);
-  magGlassCanvas.id = "magGlass";
-  magGlassCanvas.className = "magGlassCanvas";
-  let magWid = (magGlassCanvas.width = 200);
-  magGlassCanvas.height = magWid;
-  magGlassCanvas.style.zIndex = 1;
-  let magGlassCtx = magGlassCanvas.getContext("2d");
-  document.addEventListener("mousemove", function(e) {
-    magGlassCtx.clearRect(0, 0, magWid, magWid);
-    magGlassCtx.drawImage(
-      camCanvas,
-      e.pageX - magWid / 4,
-      e.pageY - magWid / 4,
-      camCanvas.width,
-      camCanvas.width,
-      0,
-      0,
-      camCanvas.width * 2,
-      camCanvas.height * 2
-    );
-    magGlassCanvas.style.top = e.pageY - magWid / 2 + "px";
-    magGlassCanvas.style.left = e.pageX - magWid / 2 + "px";
-    magGlassCanvas.style.display = "block";
-    magGlassCanvas.style.position = "absolute";
-    magGlassCanvas.style.border = "2px black solid";
-  });
+export function magGlass(state) {
+  if (state !== false) {
+    var camCanvas = Storage.camCanvas;
+    //make gls div
+    var glsDiv = document.createElement("div");
+    glsDiv.id = "glsDiv";
+    document.body.appendChild(glsDiv);
+    //another canvas for magnifying glass
+    var magGlassCanvas = document.createElement("canvas");
+    // mag. glass
+    glsDiv.appendChild(magGlassCanvas);
+    magGlassCanvas.id = "magGlass";
+    magGlassCanvas.className = "magGlassCanvas";
+    let magWid = (magGlassCanvas.width = 200);
+    magGlassCanvas.height = magWid;
+    magGlassCanvas.style.zIndex = 1;
+    let magGlassCtx = magGlassCanvas.getContext("2d");
+    document.addEventListener("mousemove", function(e) {
+      magGlassCtx.clearRect(0, 0, magWid, magWid);
+      magGlassCtx.drawImage(
+        camCanvas,
+        e.pageX - magWid / 4,
+        e.pageY - magWid / 4,
+        camCanvas.width,
+        camCanvas.width,
+        0,
+        0,
+        camCanvas.width * 2,
+        camCanvas.height * 2
+      );
+      magGlassCanvas.style.top = e.pageY - magWid / 2 + "px";
+      magGlassCanvas.style.left = e.pageX - magWid / 2 + "px";
+      magGlassCanvas.style.display = "block";
+      magGlassCanvas.style.position = "absolute";
+      magGlassCanvas.style.border = "2px black solid";
+    });
+  } else {
+    //WIP
+    var glsDiv = document.querySelector("#glsDiv");
+    glsDiv.innerHTML = "";
+  }
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////

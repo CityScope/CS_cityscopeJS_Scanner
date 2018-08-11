@@ -40,16 +40,12 @@ import { setupSVG } from "./ui/UItools";
 import "./Storage";
 
 async function init() {
+  console.log("Starting CityScopeJS applet...");
   console.log("startring stats..");
-
   stats();
-  console.log("Setting up Webcam...");
-
   //declare WebWorker as global
-  window.CVworker = new Worker("./CV/CVwebworker.js");
-  //init UI
-  console.log(">>> Starting CityScopeJS applet");
 
+  window.CVworker = new Worker("./CV/CVwebworker.js");
   //setup and start webcam
   setupWebcam();
   //make the UI
