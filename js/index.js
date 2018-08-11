@@ -1,4 +1,5 @@
-/*/////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 {{ CityScopeJS }}
 Copyright (C) {{ 2018 }}  {{ Ariel Noyman }}
@@ -27,19 +28,22 @@ CityScopeJS -- decoding 2d array of black and white LEGO bricks, parsing and sen
 "https://www.linkedin.com/", "http://twitter.com/relno",
 https://github.com/RELNO]
 
-*/ ///////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+*/
 
 import "babel-polyfill";
+import { stats } from "./UI/UItools";
 import { setupWebcam } from "./UI/Webcam";
 import { datGUI } from "./UI/DATGUI";
 import { setupSVG } from "./ui/UItools";
-import { makeInfoDiv } from "./UI/InfoDiv";
 //Import Storage class
 import "./Storage";
 
 async function init() {
-  // Storage.infoDiv = makeInfoDiv();
-  // UpdateinfoDiv("Setting up Webcam...");
+  console.log("startring stats..");
+
+  stats();
+  console.log("Setting up Webcam...");
 
   //declare WebWorker as global
   window.CVworker = new Worker("./CV/CVwebworker.js");

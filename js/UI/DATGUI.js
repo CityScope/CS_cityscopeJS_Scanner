@@ -6,7 +6,6 @@ export function datGUI() {
   // dat.GUI
   var gui = new dat.GUI({ width: 400 });
   let parm = {
-    mirror: false,
     brightness: 0,
     contrast: 0,
     vis: false,
@@ -33,16 +32,20 @@ export function datGUI() {
       );
     },
     reset: function() {
+      //clear local memory of last key stone
       localStorage.clear();
       console.log("clearing and reseting");
       location.reload(true);
-    }
+    },
+    console: function() {}
   };
 
   //upload settings
   gui.add(parm, "getJson").name("Start here: Load settings [JSON]");
+
   //or reset and restart
   gui.add(parm, "reset").name("Reset and clear Keystone");
+
   //toggle vis on camera
   gui
     .add(parm, "vis")
@@ -50,6 +53,7 @@ export function datGUI() {
     .onChange(function(e) {
       vizGridHandler(e);
     });
+
   //new calibrate folder
   var calibrateFolder = gui.addFolder("webcam");
 
@@ -71,6 +75,7 @@ export function datGUI() {
       contrastCanvas(i, vidCanvas2dContext);
     });
 
+  //add folder
   var cityioFolder = gui.addFolder("cityIO");
 
   //cityio send rate
@@ -86,6 +91,11 @@ export function datGUI() {
 
   //cityIO link
   cityioFolder.add(parm, "rawCityIO").name("View raw API");
+
   //cityIO link
   cityioFolder.add(parm, "fe").name("View on cityIO Dashboard");
+
+  //add folder
+  var consoleText = gui.addFolder("console");
+  consoleText.add(parm, "console").name("Debug Text");
 }

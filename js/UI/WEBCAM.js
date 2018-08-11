@@ -1,5 +1,3 @@
-import { UpdateinfoDiv } from "./InfoDiv";
-//Import Storage class
 import "../Storage";
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -107,6 +105,7 @@ function setupWebCamCanvas() {
 
   camCanvas.id = "webcamCanvas";
   camCanvas.className = "webcamCanvas";
+
   //MUST keep full numbers [WIP]
   camCanvas.width = Math.floor(window.innerHeight);
   camCanvas.height = Math.floor(window.innerHeight);

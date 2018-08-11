@@ -3,7 +3,7 @@ import "../Storage";
 
 export function setupSVG() {
   var camCanvas = Storage.camCanvas;
-  console.log(camCanvas);
+  console.log("saved vam canvas to storage");
 
   // load the SVGcdn to var
   var svgCDN = "http://www.w3.org/2000/svg";
@@ -114,7 +114,7 @@ export function vizGridHandler(e) {
       if (e === true) {
         on();
       } else if (e === false) {
-        cancelAnimationFrame(thisFrame);
+        cancelAnimationFrame(on);
         renderVizGrid(Storage.pixelColArr, Storage.typesArray, false);
       }
 
