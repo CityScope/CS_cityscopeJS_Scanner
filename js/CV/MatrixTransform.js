@@ -2,10 +2,12 @@ import { scanArrayMaker } from "./ScannerMaker";
 var PerspT = require("perspective-transform");
 import { svgCircle } from "../UI/UItools";
 import { ColorPicker } from "./ColorPicker";
+import "../Storage";
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 //create the scanning transposed matrix
 export function MatrixTransform(dstCorners) {
+  var camCanvas = Storage.camCanvas;
   var cityIOdataStruct = window.cityIOdataStruct;
 
   // grid pixels size from settings
@@ -49,8 +51,12 @@ export function MatrixTransform(dstCorners) {
 
     //create visuals points on canvas for ref and add to array
     svgPntsArray.push(
-      svgKeystone.appendChild(svgCircle(dstPt, "red", 1, 1, "#42adf4", 0.25))
+      svgKeystone.appendChild(
+        svgCircle(dstPt, "#ffffff", 1, 1, "#000000", 0.25)
+      )
     );
+    //save to Storage class
+    Storage.svgPntsArray = svgPntsArray;
     //Optional: show text for each pixel
     // svgKeystone.appendChild(svgText(dstPt, j, 8));
   }

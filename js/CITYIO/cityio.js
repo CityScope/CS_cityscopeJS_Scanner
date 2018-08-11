@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 //cityIO
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+import "../Storage";
 // method to get the scanned data, look for matching brick 'types'
 // and send the results back to cityIO server for other apps to use
 
@@ -13,7 +13,7 @@ export function cityIOinit(sendRate) {
 var oldTypesArrayStr;
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 function cityIOpost() {
-  var typesArray = window.typesArray;
+  var typesArray = Storage.typesArray;
   //test oldTypesArrayStr for new data, else don't send
   if (oldTypesArrayStr !== typesArray.toString()) {
     oldTypesArrayStr = typesArray.toString();

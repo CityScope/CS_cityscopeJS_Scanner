@@ -1,8 +1,11 @@
 import { magGlass, svgCircle } from "./UItools";
 import { saveSettings, loadSettings } from "../FileIO";
 import { MatrixTransform } from "../CV/MatrixTransform";
+import "../Storage";
 
 export function keystoneUI() {
+  var camCanvas = Storage.camCanvas;
+
   console.log(
     "starting keystone: make sure to select the corners of the scanned area in this order: TOP-LEFT->TOP-RIGHT->BOTTOM-LEFT->BOTTOM-RIGHT"
   );

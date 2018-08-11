@@ -1,6 +1,6 @@
 import { cityIOinit } from "../CITYIO/cityio";
 import { webWorkerListener } from "./WebWorkerListener";
-
+import "../Storage";
 /*    
 get the pixel location at the center of the grid cell div
 and match it to the pixel location in the PixelBuffer linear list
@@ -22,6 +22,7 @@ and match it to the pixel location in the PixelBuffer linear list
 */
 
 export function ColorPicker(matrixGridLocArray) {
+  var camCanvas = Storage.camCanvas;
   console.log("starting pixel scanner");
 
   //start the WW listener before initial send

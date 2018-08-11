@@ -13,6 +13,9 @@ export function setupWebcam() {
   // Global var for GUI controls
   var contrast = 0;
   var camCanvas = setupWebCamCanvas();
+  //store webcam canvas into class
+  Storage.camCanvas = camCanvas;
+
   //get main canvas context for scanning
   var vidCanvas2dContext = camCanvas.getContext("2d");
   // console.log("starting video");
@@ -111,6 +114,5 @@ function setupWebCamCanvas() {
   camCanvas.style.position = "absolute";
   // camCanvas.style.border = "1px solid";
   document.body.appendChild(camCanvas);
-  Storage.camCanvas = camCanvas;
   return camCanvas;
 }

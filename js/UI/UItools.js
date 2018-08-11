@@ -25,24 +25,8 @@ export function setupSVG() {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//stats
-export function stats() {
-  var script = document.createElement("script");
-  script.onload = function() {
-    var stats = new Stats();
-    document.body.appendChild(stats.dom);
-    requestAnimationFrame(function loop() {
-      stats.update();
-      requestAnimationFrame(loop);
-    });
-  };
-  script.src = "//rawgit.com/mrdoob/stats.js/master/build/stats.min.js";
-  document.head.appendChild(script);
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 export function magGlass() {
+  var camCanvas = Storage.camCanvas;
   //make gls div
   var glsDiv = document.createElement("div");
   glsDiv.id = "glsDiv";
@@ -125,21 +109,18 @@ export function svgText(dstPt, txt, size) {
 //controls if to update grid visuals
 export function vizGridHandler(e) {
   //check if we already have grid data
-  if (window.pixelColArr) {
-    let pixelColArr = window.pixelColArr;
-    let typesArray = window.typesArray;
-
-    if (pixelColArr) {
+  if (Storage.pixelColArr) {
+    if (Storage.pixelColArr) {
       if (e === true) {
         on();
       } else if (e === false) {
         cancelAnimationFrame(thisFrame);
-        renderVizGrid(pixelColArr, typesArray, false);
+        renderVizGrid(Storage.pixelColArr, Storage.typesArray, false);
       }
 
       function on() {
         var thisFrame = requestAnimationFrame(on);
-        renderVizGrid(pixelColArr, typesArray, true);
+        renderVizGrid(Storage.pixelColArr, Storage.typesArray, true);
         return thisFrame;
       }
     }
@@ -149,6 +130,8 @@ export function vizGridHandler(e) {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 //color the visual grid base on the web-worker cv analysis
 function renderVizGrid(pixelColArr, typesArray, state) {
+  var svgPntsArray = Storage.svgPntsArray;
+
   if (state) {
     for (let i = 0; i < pixelColArr.length; i++) {
       let pixType = typesArray[Math.floor(i / 16)];
@@ -180,4 +163,21 @@ function renderVizGrid(pixelColArr, typesArray, state) {
     }
     return;
   }
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//stats
+export function stats() {
+  var script = document.createElement("script");
+  script.onload = function() {
+    var stats = new Stats();
+    document.body.appendChild(stats.dom);
+    requestAnimationFrame(function loop() {
+      stats.update();
+      requestAnimationFrame(loop);
+    });
+  };
+  script.src = "//rawgit.com/mrdoob/stats.js/master/build/stats.min.js";
+  document.head.appendChild(script);
 }
