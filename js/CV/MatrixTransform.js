@@ -47,6 +47,8 @@ export function MatrixTransform(gridCorners) {
 
   var svgPntsArray = [];
   var svgKeystone = document.querySelector("#svgKeystone");
+  // clear SVG at start
+  svgKeystone.innerHTML = "";
 
   //distort each dot in the matrix to locations and make cubes
   for (let j = 0; j < vizGridLocArray.length; j++) {

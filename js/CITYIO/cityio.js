@@ -2,16 +2,32 @@
 //cityIO
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 import "../Storage";
+
+var cityIOtimer;
+///cmpare this to new cityIO string to avoid useless POST
+var oldTypesArrayStr;
+
+export function cityIOinit(sendRate) {
+  cityIOtimer = window.setInterval(cityIOpost, sendRate);
+}
+
+//stop cityio
+export function cityIOstop() {
+  console.log("Stopped cityIO POST");
+
+  clearInterval(cityIOtimer);
+}
+
+//calc this current time
+function timeNow() {
+  var d = Date.now();
+  return new Date(d);
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
 // method to get the scanned data, look for matching brick 'types'
 // and send the results back to cityIO server for other apps to use
 
-export function cityIOinit(sendRate) {
-  window.setInterval(cityIOpost, sendRate);
-}
-
-///Comparable string to reduce sent rate
-var oldTypesArrayStr;
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
 function cityIOpost() {
   var typesArray = Storage.typesArray;
   //test oldTypesArrayStr for new data, else don't send
@@ -54,16 +70,4 @@ function cityIOpost() {
     }
     return response;
   }
-
-  //calc this current time
-  function timeNow() {
-    var d = Date.now();
-    return new Date(d);
-  }
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-function cityIOstop() {
-  clearInterval(cityIOtimer);
 }

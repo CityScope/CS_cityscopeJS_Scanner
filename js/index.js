@@ -36,6 +36,7 @@ import { stats } from "./UI/UItools";
 import { setupWebcam } from "./UI/Webcam";
 import { datGUI } from "./UI/DATGUI";
 import { setupSVG } from "./ui/UItools";
+import { webWorkerListener } from "./CV/WebWorkerListener";
 
 //Import Storage class
 import "./Storage";
@@ -51,6 +52,8 @@ async function init() {
   //make the UI
   setupSVG();
   datGUI();
+  //start the WW listener before initial send
+  webWorkerListener();
   console.log("Waiting for your settings file [JSON]...");
 }
 

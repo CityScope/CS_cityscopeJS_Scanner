@@ -8,14 +8,14 @@ export function webWorkerListener() {
   //add the event listener
   CVworker.addEventListener(
     "message",
-    function(e) {
+    function(msg) {
       //get the WEB worker  msg and use
       //its 1st item for types
-      typesArray = e.data[0];
+      typesArray = msg.data[0];
       Storage.typesArray = typesArray;
       //get the WEB worker msg and use
       //its 2nd item for vis. the grid
-      pixelColArr = e.data[1];
+      pixelColArr = msg.data[1];
       Storage.pixelColArr = pixelColArr;
     },
     false
