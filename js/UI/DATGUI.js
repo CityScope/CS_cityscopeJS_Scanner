@@ -1,6 +1,7 @@
 import * as dat from "dat.gui";
 import { onFileLoad } from "../FileIO";
-import { vizGridHandler } from "../UI/UItools";
+import { renderGrid } from "../UI/RenderGrid";
+import "../Storage";
 
 export function datGUI() {
   // dat.GUI
@@ -9,7 +10,6 @@ export function datGUI() {
     brightness: 0,
     contrast: 0,
     vis: false,
-
     getJson: function() {
       let fileClick = document.getElementById("my_file");
       fileClick.click();
@@ -23,8 +23,9 @@ export function datGUI() {
     fe: function() {
       window.open("https://cityio.media.mit.edu/", "_blank");
     },
-
     rawCityIO: function() {
+      var cityIOdataStruct = Storage.cityIOdataStruct;
+
       window.open(
         "https://cityio.media.mit.edu/api/table/" +
           cityIOdataStruct.header.name,
@@ -37,7 +38,7 @@ export function datGUI() {
       console.log("clearing and reseting");
       location.reload(true);
     },
-    console: function() {}
+    console: ""
   };
 
   //upload settings
@@ -49,9 +50,9 @@ export function datGUI() {
   //toggle vis on camera
   gui
     .add(parm, "vis")
-    .name("Toggle visual feedback")
-    .onChange(function(e) {
-      vizGridHandler(e);
+    .name("Toggle Grid Render")
+    .onChange(function(state) {
+      renderGrid(state);
     });
 
   //new calibrate folder
@@ -97,5 +98,10 @@ export function datGUI() {
 
   //add folder
   var consoleText = gui.addFolder("console");
-  consoleText.add(parm, "console").name("Debug Text");
+  console.log(consoleText);
+
+  consoleText
+    .add(parm, "console")
+    .name("Debug Text")
+    .listen();
 }

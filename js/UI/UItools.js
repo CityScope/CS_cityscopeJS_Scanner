@@ -111,66 +111,6 @@ export function svgText(dstPt, txt, size) {
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
-//controls if to update grid visuals
-export function vizGridHandler(e) {
-  //check if we already have grid data
-  if (Storage.pixelColArr) {
-    if (Storage.pixelColArr) {
-      if (e === true) {
-        on();
-      } else if (e === false) {
-        cancelAnimationFrame(on);
-        renderVizGrid(Storage.pixelColArr, Storage.typesArray, false);
-      }
-
-      function on() {
-        var thisFrame = requestAnimationFrame(on);
-        renderVizGrid(Storage.pixelColArr, Storage.typesArray, true);
-        return thisFrame;
-      }
-    }
-  }
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
-//color the visual grid base on the web-worker cv analysis
-function renderVizGrid(pixelColArr, typesArray, state) {
-  var svgPntsArray = Storage.svgPntsArray;
-
-  if (state) {
-    for (let i = 0; i < pixelColArr.length; i++) {
-      let pixType = typesArray[Math.floor(i / 16)];
-      if (pixType !== -1) {
-        svgPntsArray[i].setAttribute("stroke", "#59d0ff");
-        svgPntsArray[i].setAttribute("stroke-width", "1");
-      } else {
-        svgPntsArray[i].setAttribute("stroke", "");
-        svgPntsArray[i].setAttribute("stroke-width", "0");
-      }
-      if (pixelColArr[i] === 2) {
-        svgPntsArray[i].setAttribute("fill", "magenta");
-        svgPntsArray[i].setAttribute("r", "2");
-      } else if (pixelColArr[i] === 1) {
-        svgPntsArray[i].setAttribute("fill", "black");
-        svgPntsArray[i].setAttribute("r", "2");
-      } else {
-        svgPntsArray[i].setAttribute("fill", "white");
-        svgPntsArray[i].setAttribute("r", "2");
-      }
-    }
-  } else {
-    //delete all and clear visuals
-    for (let i = 0; i < pixelColArr.length; i++) {
-      svgPntsArray[i].setAttribute("stroke", "");
-      svgPntsArray[i].setAttribute("stroke-width", "0");
-      svgPntsArray[i].setAttribute("fill", "");
-      svgPntsArray[i].setAttribute("r", "0");
-    }
-    return;
-  }
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //stats
 export function stats() {

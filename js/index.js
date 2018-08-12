@@ -36,6 +36,7 @@ import { stats } from "./UI/UItools";
 import { setupWebcam } from "./UI/Webcam";
 import { datGUI } from "./UI/DATGUI";
 import { setupSVG } from "./ui/UItools";
+
 //Import Storage class
 import "./Storage";
 
@@ -44,7 +45,6 @@ async function init() {
   console.log("startring stats..");
   stats();
   //declare WebWorker as global
-
   window.CVworker = new Worker("./CV/CVwebworker.js");
   //setup and start webcam
   setupWebcam();

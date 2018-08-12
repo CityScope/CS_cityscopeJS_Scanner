@@ -2,11 +2,14 @@ import { scanArrayMaker } from "./ScannerMaker";
 var PerspT = require("perspective-transform");
 import { svgCircle } from "../UI/UItools";
 import { ColorPicker } from "./ColorPicker";
+
 import "../Storage";
+
+import { saveSettings, loadSettings } from "../FileIO";
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 //create the scanning transposed matrix
-export function MatrixTransform(dstCorners) {
+export function MatrixTransform(gridCorners) {
   //get canvas from Storage
   var camCanvas = Storage.camCanvas;
   var cityIOdataStruct = Storage.cityIOdataStruct;
@@ -40,7 +43,7 @@ export function MatrixTransform(dstCorners) {
   // use perspT lib to calculate transform matrix
   //and store the results of the 4 points dist. in var perspT
   let perspTres;
-  perspTres = PerspT(srcCorners, dstCorners);
+  perspTres = PerspT(srcCorners, gridCorners);
 
   var svgPntsArray = [];
   var svgKeystone = document.querySelector("#svgKeystone");
@@ -58,24 +61,70 @@ export function MatrixTransform(dstCorners) {
         svgCircle(dstPt, "magenta", 1, 1, "#000000", 0.25)
       )
     );
-    //save to Storage class
-    Storage.svgPntsArray = svgPntsArray;
     //Optional: show text for each pixel
     // svgKeystone.appendChild(svgText(dstPt, j, 8));
   }
+
+  //save to Storage class
+  Storage.svgPntsArray = svgPntsArray;
+
+  console.log("Matrix Transformed 4 corners are at: " + gridCorners);
+
   //send points to Color Scanner fn.
   ColorPicker(matrixGridLocArray);
-  console.log("Matrix Transformed 4 corners are at: " + dstCorners);
-  dstCorners = [];
+  gridCorners = [];
 }
 
-//method to get div position
-function getPos(el) {
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//method to get this div position
+function getPos(divPos) {
   // yay readability
   for (
     var lx = 0, ly = 0;
-    el != null;
-    lx += el.offsetLeft, ly += el.offsetTop, el = el.offsetParent
+    divPos != null;
+    lx += divPos.offsetLeft,
+      ly += divPos.offsetTop,
+      divPos = divPos.offsetParent
   );
   return [lx, ly];
+}
+
+//WIP
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+window.addEventListener("keydown", function(event) {
+  const key = event.key; // "ArrowRight", "ArrowLeft", "ArrowUp", or "ArrowDown"
+  var set = loadSettings("CityScopeJS_keystone");
+
+  k(key, set);
+});
+
+function k(key, set) {
+  switch (key) {
+    case "ArrowLeft":
+      set[0]--;
+      saveSettings("CityScopeJS_keystone", set);
+      MatrixTransform(set);
+      break;
+
+    case "ArrowRight":
+      set[0]++;
+      saveSettings("CityScopeJS_keystone", set);
+      MatrixTransform(set);
+      break;
+
+    case "ArrowUp":
+      set[1]--;
+      saveSettings("CityScopeJS_keystone", set);
+      MatrixTransform(set);
+      // Up pressed
+      break;
+
+    case "ArrowDown":
+      // Down pressed
+      set[1]++;
+      saveSettings("CityScopeJS_keystone", set);
+      MatrixTransform(set);
+      break;
+  }
 }

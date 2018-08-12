@@ -7,41 +7,56 @@ class Storage {
     this._typesArray = [];
     this._pixelColArr = [];
     this._cityIOdataStruct = "";
+    this._svgPntsArray = [];
+    this._renderAnimFrame = 0;
   }
-  //erb cam canvas
+
+  //web cam canvas
   get camCanvas() {
     return this._camCanvas;
   }
-
   set camCanvas(value) {
     this._camCanvas = value;
   }
 
-  //typesArray
+  //types Array
   get typesArray() {
     return this._typesArray;
   }
-
   set typesArray(value) {
     this._typesArray = value;
   }
 
-  //pixelColArr
+  //pixel Color Arr
   get pixelColArr() {
     return this._pixelColArr;
   }
-
   set pixelColArr(value) {
-    this.pixelColArr = value;
+    this._pixelColArr = value;
   }
 
-  //pixelColArr
+  //cityIO data Struct
   get cityIOdataStruct() {
     return this._cityIOdataStruct;
   }
-
   set cityIOdataStruct(value) {
-    this.cityIOdataStruct = value;
+    this._cityIOdataStruct = value;
+  }
+
+  //SVG points Array
+  get svgPntsArray() {
+    return this._svgPntsArray;
+  }
+  set svgPntsArray(value) {
+    this._svgPntsArray = value;
+  }
+
+  //Grid Render Animation Frame
+  get renderAnimFrame() {
+    return this._renderAnimFrame;
+  }
+  set renderAnimFrame(value) {
+    this._renderAnimFrame = value;
   }
 }
 

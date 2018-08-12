@@ -15,8 +15,10 @@ export function onFileLoad(l) {
   reader.onload = function(e) {
     res = e.target.result;
     //store cityIOdataStruct in Storage
-    var cityIOdataStruct = (Storage.cityIOdataStruct = JSON.parse(res));
-    console.log("found settings [JSON]..." + cityIOdataStruct.toString());
+    var cityIOdataStruct = JSON.parse(res);
+    Storage.cityIOdataStruct = cityIOdataStruct;
+
+    console.log("found settings [JSON]...", cityIOdataStruct);
 
     // send the table settings once to Web worker for init
     CVworker.postMessage(["cityIOsetup", cityIOdataStruct]);
