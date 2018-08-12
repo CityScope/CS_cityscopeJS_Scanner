@@ -34,6 +34,7 @@ https://github.com/RELNO]
 import "babel-polyfill";
 import { stats } from "./UI/UItools";
 import { setupWebcam } from "./UI/Webcam";
+import { ColorPicker } from "./CV/ColorPicker";
 import { datGUI } from "./UI/DATGUI";
 import { setupSVG } from "./ui/UItools";
 import { webWorkerListener } from "./CV/WebWorkerListener";
@@ -51,9 +52,13 @@ async function init() {
   setupWebcam();
   //make the UI
   setupSVG();
+  //UI menu
   datGUI();
   //start the WW listener before initial send
   webWorkerListener();
+  //start picking colors
+  ColorPicker();
+  //
   console.log("Waiting for your settings file [JSON]...");
 }
 

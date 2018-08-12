@@ -20,16 +20,20 @@ and match it to the pixel location in the PixelBuffer linear list
 +----------------------+
 */
 
-export function ColorPicker(matrixGridLocArray) {
-  var camCanvas = Storage.camCanvas;
+export function ColorPicker() {
   console.log("starting pixel scanner");
+  var camCanvas = Storage.camCanvas;
 
   // call a looping method that scans the grid
   // [this is a hack, so this function could be called
-  // using  'requestAnimationFrame' API]
+  // using 'requestAnimationFrame' API]
   ColorPickerRecursive();
   // inside recursive function
   function ColorPickerRecursive() {
+    console.log("f");
+
+    var matrixGridLocArray = Storage.matrixGridLocArray;
+
     // empty color array for web-worker
     let scannedColorsArray = [];
     // read all pixels from canvas
@@ -72,9 +76,9 @@ export function ColorPicker(matrixGridLocArray) {
     });
   }
 
-  // POST to cityIO rate in MS
-  var sendRate = 1000;
-  cityIOstop();
-  //at last, start sending to cityIO
-  cityIOinit(sendRate);
+  // // POST to cityIO rate in MS
+  // var sendRate = 1000;
+  // cityIOstop();
+  // //at last, start sending to cityIO
+  // cityIOinit(sendRate);
 }

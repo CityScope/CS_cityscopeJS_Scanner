@@ -13,9 +13,8 @@ export function cityIOinit(sendRate) {
 
 //stop cityio
 export function cityIOstop() {
-  console.log("Stopped cityIO POST");
-
   clearInterval(cityIOtimer);
+  console.log("Stopped cityIO POST");
 }
 
 //calc this current time

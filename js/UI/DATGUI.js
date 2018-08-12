@@ -98,7 +98,6 @@ export function datGUI() {
 
   //add folder
   var consoleText = gui.addFolder("console");
-  console.log(consoleText);
 
   consoleText
     .add(parm, "console")

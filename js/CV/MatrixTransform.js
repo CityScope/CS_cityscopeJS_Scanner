@@ -2,9 +2,7 @@ import { scanArrayMaker } from "./ScannerMaker";
 var PerspT = require("perspective-transform");
 import { svgCircle } from "../UI/UItools";
 import { ColorPicker } from "./ColorPicker";
-
 import "../Storage";
-
 import { saveSettings, loadSettings } from "../FileIO";
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -56,7 +54,7 @@ export function MatrixTransform(gridCorners) {
     //push these locs to an array for scanning
     matrixGridLocArray.push([Math.floor(dstPt[0]), Math.floor(dstPt[1])]);
 
-    //TAKE OUT FROM HERE
+    //SHOULD TAKE OUT FROM HERE
     //create visuals points on canvas for ref and add to array
     svgPntsArray.push(
       svgKeystone.appendChild(
@@ -72,8 +70,10 @@ export function MatrixTransform(gridCorners) {
 
   console.log("Matrix Transformed 4 corners are at: " + gridCorners);
 
-  //send points to Color Scanner fn.
-  ColorPicker(matrixGridLocArray);
+  //save points to Storage
+  Storage.matrixGridLocArray = matrixGridLocArray;
+
+  //
   gridCorners = [];
 }
 

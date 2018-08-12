@@ -9,6 +9,7 @@ class Storage {
     this._cityIOdataStruct = "";
     this._svgPntsArray = [];
     this._renderAnimFrame = 0;
+    this._matrixGridLocArray = [];
   }
 
   //web cam canvas
@@ -57,6 +58,14 @@ class Storage {
   }
   set renderAnimFrame(value) {
     this._renderAnimFrame = value;
+  }
+
+  // matrix Grid Location Array
+  get matrixGridLocArray() {
+    return this._matrixGridLocArray;
+  }
+  set matrixGridLocArray(value) {
+    this._matrixGridLocArray = value;
   }
 }
 
