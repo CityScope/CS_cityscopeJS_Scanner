@@ -35,7 +35,7 @@ function cityIOpost() {
     if (oldTypesArrayStr !== typesArray.toString()) {
       oldTypesArrayStr = typesArray.toString();
     } else {
-      Storage.console = "No changes to Grid data, pausing CityIO POST";
+      Storage.console = "PAUSING CityIO POST";
       return;
     }
 
@@ -71,6 +71,6 @@ function cityIOpost() {
       return response;
     }
   } else {
-    Storage.console = "Grid not ready for cityIO POST";
+    Storage.console = "Waiting for cityIO settings file [JSON]...";
   }
 }

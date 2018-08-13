@@ -48,7 +48,6 @@ async function init() {
 
   loadImg(logo.default, 80, 80, "logo");
   Storage.console = "Starting CityScopeJS applet...";
-  Storage.console = "startring stats..";
   stats();
   //declare WebWorker as global
   window.CVworker = new Worker("./CV/CVwebworker.js");
@@ -68,8 +67,6 @@ async function init() {
   Storage.console = "starting cityIO";
   //start sending to cityIO
   cityIOinit(sendRate);
-  //
-  Storage.console = "Waiting for your settings file [JSON]...";
 }
 
 //start app after HTML load
