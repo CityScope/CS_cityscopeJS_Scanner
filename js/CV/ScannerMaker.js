@@ -1,6 +1,6 @@
 import "../Storage";
 /*
-// import { svgCircle, svgText } from "../UI/UItools";
+import { svgCircle, svgText } from "../Modules";
 */
 
 // a function to make the initial generic array of

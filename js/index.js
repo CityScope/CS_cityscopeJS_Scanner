@@ -32,11 +32,10 @@ https://github.com/RELNO]
 */
 
 import "babel-polyfill";
-import { stats } from "./UI/UItools";
+import { setupSVG, stats } from "./Modules";
 import { setupWebcam } from "./UI/Webcam";
 import { cityIOinit, cityIOstop } from "./CITYIO/cityio";
 import { datGUI } from "./UI/DATGUI";
-import { setupSVG } from "./ui/UItools";
 import { webWorkerListener } from "./CV/WebWorkerListener";
 
 //Import Storage class

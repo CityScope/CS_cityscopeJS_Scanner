@@ -1,7 +1,6 @@
-import { magGlass, svgCircle } from "./UItools";
-import { saveSettings, loadSettings } from "../FileIO";
-import { MatrixTransform } from "../CV/MatrixTransform";
 import "../Storage";
+import { saveSettings, loadSettings, magGlass, svgCircle } from "../Modules";
+import { MatrixTransform } from "../CV/MatrixTransform";
 
 export function keystoneMouse() {
   var camCanvas = Storage.camCanvas;

@@ -1,9 +1,8 @@
 import { scanArrayMaker } from "./ScannerMaker";
-var PerspT = require("perspective-transform");
-import { svgCircle } from "../UI/UItools";
+var PerspT = require("perspective-transform/dist/perspective-transform");
 import { ColorPicker } from "./ColorPicker";
 import "../Storage";
-import { saveSettings, loadSettings } from "../FileIO";
+import { svgCircle, saveSettings, loadSettings } from "../Modules";
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 //GLOBAL FOR NOW

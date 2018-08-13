@@ -1,5 +1,5 @@
 import * as dat from "dat.gui";
-import { onFileLoad } from "../FileIO";
+import { onFileLoad } from "../Modules";
 import { renderGrid } from "../UI/RenderGrid";
 import "../Storage";
 
