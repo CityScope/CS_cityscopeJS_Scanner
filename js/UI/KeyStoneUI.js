@@ -60,12 +60,14 @@ export function keystoneKeys() {
     switch (key) {
       case "=":
         velocity += 1;
-        Storage.console = ("edit speed", velocity, "pixels at the time");
+        Storage.console =
+          "edit speed " + velocity.toString() + " pixels at the time";
         break;
 
       case "-":
         if (velocity > 1) velocity -= 1;
-        Storage.console = ("edit speed", velocity, "pixels at the time");
+        Storage.console =
+          "edit speed " + velocity.toString() + " pixels at the time";
         break;
 
       case "1":
