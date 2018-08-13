@@ -33,7 +33,7 @@ https://github.com/RELNO]
 
 import "babel-polyfill";
 import { setupSVG, stats, loadImg } from "./Modules";
-import { setupWebcam } from "./UI/Webcam";
+import { setupWebcam } from "./CV/Webcam";
 import { cityIOinit, cityIOstop } from "./CITYIO/cityio";
 import { datGUI } from "./UI/DATGUI";
 import { webWorkerListener } from "./CV/WebWorkerListener";

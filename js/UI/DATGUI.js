@@ -1,7 +1,7 @@
 import * as dat from "dat.gui";
 import { cityIOinit, cityIOstop } from "../CITYIO/cityio";
 import { onFileLoad } from "../Modules";
-import { renderGrid } from "../UI/RenderGrid";
+import { renderGrid } from "./RenderGrid";
 import "../Storage";
 
 export function datGUI() {

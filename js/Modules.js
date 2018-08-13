@@ -218,3 +218,22 @@ export function loadImg(src, width, height, classname) {
   // This next line will just add it to the <body> tag
   document.body.appendChild(img);
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export function setupWebCamCanvas() {
+  //make vid canvas
+  var camCanvas = document.createElement("canvas");
+
+  camCanvas.id = "webcamCanvas";
+  camCanvas.className = "webcamCanvas";
+
+  //MUST keep full numbers [WIP]
+  camCanvas.width = Math.floor(window.innerWidth);
+  camCanvas.height = Math.floor(window.innerHeight);
+  //
+  camCanvas.style.zIndex = 0;
+  camCanvas.style.position = "absolute";
+  document.body.appendChild(camCanvas);
+  return camCanvas;
+}
