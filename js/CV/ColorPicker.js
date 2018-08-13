@@ -83,10 +83,4 @@ export function ColorPicker() {
       cancelAnimationFrame(timerID);
     }
   };
-
-  // // POST to cityIO rate in MS
-  // var sendRate = 1000;
-  // cityIOstop();
-  // //at last, start sending to cityIO
-  // cityIOinit(sendRate);
 }

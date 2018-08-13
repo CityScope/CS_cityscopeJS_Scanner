@@ -49,27 +49,48 @@ export function keystoneMouse() {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 export function keystoneKeys() {
   window.addEventListener("keydown", function(event) {
-    const key = event.key; // "ArrowRight", "ArrowLeft", "ArrowUp", or "ArrowDown"
+    const key = event.key;
     var keystone = loadSettings("CityScopeJS_keystone");
-    k(key, keystone);
+    keystoneByKey(key, keystone);
+    console.log(key);
   });
 
-  function k(key, keystone) {
+  let kyStArrPos = 0;
+  //set the edit speed
+  let velocity = 1;
+
+  // "ArrowRight", "ArrowLeft", "ArrowUp", or "ArrowDown"
+  function keystoneByKey(key, keystone) {
     switch (key) {
+      case "=":
+        velocity += 1;
+        break;
+
+      case "-":
+        if (velocity > 1) velocity -= 1;
+        break;
+
+      case "1":
+      case "2":
+      case "3":
+      case "4":
+        //gets the x pos of each pair of pnts
+        kyStArrPos = (key - 1) * 2;
+
       case "ArrowLeft":
-        keystone[0]--;
+        keystone[kyStArrPos] = keystone[kyStArrPos] - velocity;
         saveSettings("CityScopeJS_keystone", keystone);
         MatrixTransform(keystone);
         break;
 
       case "ArrowRight":
-        keystone[0]++;
+        keystone[kyStArrPos] = keystone[kyStArrPos] + velocity;
         saveSettings("CityScopeJS_keystone", keystone);
         MatrixTransform(keystone);
         break;
 
       case "ArrowUp":
-        keystone[1]--;
+        keystone[kyStArrPos + 1] = keystone[kyStArrPos + 1] - velocity;
         saveSettings("CityScopeJS_keystone", keystone);
         MatrixTransform(keystone);
         // Up pressed
@@ -77,7 +98,7 @@ export function keystoneKeys() {
 
       case "ArrowDown":
         // Down pressed
-        keystone[1]++;
+        keystone[kyStArrPos + 1] = keystone[kyStArrPos + 1] + velocity;
         saveSettings("CityScopeJS_keystone", keystone);
         MatrixTransform(keystone);
         break;

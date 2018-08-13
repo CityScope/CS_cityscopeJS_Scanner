@@ -34,7 +34,7 @@ https://github.com/RELNO]
 import "babel-polyfill";
 import { stats } from "./UI/UItools";
 import { setupWebcam } from "./UI/Webcam";
-import { ColorPicker } from "./CV/ColorPicker";
+import { cityIOinit, cityIOstop } from "./CITYIO/cityio";
 import { datGUI } from "./UI/DATGUI";
 import { setupSVG } from "./ui/UItools";
 import { webWorkerListener } from "./CV/WebWorkerListener";
@@ -57,6 +57,13 @@ async function init() {
   //start the WW listener before initial send
   webWorkerListener();
 
+  // [WIP] POST to cityIO rate in MS
+  var sendRate = 1000;
+  //make sure to clear sending from before
+  cityIOstop();
+  console.log("starting cityIO");
+  //start sending to cityIO
+  cityIOinit(sendRate);
   //
   console.log("Waiting for your settings file [JSON]...");
 }
