@@ -51,7 +51,6 @@ export function keystoneKeys() {
     const key = event.key;
     var keystone = loadSettings("CityScopeJS_keystone");
     keystoneByKey(key, keystone);
-    console.log(key);
   });
 
   let kyStArrPos = 0;
@@ -63,10 +62,13 @@ export function keystoneKeys() {
     switch (key) {
       case "=":
         velocity += 1;
+        console.log("edit speed", velocity, "pixels at the time");
+
         break;
 
       case "-":
         if (velocity > 1) velocity -= 1;
+        console.log("edit speed", velocity, "pixels at the time");
         break;
 
       case "1":

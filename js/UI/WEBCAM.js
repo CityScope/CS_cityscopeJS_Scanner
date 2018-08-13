@@ -6,10 +6,6 @@ import "../Storage";
 
 //setup the camera device
 export function setupWebcam() {
-  // Global var for GUI controls
-  var brightness = 0;
-  // Global var for GUI controls
-  var contrast = 0;
   var camCanvas = setupWebCamCanvas();
   //store webcam canvas into class
   Storage.camCanvas = camCanvas;
@@ -21,29 +17,24 @@ export function setupWebcam() {
   var width = 0;
   var height = 0;
   var video = document.createElement("video");
+  //set auto play for video
+  video.setAttribute("autoplay", true);
   video.addEventListener("loadedmetadata", function() {
     width = camCanvas.width;
     height = camCanvas.height;
     //call the video to canvas loop
     loop();
   });
-  //set auto paly video
-  video.setAttribute("autoplay", true);
-  window.vid = video;
   //get user webcam
   navigator.mediaDevices
     .getUserMedia({ audio: false, video: true })
     .then(function(stream) {
-      // Older browsers may not have srcObject
       if ("srcObject" in video) {
         video.srcObject = stream;
       } else {
-        // Avoid using this in new browsers, as it is going away.
         video.src = window.URL.createObjectURL(stream);
       }
-      video.onloadedmetadata = function(e) {
-        video.play();
-      };
+      video.onloadedmetadata = video.play();
     })
     .catch(function(err) {
       console.log(err.name + ": " + err.message);
@@ -51,21 +42,47 @@ export function setupWebcam() {
 
   //loop fn.
   function loop() {
+    vidCanvas2dContext.drawImage(video, 0, 0, width, height);
     //loop the video to canvas method
     requestAnimationFrame(loop);
-    vidCanvas2dContext.drawImage(video, 0, 0, width, height);
-
-    //draw the image before applying filters
-    //apply filter every frame !! COSTLY
-    //WIP -- draw the filter result to each frame
-    // brightnessCanvas(brightness, vidCanvas2dContext);
-    // contrastCanvas(contrast, vidCanvas2dContext);
   }
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function setupWebCamCanvas() {
+  //make vid canvas
+  var camCanvas = document.createElement("canvas");
+
+  camCanvas.id = "webcamCanvas";
+  camCanvas.className = "webcamCanvas";
+
+  //MUST keep full numbers [WIP]
+  camCanvas.width = Math.floor(window.innerWidth);
+  camCanvas.height = Math.floor(window.innerHeight);
+  //
+  camCanvas.style.zIndex = 0;
+  camCanvas.style.position = "absolute";
+  document.body.appendChild(camCanvas);
+  return camCanvas;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 ////////////////////
 // Brightness fn. for canvas video. UI for input.
 ////////////////////
+// Global var for GUI controls
+// var brightness = 0;
+// Global var for GUI controls
+// var contrast = 0;
+
+//draw the image before applying filters
+//apply filter every frame !! COSTLY
+//WIP -- draw the filter result to each frame
+// brightnessCanvas(brightness, vidCanvas2dContext);
+// contrastCanvas(contrast, vidCanvas2dContext);
+
 function brightnessCanvas(brightness, canvas) {
   // Get the pixel data
   var pixelData = canvas.getImageData(0, 0, canvas.width, canvas.height);
@@ -95,23 +112,4 @@ function contrastCanvas(contrast, canvas) {
     pixelData.data[i + 2] = pixelData.data[i + 2] * contrast + intercept;
   }
   canvas.putImageData(pixelData, 0, 0);
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-function setupWebCamCanvas() {
-  //make vid canvas
-  var camCanvas = document.createElement("canvas");
-
-  camCanvas.id = "webcamCanvas";
-  camCanvas.className = "webcamCanvas";
-
-  //MUST keep full numbers [WIP]
-  camCanvas.width = Math.floor(window.innerWidth);
-  camCanvas.height = Math.floor(window.innerHeight);
-  //
-  camCanvas.style.zIndex = 0;
-  camCanvas.style.position = "absolute";
-  document.body.appendChild(camCanvas);
-  return camCanvas;
 }

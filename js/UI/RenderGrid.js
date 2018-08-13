@@ -4,13 +4,8 @@ import "../Storage";
 export function renderGrid(state) {
   //check if we already have grid data
   if (state === true) {
-    console.log(state);
-
-    // render();
     requestAnimationFrame(render);
   } else if (state === false) {
-    console.log(state);
-
     stopRender();
   }
 
