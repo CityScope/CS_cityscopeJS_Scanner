@@ -14,7 +14,7 @@ export function cityIOinit(sendRate) {
 //stop cityio
 export function cityIOstop() {
   clearInterval(cityIOtimer);
-  console.log("Stopped cityIO POST");
+  Storage.console = "Stopped cityIO POST";
 }
 
 //calc this current time
@@ -35,7 +35,7 @@ function cityIOpost() {
     if (oldTypesArrayStr !== typesArray.toString()) {
       oldTypesArrayStr = typesArray.toString();
     } else {
-      console.log("No changes to Grid data, pausing CityIO POST");
+      Storage.console = "No changes to Grid data, pausing CityIO POST";
       return;
     }
 
@@ -59,19 +59,18 @@ function cityIOpost() {
     })
       .then(
         response => handleErrors(response),
-        console.log(
-          "cityIO table '" + cityIOtableName + "' uploaded at " + timeNow()
-        )
+        (Storage.console =
+          "cityIO table '" + cityIOtableName + "' uploaded at " + timeNow())
       )
-      .catch(error => console.log(error));
+      .catch(error => (Storage.console = error));
 
     function handleErrors(response) {
       if (response.ok) {
-        // console.log("cityIO response: " + response.ok);
+        // Storage.console = ("cityIO response: " + response.ok);
       }
       return response;
     }
   } else {
-    console.log("Grid not ready for cityIO POST");
+    Storage.console = "Grid not ready for cityIO POST";
   }
 }

@@ -8,7 +8,7 @@ import "./Storage";
 
 ///JSON load function
 export function onFileLoad(loadEvent) {
-  // console.log("Trying to Load Setting JSON file...");
+  // Storage.console = ("Trying to Load Setting JSON file...");
   var file = loadEvent.target.files[0];
   var reader = new FileReader();
   let res = reader.readAsText(file);
@@ -18,18 +18,18 @@ export function onFileLoad(loadEvent) {
     var cityIOdataStruct = JSON.parse(res);
     Storage.cityIOdataStruct = cityIOdataStruct;
 
-    console.log("found settings [JSON]...", cityIOdataStruct);
+    Storage.console = ("found settings [JSON]...", cityIOdataStruct);
 
     // send the table settings once to Web worker for init
     CVworker.postMessage(["cityIOsetup", cityIOdataStruct]);
 
     // than, if exists, load pos. settings from localStorage
     if (loadSettings("CityScopeJS_keystone")) {
-      console.log("found key stoning setup...Loading last key stone");
+      Storage.console = "found key stoning setup...Loading last key stone";
       MatrixTransform(loadSettings("CityScopeJS_keystone"));
       keystoneKeys();
     } else {
-      console.log("no ket stone was found, starting new one..");
+      Storage.console = "no ket stone was found, starting new one..";
       //save these keystone points to local storage
       keystoneMouse();
     }
@@ -39,7 +39,7 @@ export function onFileLoad(loadEvent) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export var saveSettings = function(key, data) {
-  console.log("saving to localStorage in " + key + " key");
+  Storage.console = "saving to localStorage in " + key + " key";
   //save to local storage
   localStorage.setItem(key, JSON.stringify(data));
 };

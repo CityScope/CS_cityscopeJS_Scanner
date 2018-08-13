@@ -1,7 +1,4 @@
 import "../Storage";
-
-import { svgCircle, svgText } from "../Modules";
-
 // a function to make the initial generic array of
 //evenly divided grid points before distorting
 export function scanArrayMaker(gridCols, gridRows) {

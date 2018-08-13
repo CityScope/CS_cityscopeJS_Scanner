@@ -1,4 +1,3 @@
-import { cityIOinit, cityIOstop } from "../CITYIO/cityio";
 import "../Storage";
 /*    
 get the pixel location at the center of the grid cell div
@@ -26,7 +25,7 @@ and match it to the pixel location in the PixelBuffer linear list
 */
 
 export function ColorPicker() {
-  console.log("starting pixel scanner");
+  Storage.console = "starting pixel scanner";
   //gets the anim frame
   var timerID;
 

@@ -43,6 +43,9 @@ import * as logo from "../media/logo.png";
 import "./Storage";
 
 async function init() {
+  //UI menu
+  datGUI();
+
   loadImg(logo.default, 80, 80, "logo");
   Storage.console = "Starting CityScopeJS applet...";
   Storage.console = "startring stats..";
@@ -54,8 +57,7 @@ async function init() {
   setupWebcam();
   //make the UI
   setupSVG();
-  //UI menu
-  datGUI();
+
   //start the WW listener before initial send
   webWorkerListener();
 

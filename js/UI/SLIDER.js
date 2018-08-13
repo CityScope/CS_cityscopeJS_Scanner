@@ -6,7 +6,7 @@ if (cityIOdataStruct.objects.sliders) {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 let pts = [400, 500, 600, 200];
 // SliderPicker(pts, 5);
-console.log(cityIOdataStruct);
+Storage.console = (cityIOdataStruct);
 
 function SliderPicker(sliderPts, numScanPts) {
   let sliderPntsArr = [];
@@ -14,7 +14,7 @@ function SliderPicker(sliderPts, numScanPts) {
   let sliderPtsSvgHolder = [];
   let sliderLen;
   let accumLen = 0;
-  console.log("Starting slider scanner");
+  Storage.console = ("Starting slider scanner");
 
   //get the segment len
   sliderLen = divideSliderVector(sliderPts);
