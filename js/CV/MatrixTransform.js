@@ -2,7 +2,7 @@ import { scanArrayMaker } from "./ScannerMaker";
 var PerspT = require("perspective-transform/dist/perspective-transform");
 import { ColorPicker } from "./ColorPicker";
 import "../Storage";
-import { svgCircle, saveSettings, loadSettings } from "../Modules";
+import { svgCircle } from "../Modules";
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 //GLOBAL FOR NOW
@@ -21,8 +21,8 @@ export function MatrixTransform(gridCorners) {
   //matrix Grid Location Array
   var matrixGridLocArray = [];
 
-  // return a new visual Grid Locations Array
-  let vizGridLocArray = scanArrayMaker(gridCols, gridRows);
+  // returns a new baseline grid of locations as Array
+  let initGridArr = scanArrayMaker(gridCols, gridRows);
 
   //set the reference points of the 4 edges of the canvas
   // to get 100% of the image/video in canvas
@@ -51,28 +51,19 @@ export function MatrixTransform(gridCorners) {
   svgKeystone.innerHTML = "";
 
   //distort each dot in the matrix to locations and make cubes
-  for (let j = 0; j < vizGridLocArray.length; j++) {
-    dstPt = perspTres.transform(vizGridLocArray[j][0], vizGridLocArray[j][1]);
+  for (let j = 0; j < initGridArr.length; j++) {
+    dstPt = perspTres.transform(initGridArr[j][0], initGridArr[j][1]);
+    // Draw the grid and put it in an array
+    svgPntsArray.push(drawPnt(dstPt));
     //push these locs to an array for scanning
     matrixGridLocArray.push([Math.floor(dstPt[0]), Math.floor(dstPt[1])]);
-
-    //SHOULD TAKE OUT FROM HERE
-    //create visuals points on canvas for ref and add to array
-    svgPntsArray.push(
-      svgKeystone.appendChild(
-        svgCircle(dstPt, "magenta", 1.5, 0.8, "#000000", 0.25)
-      )
-    );
-    //Optional: show text for each pixel
-    // svgKeystone.appendChild(svgText(dstPt, j, 8));
   }
 
   //save to Storage class
   Storage.svgPntsArray = svgPntsArray;
-  console.log("Matrix Transformed 4 corners are at: " + gridCorners);
-
   //save points to Storage
   Storage.matrixGridLocArray = matrixGridLocArray;
+  console.log("Matrix Transformed 4 corners are at: " + gridCorners);
 
   //start picking colors
   colorPicker.cancel();
@@ -94,4 +85,30 @@ function getPos(divPos) {
       divPos = divPos.offsetParent
   );
   return [lx, ly];
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function drawPnt(dstPt) {
+  //create visuals points on canvas for ref and add to array
+  var thisPnt = svgKeystone.appendChild(
+    svgCircle(dstPt, "magenta", 1.5, 0.8, "#000000", 0.25)
+  );
+  return thisPnt;
+  /*  
+  // show text for each grid pnt
+  svgKeystone.appendChild(svgText(dstPt, j, 8));
+  //Save for basline grid draw
+  let counter = 0;
+  let counter_inner = 0;
+  // draw points if needed
+  let t = svgText([rows, cols], counter, 5);
+  let c = svgCircle([rows, cols], "green", 10, 1, "green", 10);
+  let c2 = svgCircle([rows + i, cols + j], "green", 10, 1, "green", 2);
+  let t2 = svgText([rows + i, cols + j], counter_inner, 2);
+  svgKeystone.appendChild(c2, t2);
+  //
+  counter_inner++;
+  counter++;
+  */
 }

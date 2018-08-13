@@ -1,14 +1,13 @@
 import * as dat from "dat.gui";
+import { cityIOinit, cityIOstop } from "../CITYIO/cityio";
 import { onFileLoad } from "../Modules";
 import { renderGrid } from "../UI/RenderGrid";
 import "../Storage";
 
 export function datGUI() {
   // dat.GUI
-  var gui = new dat.GUI({ width: 400 });
+  var gui = new dat.GUI({ width: 300 });
   let parm = {
-    brightness: 0,
-    contrast: 0,
     vis: false,
     getJson: function() {
       let fileClick = document.getElementById("my_file");
@@ -55,27 +54,6 @@ export function datGUI() {
       renderGrid(state);
     });
 
-  //new calibrate folder
-  var calibrateFolder = gui.addFolder("webcam");
-
-  //brightness control
-  calibrateFolder
-    .add(parm, "brightness", -100, 100)
-    .name("brightness")
-    .onChange(function(i) {
-      brightness = i;
-      brightnessCanvas(i, vidCanvas2dContext);
-    });
-
-  //contrast control
-  calibrateFolder
-    .add(parm, "contrast", -100, 100)
-    .name("contrast")
-    .onChange(function(i) {
-      contrast = i;
-      contrastCanvas(i, vidCanvas2dContext);
-    });
-
   //add folder
   var cityioFolder = gui.addFolder("cityIO");
 
@@ -84,10 +62,9 @@ export function datGUI() {
     .add(parm, "sendRate", 250, 2000)
     .step(250)
     .name("cityIO send [ms]")
-    .onChange(function(d) {
-      sendRate = d;
+    .onChange(function(result) {
       cityIOstop();
-      cityIOinit(sendRate);
+      cityIOinit(result);
     });
 
   //cityIO link
@@ -101,6 +78,6 @@ export function datGUI() {
 
   consoleText
     .add(parm, "console")
-    .name("Debug Text")
+    .name("")
     .listen();
 }
