@@ -10,6 +10,7 @@ class Storage {
     this._svgPntsArray = [];
     this._renderAnimFrame = 0;
     this._matrixGridLocArray = [];
+    this._console = "";
   }
 
   //web cam canvas
@@ -66,6 +67,14 @@ class Storage {
   }
   set matrixGridLocArray(value) {
     this._matrixGridLocArray = value;
+  }
+
+  // matrix Grid Location Array
+  get console() {
+    return this._console;
+  }
+  set console(value) {
+    this._console += value;
   }
 }
 

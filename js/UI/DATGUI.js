@@ -37,7 +37,7 @@ export function datGUI() {
       console.log("clearing and reseting");
       location.reload(true);
     },
-    console: ""
+    console: Storage.console
   };
 
   //upload settings
@@ -74,10 +74,5 @@ export function datGUI() {
   cityioFolder.add(parm, "fe").name("View on cityIO Dashboard");
 
   //add folder
-  var consoleText = gui.addFolder("console");
-
-  consoleText
-    .add(parm, "console")
-    .name("")
-    .listen();
+  gui.add(parm, "console").name("");
 }

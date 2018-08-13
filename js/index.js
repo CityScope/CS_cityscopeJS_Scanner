@@ -44,11 +44,12 @@ import "./Storage";
 
 async function init() {
   loadImg(logo.default, 80, 80, "logo");
-  console.log("Starting CityScopeJS applet...");
-  console.log("startring stats..");
+  Storage.console = "Starting CityScopeJS applet...";
+  Storage.console = "startring stats..";
   stats();
   //declare WebWorker as global
   window.CVworker = new Worker("./CV/CVwebworker.js");
+
   //setup and start webcam
   setupWebcam();
   //make the UI
@@ -62,11 +63,11 @@ async function init() {
   var sendRate = 1000;
   //make sure to clear sending from before
   cityIOstop();
-  console.log("starting cityIO");
+  Storage.console = "starting cityIO";
   //start sending to cityIO
   cityIOinit(sendRate);
   //
-  console.log("Waiting for your settings file [JSON]...");
+  Storage.console = "Waiting for your settings file [JSON]...";
 }
 
 //start app after HTML load
