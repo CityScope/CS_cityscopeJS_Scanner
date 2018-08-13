@@ -6,6 +6,9 @@ import "../Storage";
 import { saveSettings, loadSettings } from "../FileIO";
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
+//GLOBAL FOR NOW
+let colorPicker = new ColorPicker();
+
 //create the scanning transposed matrix
 export function MatrixTransform(gridCorners) {
   //get canvas from Storage
@@ -58,7 +61,7 @@ export function MatrixTransform(gridCorners) {
     //create visuals points on canvas for ref and add to array
     svgPntsArray.push(
       svgKeystone.appendChild(
-        svgCircle(dstPt, "magenta", 1, 1, "#000000", 0.25)
+        svgCircle(dstPt, "magenta", 1.5, 0.8, "#000000", 0.25)
       )
     );
     //Optional: show text for each pixel
@@ -67,12 +70,14 @@ export function MatrixTransform(gridCorners) {
 
   //save to Storage class
   Storage.svgPntsArray = svgPntsArray;
-
   console.log("Matrix Transformed 4 corners are at: " + gridCorners);
 
   //save points to Storage
   Storage.matrixGridLocArray = matrixGridLocArray;
 
+  //start picking colors
+  colorPicker.cancel();
+  colorPicker.start();
   //
   gridCorners = [];
 }
@@ -90,43 +95,4 @@ function getPos(divPos) {
       divPos = divPos.offsetParent
   );
   return [lx, ly];
-}
-
-//WIP
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
-window.addEventListener("keydown", function(event) {
-  const key = event.key; // "ArrowRight", "ArrowLeft", "ArrowUp", or "ArrowDown"
-  var set = loadSettings("CityScopeJS_keystone");
-
-  k(key, set);
-});
-
-function k(key, set) {
-  switch (key) {
-    case "ArrowLeft":
-      set[0]--;
-      saveSettings("CityScopeJS_keystone", set);
-      MatrixTransform(set);
-      break;
-
-    case "ArrowRight":
-      set[0]++;
-      saveSettings("CityScopeJS_keystone", set);
-      MatrixTransform(set);
-      break;
-
-    case "ArrowUp":
-      set[1]--;
-      saveSettings("CityScopeJS_keystone", set);
-      MatrixTransform(set);
-      // Up pressed
-      break;
-
-    case "ArrowDown":
-      // Down pressed
-      set[1]++;
-      saveSettings("CityScopeJS_keystone", set);
-      MatrixTransform(set);
-      break;
-  }
 }

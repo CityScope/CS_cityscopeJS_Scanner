@@ -18,26 +18,25 @@ and match it to the pixel location in the PixelBuffer linear list
 |      ||next  ||      |
 |      ||pixel ||      |
 +----------------------+
+
+  call a looping method that scans the grid
+  [this is a hack, so this function could be called
+  using 'requestAnimationFrame' API]
+
 */
 
 export function ColorPicker() {
   console.log("starting pixel scanner");
-  var camCanvas = Storage.camCanvas;
+  //gets the anim frame
+  var timerID;
 
-  // call a looping method that scans the grid
-  // [this is a hack, so this function could be called
-  // using 'requestAnimationFrame' API]
-  ColorPickerRecursive();
-  // inside recursive function
-  function ColorPickerRecursive() {
-    console.log("f");
-
+  var loop = function() {
     var matrixGridLocArray = Storage.matrixGridLocArray;
 
     // empty color array for web-worker
     let scannedColorsArray = [];
     // read all pixels from canvas
-    let vidCanvas2dContext = camCanvas.getContext("2d");
+    let vidCanvas2dContext = Storage.camCanvas.getContext("2d");
     let pixelArray = vidCanvas2dContext.getImageData(
       0,
       0,
@@ -71,10 +70,19 @@ export function ColorPicker() {
     CVworker.postMessage(["pixels", scannedColorsArray]);
 
     //recursively call this method every frame
-    requestAnimationFrame(function() {
-      ColorPickerRecursive();
-    });
-  }
+
+    timerID = requestAnimationFrame(loop);
+  };
+
+  //controllers
+  return {
+    start: function() {
+      timerID = requestAnimationFrame(loop);
+    },
+    cancel: function() {
+      cancelAnimationFrame(timerID);
+    }
+  };
 
   // // POST to cityIO rate in MS
   // var sendRate = 1000;

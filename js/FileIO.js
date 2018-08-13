@@ -1,4 +1,4 @@
-import { keystoneUI } from "./UI/KeyStoneUI";
+import { keystoneMouse, keystoneKeys } from "./UI/KeyStoneUI";
 import { MatrixTransform } from "./CV/MatrixTransform";
 import "./Storage";
 
@@ -27,10 +27,11 @@ export function onFileLoad(l) {
     if (loadSettings("CityScopeJS_keystone")) {
       console.log("found key stoning setup...Loading last key stone");
       MatrixTransform(loadSettings("CityScopeJS_keystone"));
+      keystoneKeys();
     } else {
       console.log("no ket stone was found, starting new one..");
       //save these keystone points to local storage
-      keystoneUI();
+      keystoneMouse();
     }
   };
 }

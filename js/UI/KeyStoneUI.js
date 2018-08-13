@@ -3,7 +3,7 @@ import { saveSettings, loadSettings } from "../FileIO";
 import { MatrixTransform } from "../CV/MatrixTransform";
 import "../Storage";
 
-export function keystoneUI() {
+export function keystoneMouse() {
   var camCanvas = Storage.camCanvas;
 
   console.log(
@@ -40,7 +40,47 @@ export function keystoneUI() {
         MatrixTransform(loadSettings("CityScopeJS_keystone"));
         // and stop keystone mouse clicks
         document.removeEventListener("click", mouseKeystone);
+        keystoneKeys();
       }
+    }
+  }
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+export function keystoneKeys() {
+  window.addEventListener("keydown", function(event) {
+    const key = event.key; // "ArrowRight", "ArrowLeft", "ArrowUp", or "ArrowDown"
+    var keystone = loadSettings("CityScopeJS_keystone");
+    k(key, keystone);
+  });
+
+  function k(key, keystone) {
+    switch (key) {
+      case "ArrowLeft":
+        keystone[0]--;
+        saveSettings("CityScopeJS_keystone", keystone);
+        MatrixTransform(keystone);
+        break;
+
+      case "ArrowRight":
+        keystone[0]++;
+        saveSettings("CityScopeJS_keystone", keystone);
+        MatrixTransform(keystone);
+        break;
+
+      case "ArrowUp":
+        keystone[1]--;
+        saveSettings("CityScopeJS_keystone", keystone);
+        MatrixTransform(keystone);
+        // Up pressed
+        break;
+
+      case "ArrowDown":
+        // Down pressed
+        keystone[1]++;
+        saveSettings("CityScopeJS_keystone", keystone);
+        MatrixTransform(keystone);
+        break;
     }
   }
 }

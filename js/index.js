@@ -56,8 +56,7 @@ async function init() {
   datGUI();
   //start the WW listener before initial send
   webWorkerListener();
-  //start picking colors
-  ColorPicker();
+
   //
   console.log("Waiting for your settings file [JSON]...");
 }
