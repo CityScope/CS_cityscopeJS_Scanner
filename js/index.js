@@ -32,16 +32,18 @@ https://github.com/RELNO]
 */
 
 import "babel-polyfill";
-import { setupSVG, stats } from "./Modules";
+import { setupSVG, stats, loadImg } from "./Modules";
 import { setupWebcam } from "./UI/Webcam";
 import { cityIOinit, cityIOstop } from "./CITYIO/cityio";
 import { datGUI } from "./UI/DATGUI";
 import { webWorkerListener } from "./CV/WebWorkerListener";
+import * as logo from "../media/logo.png";
 
 //Import Storage class
 import "./Storage";
 
 async function init() {
+  loadImg(logo.default, 80, 80, "logo");
   console.log("Starting CityScopeJS applet...");
   console.log("startring stats..");
   stats();

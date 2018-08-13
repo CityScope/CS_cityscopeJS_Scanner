@@ -63,7 +63,6 @@ export function keystoneKeys() {
       case "=":
         velocity += 1;
         console.log("edit speed", velocity, "pixels at the time");
-
         break;
 
       case "-":
@@ -77,6 +76,7 @@ export function keystoneKeys() {
       case "4":
         //gets the x pos of each pair of pnts
         kyStArrPos = (key - 1) * 2;
+        break;
 
       case "ArrowLeft":
         keystone[kyStArrPos] = keystone[kyStArrPos] - velocity;

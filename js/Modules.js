@@ -207,3 +207,14 @@ export function UpdateinfoDiv(text) {
     infoDiv.scrollTop = infoDiv.scrollHeight;
   }
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+export function loadImg(src, width, height, classname) {
+  var img = document.createElement("img");
+  img.src = src;
+  img.width = width;
+  img.height = height;
+  img.className = classname;
+  // This next line will just add it to the <body> tag
+  document.body.appendChild(img);
+}
