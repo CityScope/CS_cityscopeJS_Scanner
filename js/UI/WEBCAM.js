@@ -40,9 +40,41 @@ export function setupWebcam() {
       console.log(err.name + ": " + err.message);
     });
 
-  //loop fn.
+  //Image effect control for now
+  var brightness = -30;
+  var contrast = 50;
+  contrast = contrast / 100 + 1; //convert to decimal & shift range: [0..2]
+  var intercept = 128 * (1 - contrast);
+
+  //loop
   function loop() {
     vidCanvas2dContext.drawImage(video, 0, 0, width, height);
+
+    //Brightness + Contrast
+    var pixelData = vidCanvas2dContext.getImageData(
+      0,
+      0,
+      camCanvas.width,
+      camCanvas.height
+    );
+
+    var pixelDataLen = pixelData.data.length;
+
+    for (var i = 0; i < pixelDataLen; i += 4) {
+      //Brightness
+      pixelData.data[i] += brightness;
+      pixelData.data[i + 1] += brightness;
+      pixelData.data[i + 2] += brightness;
+
+      //Contrast
+      pixelData.data[i] = pixelData.data[i] * contrast + intercept;
+      pixelData.data[i + 1] = pixelData.data[i + 1] * contrast + intercept;
+      pixelData.data[i + 2] = pixelData.data[i + 2] * contrast + intercept;
+    }
+
+    // Draw the data back to the visible canvas
+    vidCanvas2dContext.putImageData(pixelData, 0, 0);
+
     //loop the video to canvas method
     requestAnimationFrame(loop);
   }
@@ -65,51 +97,4 @@ function setupWebCamCanvas() {
   camCanvas.style.position = "absolute";
   document.body.appendChild(camCanvas);
   return camCanvas;
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-////////////////////
-// Brightness fn. for canvas video. UI for input.
-////////////////////
-// Global var for GUI controls
-// var brightness = 0;
-// Global var for GUI controls
-// var contrast = 0;
-
-//draw the image before applying filters
-//apply filter every frame !! COSTLY
-//WIP -- draw the filter result to each frame
-// brightnessCanvas(brightness, vidCanvas2dContext);
-// contrastCanvas(contrast, vidCanvas2dContext);
-
-function brightnessCanvas(brightness, canvas) {
-  // Get the pixel data
-  var pixelData = canvas.getImageData(0, 0, canvas.width, canvas.height);
-  var pixelDataLen = pixelData.data.length;
-  for (var i = 0; i < pixelDataLen; i += 4) {
-    pixelData.data[i] += brightness;
-    pixelData.data[i + 1] += brightness;
-    pixelData.data[i + 2] += brightness;
-  }
-  // Draw the data back to the visible canvas
-  canvas.putImageData(pixelData, 0, 0);
-}
-
-////////////////////
-// contrast fn.
-////////////////////
-function contrastCanvas(contrast, canvas) {
-  var pixelData = canvas.getImageData(0, 0, camCanvas.width, camCanvas.height);
-  //input range [-100..100]
-  var pixelDataLen = pixelData.data.length;
-  contrast = contrast / 100 + 1; //convert to decimal & shift range: [0..2]
-  var intercept = 128 * (1 - contrast);
-  for (var i = 0; i < pixelDataLen; i += 4) {
-    //r,g,b,a
-    pixelData.data[i] = pixelData.data[i] * contrast + intercept;
-    pixelData.data[i + 1] = pixelData.data[i + 1] * contrast + intercept;
-    pixelData.data[i + 2] = pixelData.data[i + 2] * contrast + intercept;
-  }
-  canvas.putImageData(pixelData, 0, 0);
 }
