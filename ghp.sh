@@ -1,7 +1,7 @@
 # #!/bin/bash
 sudo rm -rf dist
 # build the /dist for public url 
-sudo parcel build index.html --public-url https://cityscope.media.mit.edu/CS_CityScopeJS/
+sudo parcel build index.html --public-url https://cityscope.media.mit.edu/CS_cityscopeJS/
 # make sure to add dist to gitignore [force] 
 git add dist -f
 #commit the GH pages changes 
