@@ -1,5 +1,5 @@
 {
-  "name": "18_cityscopeJS",
+  "name": "cityscopeJS",
   "version": "1.0.0",
   "description": "MIT CityScope Scanner for Optically & Uniquely Tagged LEGO Objects",
   "main": "index.js",
@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/CityScope/cityscopeJS#readme",
   "dependencies": {
+    "babel-plugin-transform-runtime": "^6.23.0",
     "core-js": "^2.5.7",
     "dat.gui": "^0.7.2",
     "jquery": "^3.3.1",
@@ -30,7 +31,6 @@
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
-    "babel-plugin-transform-runtime": "^6.23.0",
     "babel-runtime": "^6.26.0",
     "cssnano": "^4.0.5"
   }
