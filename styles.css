@@ -13,11 +13,6 @@ body {
   background-repeat: no-repeat;
   background-attachment: fixed;
   overflow: hidden;
-  background: linear-gradient(
-    115deg,
-    rgba(2, 0, 36, 1) 47%,
-    rgba(121, 9, 114, 1) 97%
-  );
   font-family: Helvetica, sans-serif;
   font-weight: 700;
   font-size: 1vw;
@@ -40,24 +35,6 @@ a {
   top: 0;
 }
 
-.info {
-  z-index: 10;
-  font-family: Helvetica, sans-serif;
-  font-weight: 300;
-  position: fixed;
-  height: 10rem;
-  min-width: 100px;
-  max-width: 300px;
-  overflow-y: auto;
-  font-size: 0.75rem;
-  color: white;
-  box-shadow: 5px 5px 20px rgb(0, 0, 0);
-  cursor: all-scroll;
-  border: 3px solid black;
-  text-shadow: 1px 1px 1px rgb(0, 0, 0);
-  background-color: rgba(0, 0, 0, 0.5);
-}
-
 .transformedMatrix {
   border: 1px solid rgb(255, 0, 255);
   width: 1px;
@@ -70,22 +47,6 @@ a {
   left: 0;
   top: 0;
   z-index: 1;
-}
-
-.vizGridDiv {
-  width: 500px;
-  height: 500px;
-  z-index: 9;
-  position: fixed;
-  left: 70vw;
-  top: 10rem;
-  box-shadow: 5px 5px 20px rgb(0, 0, 0);
-  cursor: all-scroll;
-  border: 3px solid black;
-  background-color: rgba(0, 0, 0, 0.5);
-  font-family: "Courier New", Courier, monospace;
-  font-size: 2vw;
-  color: white;
 }
 
 .svgVizGrid {
