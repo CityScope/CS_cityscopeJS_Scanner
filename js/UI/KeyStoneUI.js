@@ -3,16 +3,18 @@ import { saveSettings, loadSettings, magGlass, svgCircle } from "../Modules";
 import { MatrixTransform } from "../CV/MatrixTransform";
 
 export function keystoneMouse() {
-  var camCanvas = Storage.camCanvas;
+  //turn on mag-glass effect
+  //  magGlass();
 
+  var camCanvas = Storage.camCanvas;
+  document.body.style.cursor = "crosshair";
   Storage.console =
     "Key-stone in this order: TOP-LEFT [⬉] TOP-RIGHT [⬈] BOTTOM-LEFT  [⬋]  BOTTOM-RIGHT [⬊]";
   //
   var svgKeystone = window.svgKeystone;
   //clear clicks array
   let clkArr = [];
-  //turn on mag-glass effect
-  magGlass();
+
   //collect 4 mouse clicks as corners of keystone
   document.addEventListener("click", mouseKeystone);
 
@@ -38,6 +40,7 @@ export function keystoneMouse() {
         // and stop keystone mouse clicks
         document.removeEventListener("click", mouseKeystone);
         keystoneKeys();
+        document.body.style.cursor = "auto";
       }
     }
   }
