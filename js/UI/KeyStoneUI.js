@@ -51,7 +51,7 @@ export function keystoneKeys() {
   window.addEventListener("keydown", function(event) {
     const key = event.key;
     var keystone = loadSettings("CityScopeJS_keystone");
-    keystoneByKey(key, keystone);
+    keystoneUsingKeys(key, keystone);
   });
 
   let kyStArrPos = 0;
@@ -59,7 +59,7 @@ export function keystoneKeys() {
   let velocity = 1;
 
   // "ArrowRight", "ArrowLeft", "ArrowUp", or "ArrowDown"
-  function keystoneByKey(key, keystone) {
+  function keystoneUsingKeys(key, keystone) {
     switch (key) {
       case "=":
         velocity += 1;
@@ -104,6 +104,21 @@ export function keystoneKeys() {
         // Down pressed
         keystone[kyStArrPos + 1] = keystone[kyStArrPos + 1] + velocity;
         saveSettings("CityScopeJS_keystone", keystone);
+        MatrixTransform(keystone);
+        break;
+      //change grid gap
+      case "[":
+        if (Storage.cellGap > 0) {
+          Storage.cellGap = Storage.cellGap - 1;
+          saveSettings("CityScopeJS_gap", Storage.cellGap);
+          MatrixTransform(keystone);
+        } else {
+          Storage.cellGap = 0;
+        }
+        break;
+      case "]":
+        Storage.cellGap += 1;
+        saveSettings("CityScopeJS_gap", Storage.cellGap);
         MatrixTransform(keystone);
         break;
     }

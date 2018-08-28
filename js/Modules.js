@@ -26,10 +26,12 @@ export function onFileLoad(loadEvent) {
     // than, if exists, load pos. settings from localStorage
     if (loadSettings("CityScopeJS_keystone")) {
       Storage.console = "found key stoning setup...Loading last key stone";
+      Storage.cellGap = loadSettings("CityScopeJS_gap");
       MatrixTransform(loadSettings("CityScopeJS_keystone"));
       keystoneKeys();
     } else {
       Storage.console = "no ket stone was found, starting new one..";
+      Storage.cellGap = 0;
       //save these keystone points to local storage
       keystoneMouse();
     }

@@ -11,6 +11,7 @@ class Storage {
     this._renderAnimFrame = 0;
     this._matrixGridLocArray = [];
     this._console = "";
+    this._cellGap = 0;
   }
 
   //web cam canvas
@@ -75,6 +76,14 @@ class Storage {
   }
   set console(value) {
     this._console += value;
+  }
+
+  // matrix Grid Location Array
+  get cellGap() {
+    return this._cellGap;
+  }
+  set cellGap(value) {
+    this._cellGap = value;
   }
 }
 

@@ -51,8 +51,8 @@ export function MatrixTransform(gridCorners) {
   svgKeystone.innerHTML = "";
 
   //distort each dot in the matrix to locations and make cubes
-  for (let j = 0; j < initGridArr.length; j++) {
-    dstPt = perspTres.transform(initGridArr[j][0], initGridArr[j][1]);
+  for (let i = 0; i < initGridArr.length; i++) {
+    dstPt = perspTres.transform(initGridArr[i][0], initGridArr[i][1]);
     // Draw the grid and put it in an array
     svgPntsArray.push(drawPnt(dstPt));
     //push these locs to an array for scanning
@@ -68,7 +68,7 @@ export function MatrixTransform(gridCorners) {
   //start picking colors
   colorPicker.cancel();
   colorPicker.start();
-  //
+  //reset the base corners
   gridCorners = [];
 }
 
