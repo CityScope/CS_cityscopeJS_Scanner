@@ -107,13 +107,12 @@ For 1110111111111111, check:
  12 "1111 1110 1111 1111"
 */
 
-  console.log(thisBrick);
   let newIndex = -1;
   for (let i = 0; i < thisBrick.length; i = i + 4) {
     var shiftedString = thisBrick.slice(i) + thisBrick.slice(0, i);
     newIndex = cityIOdataStruct.objects.codes.indexOf(shiftedString);
     if (newIndex !== -1) {
-      console.log(newIndex);
+      // console.log("Rotated, new index: ", newIndex);
       return newIndex;
     }
   }
