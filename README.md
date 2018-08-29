@@ -4,17 +4,16 @@
 
 ![](docs/csjs.jpg)
 
-CityScopeJS is a rapid prototyping urban modeling and simulation platform aimed at making MIT CityScope project accessible though the ubiquity of web-enabled devices. CityScopeJS runs entirely in the browser, including CV, projection and spatial analysis.
+CityScopeJS is a scanning component for MIT CityScope - a rapid prototyping urban modeling and simulation platform. CityScopeJS is built with deployment, stability and ease of use in mind. CityScopeJS runs entirely in your browser, including CV, projection and spatial analysis [explored in other repos].
 
 ### features
 
 - web-based, HTML5 + JS without dependencies
 - ~65k potential unique permutations ['brick types'] using only black and white optically tagged objects
-- Dead easy setup and running
-- Table testing and dataviz portal
+- Dead easy setup and running in <1 min
 - 100x100 4x4 LEGO grid scanning & sending to cityIO @40fps and 20x20 @20fps from Pixel 2xl Android phone
 
-#### the real important features
+##### the real important features
 
 - Vaporware graphics
 - Turing Complete
@@ -34,25 +33,31 @@ watch this intro video [also, 80's music] to get to know how CityScopeJS is maki
 
 [Click here to run CityScopeJS](https://cityscope.media.mit.edu/CS_cityscopeJS/)
 
-- CityScopeJS should run on any modern browser with HTML5 support. Tested on Raspberry pi 2, Android and IPhone Yes, IE7 on Windows XP might not work.
-- Clone is not necessary for common setup but please do clone and run locally before posting `issues`.
+- CityScopeJS should run on any modern browser with HTML5 support. Tested on Raspberry pi 2, Android and IPhone though IE7 on Windows XP might not work.
+- Clone is not necessary for common usage but please do clone and run locally before adding `issues`.
 
 ### Setup
 
-At first run, follow these instructions:
+At first run [new computer or after `cache` removal, follow these instructions:
 
-- Table and LEGO bricks settings are under `data` folder in `json` format.
+- Generic table and LEGO bricks settings are under `data` folder in a `json` format.
 - Load `json` file using the UI file browser. File should follow settings described here:
   https://github.com/CityScope/CS_CityIO_Backend/wiki
-- For advanced creation of binary [0,1 x 16] permutations, us python script in: `/Py_BinaryPermutations/py_bin.py`
-- upon successful loading of settings file the mouse will turn to a magnifying glass prompting key stone of the table image/video
+
+- upon successful loading of settings file the mouse will turn to cross
+- locate the mouse on the 4 corners of the table's scanned section
 - select the top left, top right, bottom left and bottom right corners of the image (in that order)
+- when done, a magenta grid will appear, corresponding to your 4 clicks
+- for fine grain correction of the grid press `1` to `4` and use the arrow keys to move the selected point
+- increase or decrease the amount of pixels each shifted in each keystroke using `-/_` and `=/+` keys
+- if an acrylic grid is part of your setup [not recommended], use `[` and `]` to add/remove gap between bricks -- note: this feature might yield unwanted results. Remove the plastic grid and let Legos be a family again for better results.
 - check https://cityio.media.mit.edu/api or under `cityIO` UI folder to see the results
 
 ### Advanced Usage
 
 ##### Editing `_YourSettings_.JSON`
 
+- For advanced creation of binary [0,1 x 16] permutations, us python script in: `/Py_BinaryPermutations/py_bin.py`
 - open your JSON [name it at will] file for editing
 - change the `gridSize` to the size you need in `ncol` property
 - If necessary, change the recognized patterns. To do this you need to edit the `codes` array in the `JSON` file.
@@ -75,7 +80,7 @@ At first run, follow these instructions:
 
 ## The true story behind CityScopeJS
 
-CityScopeJS, also favorably known as _©® TactileScopeMatrixCityLEGOtizer ©®_ was invented during a warm, steamy but somehow cold summer night in December, 2013. My friend [Hackerman](https://www.youtube.com/watch?v=KEkrWRHCDQU) and I were riding [Jeremiah](https://www.youtube.com/watch?v=GBlWkNZph0s), our old faithful Trojan horse, across the Mohave dessert.
+CityScopeJS, also favorably known as _©® TactileScopeMatrixCityLEGOtizer ©®_ was invented during a warm, steamy but somehow cold summer night in December, 2013. My friend [Hackerman](https://www.youtube.com/watch?v=KEkrWRHCDQU) and I were riding [Jeremiah](https://www.youtube.com/watch?v=GBlWkNZph0s), our old faithful Trojan horse, across the Vaporwave dessert.
 
 ![Alt Text](https://media.giphy.com/media/oSYflamt3IEjm/giphy.gif)
 
@@ -87,8 +92,6 @@ The system has since won the Oscars, Turing Prize, 47 pending patents, a book an
 
 ---
 
-Maintained by [Ariel Noyman](http://arielnoyman.com)
-
-[Repo contributors](https://github.com/CityScope/CS_cityscopeJS/graphs/contributors)
-
 using @jlouthan matrix transformations.
+Maintained by [Ariel Noyman](http://arielnoyman.com)
+[Repo contributors](https://github.com/CityScope/CS_cityscopeJS/graphs/contributors)
