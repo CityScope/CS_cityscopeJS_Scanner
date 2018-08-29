@@ -70,21 +70,53 @@ function CV(scannedPixels) {
       for (let j = 0; j < 16; j++) {
         thisBrick.push(pixelColorArray[i + j]);
       }
-      //remove  new lines and commas for clear list
+      //remove new lines and commas to get a clear list
       thisBrick = thisBrick.join("");
+
       //before sending back to main thread for cityIO POST,
       //look for this bricks pattern in 'Codes' property
-      typesArray.push(cityIOdataStruct.objects.codes.indexOf(thisBrick));
+      let indexCode = cityIOdataStruct.objects.codes.indexOf(thisBrick);
+      //check if this type is not known
+      //and not becouse it has '2' color
+      if (indexCode === -1 && !thisBrick.includes("2")) {
+        indexCode = checkRotatedBrick(thisBrick);
+      }
+      typesArray.push(indexCode);
     }
     return typesArray;
   }
 
   /////////////////////////////////////////////////////////////////
   //send back the location of this type in the types list
-
   //return 2 msgs  to main thread:
   // 1. the type found in cv
   // 2. colors for  visualization & cityIO sending
   webworkerMsg.push(typesLookup(pixColArr), pixColArr);
   self.postMessage(webworkerMsg);
+}
+
+/////////////////////////////////////////////////////////////////
+// checks if this brick string is actually a rotated brick
+
+function checkRotatedBrick(thisBrick) {
+  /*
+For 1110111111111111, check:
+ 0  "1110 1111 1111 1111"
+ 4  "1111 1111 1111 1110"
+ 8  "1111 1111 1110 1111"
+ 12 "1111 1110 1111 1111"
+*/
+
+  console.log(thisBrick);
+  let newIndex = -1;
+  for (let i = 0; i < thisBrick.length; i = i + 4) {
+    var shiftedString = thisBrick.slice(i) + thisBrick.slice(0, i);
+    newIndex = cityIOdataStruct.objects.codes.indexOf(shiftedString);
+    if (newIndex !== -1) {
+      console.log(newIndex);
+      return newIndex;
+    }
+  }
+  // console.log(newIndex);
+  return newIndex;
 }
