@@ -22,7 +22,7 @@ export function MatrixTransform(gridCorners) {
   var matrixGridLocArray = [];
 
   // returns a new baseline grid of locations as Array
-  let initGridArr = scanArrayMaker(gridCols, gridRows);
+  let initialScannerGridArr = scanArrayMaker(gridCols, gridRows);
 
   //set the reference points of the 4 edges of the canvas
   // to get 100% of the image/video in canvas
@@ -51,10 +51,16 @@ export function MatrixTransform(gridCorners) {
   svgKeystone.innerHTML = "";
 
   //distort each dot in the matrix to locations and make cubes
-  for (let i = 0; i < initGridArr.length; i++) {
-    dstPt = perspTres.transform(initGridArr[i][0], initGridArr[i][1]);
+  for (let i = 0; i < initialScannerGridArr.length; i++) {
+    //
+    // drawPnt([initialScannerGridArr[i][0], initialScannerGridArr[i][1]], "red");
+    //
+    dstPt = perspTres.transform(
+      initialScannerGridArr[i][0],
+      initialScannerGridArr[i][1]
+    );
     // Draw the grid and put it in an array
-    svgPntsArray.push(drawPnt(dstPt));
+    svgPntsArray.push(drawPnt(dstPt, "magenta"));
     //push these locs to an array for scanning
     matrixGridLocArray.push([Math.floor(dstPt[0]), Math.floor(dstPt[1])]);
   }
@@ -89,10 +95,10 @@ function getPos(divPos) {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function drawPnt(dstPt) {
+export function drawPnt(dstPt, color) {
   //create visuals points on canvas for ref and add to array
   var thisPnt = svgKeystone.appendChild(
-    svgCircle(dstPt, "magenta", 1.5, 0.8, "#000000", 0.25)
+    svgCircle(dstPt, color, 1.5, 0.8, "#000000", 0.25)
   );
   return thisPnt;
   /*  

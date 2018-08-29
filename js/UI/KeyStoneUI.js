@@ -109,7 +109,7 @@ export function keystoneKeys() {
       //change grid gap
       case "[":
         if (Storage.cellGap > 0) {
-          Storage.cellGap = Storage.cellGap - 1;
+          Storage.cellGap = Storage.cellGap - velocity;
           saveSettings("CityScopeJS_gap", Storage.cellGap);
           MatrixTransform(keystone);
         } else {
@@ -117,7 +117,7 @@ export function keystoneKeys() {
         }
         break;
       case "]":
-        Storage.cellGap += 1;
+        Storage.cellGap += velocity;
         saveSettings("CityScopeJS_gap", Storage.cellGap);
         MatrixTransform(keystone);
         break;

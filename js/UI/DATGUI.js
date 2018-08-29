@@ -7,7 +7,7 @@ import "../Storage";
 export function datGUI() {
   var consoleText = Storage.console;
   // dat.GUI
-  var gui = new dat.GUI({ width: 600 });
+  var gui = new dat.GUI({ width: 300 });
   let parm = {
     vis: false,
     getJson: function() {
