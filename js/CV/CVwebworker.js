@@ -96,26 +96,67 @@ function CV(scannedPixels) {
 }
 
 /////////////////////////////////////////////////////////////////
-// checks if this brick string is actually a rotated brick
+/**
+ * http://jsfiddle.net/FloydPink/0fg4rLf9/
+
+ 
+ 
+////
+1,2,3,4
+5,6,7,8
+9,10,11,12
+13,14,15,16
+
+1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16
+
+-->
+13,9,5,1
+14,10,6,2
+15,11,7,3
+16,12,8,4
+
+13,9,5,1,14,10,6,2,15,11,7,3,16,12,8,4
+
+-->
+16,15,14,13,
+12,11,10,9,
+8,7,6,5,
+4,3,2,1
+
+16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1
+
+-->
+4,8,12,16,
+3,7,11,15,
+2,6,10,14,
+1,5,9,13
+
+4,8,12,16,3,7,11,15,2,6,10,14,1,5,9,13
+
+
+1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16
+13,9,5,1,14,10,6,2,15,11,7,3,16,12,8,4
+16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1
+4,8,12,16,3,7,11,15,2,6,10,14,1,5,9,13
+
+ */
+
+//https://stackoverflow.com/questions/17428587/transposing-a-2d-array-in-javascript
 
 function checkRotatedBrick(thisBrick) {
-  /*
-For 1110111111111111, check:
- 0  "1110 1111 1111 1111"
- 4  "1111 1111 1111 1110"
- 8  "1111 1111 1110 1111"
- 12 "1111 1110 1111 1111"
-*/
-
-  let newIndex = -1;
-  for (let i = 0; i < thisBrick.length; i = i + 4) {
-    var shiftedString = thisBrick.slice(i) + thisBrick.slice(0, i);
-    newIndex = cityIOdataStruct.objects.codes.indexOf(shiftedString);
-    if (newIndex !== -1) {
-      // console.log("Rotated, new index: ", newIndex);
-      return newIndex;
-    }
-  }
-  // console.log(newIndex);
-  return newIndex;
+  thisBrick = Array.from(thisBrick);
+  let arrBrick = [
+    thisBrick.slice(0, 4),
+    thisBrick.slice(4, 8),
+    thisBrick.slice(8, 12),
+    thisBrick.slice(12, 16)
+  ];
+  console.log("Org: ", arrBrick);
+  console.log("first: ", rotateMatrix(arrBrick));
+  console.log("Second:", rotateMatrix(arrBrick));
 }
+
+// filp functions
+const flipMatrix = matrix =>
+  matrix[0].map((column, index) => matrix.map(row => row[index]));
+const rotateMatrix = matrix => flipMatrix(matrix.reverse());
