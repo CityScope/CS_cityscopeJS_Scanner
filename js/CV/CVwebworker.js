@@ -96,67 +96,30 @@ function CV(scannedPixels) {
 }
 
 /////////////////////////////////////////////////////////////////
-/**
- * http://jsfiddle.net/FloydPink/0fg4rLf9/
-
- 
- 
-////
-1,2,3,4
-5,6,7,8
-9,10,11,12
-13,14,15,16
-
-1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16
-
--->
-13,9,5,1
-14,10,6,2
-15,11,7,3
-16,12,8,4
-
-13,9,5,1,14,10,6,2,15,11,7,3,16,12,8,4
-
--->
-16,15,14,13,
-12,11,10,9,
-8,7,6,5,
-4,3,2,1
-
-16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1
-
--->
-4,8,12,16,
-3,7,11,15,
-2,6,10,14,
-1,5,9,13
-
-4,8,12,16,3,7,11,15,2,6,10,14,1,5,9,13
-
-
-1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16
-13,9,5,1,14,10,6,2,15,11,7,3,16,12,8,4
-16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1
-4,8,12,16,3,7,11,15,2,6,10,14,1,5,9,13
-
- */
-
-//https://stackoverflow.com/questions/17428587/transposing-a-2d-array-in-javascript
 
 function checkRotatedBrick(thisBrick) {
   thisBrick = Array.from(thisBrick);
+  console.log(thisBrick);
+
   let arrBrick = [
     thisBrick.slice(0, 4),
     thisBrick.slice(4, 8),
     thisBrick.slice(8, 12),
     thisBrick.slice(12, 16)
   ];
-  console.log("Org: ", arrBrick);
-  console.log("first: ", rotateMatrix(arrBrick));
-  console.log("Second:", rotateMatrix(arrBrick));
+
+  console.log("0: ", arrBrick);
+  console.log("1: ", rotateMatrixCCW(arrBrick));
+  console.log("2: ", rotateMatrixCCW(rotateMatrixCCW(arrBrick)));
+  console.log(
+    "3: ",
+    rotateMatrixCCW(rotateMatrixCCW(rotateMatrixCCW(arrBrick)))
+  );
+
+  return -1;
 }
 
-// filp functions
+// filp function
 const flipMatrix = matrix =>
   matrix[0].map((column, index) => matrix.map(row => row[index]));
-const rotateMatrix = matrix => flipMatrix(matrix.reverse());
+const rotateMatrixCCW = matrix => flipMatrix(matrix).reverse();
