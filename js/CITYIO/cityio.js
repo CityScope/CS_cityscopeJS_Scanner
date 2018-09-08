@@ -14,7 +14,7 @@ export function cityIOinit(sendRate) {
 //stop cityio
 export function cityIOstop() {
   clearInterval(cityIOtimer);
-  Storage.console = "Stopped cityIO POST";
+  updateInfoDIV("Stopped cityIO POST");
 }
 
 //calc this current time
@@ -35,7 +35,7 @@ function cityIOpost() {
     if (oldTypesArrayStr !== typesArray.toString()) {
       oldTypesArrayStr = typesArray.toString();
     } else {
-      Storage.console = "PAUSING CityIO POST";
+      updateInfoDIV("PAUSING CityIO POST");
       return;
     }
 
@@ -56,21 +56,20 @@ function cityIOpost() {
       method: "POST",
       // mode: "no-cors", // fix cors issue
       body: JSON.stringify(cityIOpacket)
-    })
-      .then(
-        response => handleErrors(response),
-        (Storage.console =
-          "cityIO table '" + cityIOtableName + "' uploaded at " + timeNow())
-      )
-      .catch(error => (Storage.console = error));
+    }).then(
+      response => handleErrors(response),
+      updateInfoDIV(
+        "cityIO table '" + cityIOtableName + "' uploaded at " + timeNow()
+      ).catch(error => updateInfoDIV(error))
+    );
 
     function handleErrors(response) {
       if (response.ok) {
-        // Storage.console = ("cityIO response: " + response.ok);
+        // updateInfoDIV( ("cityIO response: " + response.ok);
       }
       return response;
     }
   } else {
-    Storage.console = "Waiting for cityIO settings file [JSON]...";
+    updateInfoDIV("Waiting for cityIO settings file [JSON]...");
   }
 }

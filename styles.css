@@ -58,3 +58,15 @@ a {
 .dg.ac {
   z-index: 1000 !important;
 }
+
+.infoDIV {
+  position: relative;
+  top: 95%;
+  z-index: 1000 !important;
+  width: 100%;
+  max-height: 20vw;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.2);
+  font-family: "Courier New", Courier, monospace;
+  font-size: 14px;
+}

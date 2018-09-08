@@ -13,7 +13,7 @@ export function setupWebcam() {
 
   //get main canvas context for scanning
   var vidCanvas2dContext = camCanvas.getContext("2d");
-  // Storage.console = ("starting video");
+  // updateInfoDIV( ("starting video"))
   //Video loop setup call video mesh creator
   var width = 0;
   var height = 0;
@@ -38,7 +38,7 @@ export function setupWebcam() {
       video.onloadedmetadata = video.play();
     })
     .catch(function(err) {
-      Storage.console = err.name + ": " + err.message;
+      updateInfoDIV(err.name + ": " + err.message);
     });
 
   /*

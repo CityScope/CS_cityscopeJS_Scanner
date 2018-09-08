@@ -69,7 +69,7 @@ export function MatrixTransform(gridCorners) {
   Storage.svgPntsArray = svgPntsArray;
   //save points to Storage
   Storage.matrixGridLocArray = matrixGridLocArray;
-  Storage.console = "Matrix Transformed 4 corners are at: " + gridCorners;
+  updateInfoDIV("Matrix Transformed 4 corners are at: " + gridCorners);
 
   //start picking colors
   colorPicker.cancel();

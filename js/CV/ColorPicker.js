@@ -25,7 +25,7 @@ and match it to the pixel location in the PixelBuffer linear list
 */
 
 export function ColorPicker() {
-  Storage.console = "starting pixel scanner";
+  updateInfoDIV("starting pixel scanner");
   //gets the anim frame
   var timerID;
 

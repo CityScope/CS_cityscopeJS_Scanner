@@ -35,7 +35,7 @@ import "babel-polyfill";
 import { setupSVG, stats, loadImg } from "./Modules";
 import { setupWebcam } from "./CV/Webcam";
 import { cityIOinit, cityIOstop } from "./CITYIO/cityio";
-import { datGUI } from "./UI/DATGUI";
+import { datGUI, infoDIV } from "./UI/DATGUI";
 import { webWorkerListener } from "./CV/WebWorkerListener";
 import * as logo from "../media/logo.png";
 
@@ -43,11 +43,13 @@ import * as logo from "../media/logo.png";
 import "./Storage";
 
 async function init() {
+  infoDIV();
+
   //UI menu
   datGUI();
 
   loadImg(logo.default, 80, 80, "logo");
-  Storage.console = "Starting CityScopeJS applet...";
+  updateInfoDIV("Starting CityScopeJS applet...");
   stats();
   //declare WebWorker as global
   window.CVworker = new Worker("./CV/CVwebworker.js");
@@ -64,7 +66,7 @@ async function init() {
   var sendRate = 1000;
   //make sure to clear sending from before
   cityIOstop();
-  Storage.console = "starting cityIO";
+  updateInfoDIV("starting cityIO");
   //start sending to cityIO
   cityIOinit(sendRate);
 }

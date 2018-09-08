@@ -4,7 +4,7 @@ export function webWorkerListener() {
   var typesArray = 0;
   var pixelColArr = [];
   // Get data back form WEB worker
-  Storage.console = "starting WebWorker listener...";
+  updateInfoDIV("starting WebWorker listener...");
   //add the event listener
   CVworker.addEventListener(
     "message",

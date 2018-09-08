@@ -70,7 +70,7 @@ class Storage {
     this._matrixGridLocArray = value;
   }
 
-  // matrix Grid Location Array
+  // console text
   get console() {
     return this._console;
   }

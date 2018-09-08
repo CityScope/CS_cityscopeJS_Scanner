@@ -5,7 +5,6 @@ import { renderGrid } from "./RenderGrid";
 import "../Storage";
 
 export function datGUI() {
-  var consoleText = Storage.console;
   // dat.GUI
   var gui = new dat.GUI({ width: 300 });
   let parm = {
@@ -35,7 +34,7 @@ export function datGUI() {
     reset: function() {
       //clear local memory of last key stone
       localStorage.clear();
-      Storage.console = "clearing and reseting";
+      updateInfoDIV("clearing and reseting");
       location.reload(true);
     }
   };
@@ -72,12 +71,16 @@ export function datGUI() {
 
   //cityIO link
   cityioFolder.add(parm, "fe").name("View on cityIO Dashboard");
+}
 
-  //add folder
-  gui
-    .add(Storage, "console")
-    .listen()
-    .name("");
+export function makeInfoDIV() {
+  let infoDIV = document.createElement("div");
+  infoDIV.className = "infoDIV";
+  infoDIV.id = "infoDIV";
+  document.body.appendChild(infoDIV);
+}
 
-  gui.__ul.childNodes[5];
+export function updateInfoDIV(value) {
+  let infoDiv = document.getElementById("infoDIV");
+  infoDiv.innerHTML = value;
 }

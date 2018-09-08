@@ -8,8 +8,9 @@ export function keystoneMouse() {
 
   var camCanvas = Storage.camCanvas;
   document.body.style.cursor = "crosshair";
-  Storage.console =
-    "Key-stone in this order: TOP-LEFT [⬉] TOP-RIGHT [⬈] BOTTOM-LEFT  [⬋]  BOTTOM-RIGHT [⬊]";
+  updateInfoDIV(
+    "Key-stone in this order: TOP-LEFT [⬉] TOP-RIGHT [⬈] BOTTOM-LEFT  [⬋]  BOTTOM-RIGHT [⬊]"
+  );
   //
   var svgKeystone = window.svgKeystone;
   //clear clicks array
@@ -24,8 +25,9 @@ export function keystoneMouse() {
     if (e.x < camCanvas.width && e.y < camCanvas.height) {
       //pop. array of clicks
       clkArr.push(e.x, e.y);
-      Storage.console =
-        "Mouse click " + clkArr.length / 2 + " at " + e.x + ", " + e.y;
+      updateInfoDIV(
+        "Mouse click " + clkArr.length / 2 + " at " + e.x + ", " + e.y
+      );
       //show points with svg
       svgKeystone.appendChild(
         svgCircle([e.x, e.y], "none", 10, 0, "magenta", "1")
@@ -63,14 +65,16 @@ export function keystoneKeys() {
     switch (key) {
       case "=":
         velocity += 1;
-        Storage.console =
-          "edit speed " + velocity.toString() + " pixels at the time";
+        updateInfoDIV(
+          "edit speed " + velocity.toString() + " pixels at the time"
+        );
         break;
 
       case "-":
         if (velocity > 1) velocity -= 1;
-        Storage.console =
-          "edit speed " + velocity.toString() + " pixels at the time";
+        updateInfoDIV(
+          "edit speed " + velocity.toString() + " pixels at the time"
+        );
         break;
 
       case "1":
