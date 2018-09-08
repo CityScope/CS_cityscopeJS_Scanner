@@ -1,12 +1,11 @@
 import "../Storage";
 import { _ } from "core-js";
+
 // a function to make the initial generic array of
 //evenly divided grid points before distorting
 export function scanArrayMaker(gridCols, gridRows) {
   let gap = Storage.cellGap;
-
   var camCanvas = Storage.camCanvas;
-  var svgKeystone = window.svgKeystone;
 
   var initialScannerGridArr = [];
   //get canvas ratio to divided by #-1 of points

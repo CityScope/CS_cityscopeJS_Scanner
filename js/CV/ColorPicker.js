@@ -1,4 +1,6 @@
 import "../Storage";
+import { updateInfoDIV } from "../UI/DATGUI";
+
 /*    
 get the pixel location at the center of the grid cell div
 and match it to the pixel location in the PixelBuffer linear list

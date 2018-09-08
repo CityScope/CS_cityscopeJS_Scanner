@@ -1,3 +1,5 @@
+import { updateInfoDIV } from "../UI/DATGUI";
+
 // HOW TO RUN?
 if (cityIOdataStruct.objects.sliders) {
   SliderPicker([100, 100, 200, 200], cityIOdataStruct.objects.sliders);

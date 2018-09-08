@@ -104,7 +104,7 @@ function checkRotatedBrick(thisBrick, codes) {
   //convert this brick  string to array
   thisBrick = Array.from(thisBrick);
 
-  console.log("-----------NEW BRICK-----------");
+  // console.log("-----------NEW BRICK-----------");
 
   //convert the array to 2 matrix of 4 arrays
   let arrBrick = [
@@ -118,13 +118,13 @@ function checkRotatedBrick(thisBrick, codes) {
   let brickCCW270 = rotMtrxCCW(arrBrick)
     .toString()
     .replace(/,/g, "");
-  console.log("270 ", brickCCW270);
+  // console.log("270 ", brickCCW270);
   //check the brick aginst the codes array
   let indexCode = codes.indexOf(brickCCW270);
   //if brick is a type in codes
   if (indexCode !== -1) {
     //return it
-    console.log(indexCode);
+    // console.log(indexCode);
 
     return indexCode;
     //if brick is not a type in codes
@@ -133,12 +133,12 @@ function checkRotatedBrick(thisBrick, codes) {
     let brickCCW180 = rotMtrxCCW(rotMtrxCCW(arrBrick))
       .toString()
       .replace(/,/g, "");
-    console.log("180", brickCCW180);
+    // console.log("180", brickCCW180);
     //check the brick aginst the codes array
     let indexCode = codes.indexOf(brickCCW180);
     if (indexCode !== -1) {
       //return it
-      console.log(indexCode);
+      // console.log(indexCode);
 
       return indexCode;
       //if brick is not a type in codes
@@ -147,13 +147,13 @@ function checkRotatedBrick(thisBrick, codes) {
       let brickCCW90 = rotMtrxCCW(rotMtrxCCW(rotMtrxCCW(arrBrick)))
         .toString()
         .replace(/,/g, "");
-      console.log("90", brickCCW90);
+      // console.log("90", brickCCW90);
       //check the brick aginst the codes array
       let indexCode = codes.indexOf(brickCCW90);
       //
       if (indexCode !== -1) {
         //return it
-        console.log(indexCode);
+        // console.log(indexCode);
 
         return indexCode;
         //conclude that this is not a type

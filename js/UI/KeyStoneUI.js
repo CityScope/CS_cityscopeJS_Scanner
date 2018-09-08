@@ -1,6 +1,7 @@
 import "../Storage";
-import { saveSettings, loadSettings, magGlass, svgCircle } from "../Modules";
+import { saveSettings, loadSettings, svgCircle } from "../Modules";
 import { MatrixTransform } from "../CV/MatrixTransform";
+import { updateInfoDIV } from "../UI/DATGUI";
 
 export function keystoneMouse() {
   //turn on mag-glass effect
@@ -37,6 +38,8 @@ export function keystoneMouse() {
       if (clkArr.length == 8) {
         //save these settings for next load
         saveSettings("CityScopeJS_keystone", clkArr);
+        //save gap settings
+        saveSettings("CityScopeJS_gap", Storage.cellGap);
         //call the matrix transform function
         MatrixTransform(loadSettings("CityScopeJS_keystone"));
         // and stop keystone mouse clicks

@@ -61,12 +61,20 @@ a {
 
 .infoDIV {
   position: relative;
-  top: 95%;
+  height: 2vw;
+  top: 85%;
+  left: 25%;
   z-index: 1000 !important;
-  width: 100%;
-  max-height: 20vw;
+  width: 50%;
+  overflow: scroll;
+  text-align: center !important;
   color: white;
   background-color: rgba(0, 0, 0, 0.2);
   font-family: "Courier New", Courier, monospace;
   font-size: 14px;
+}
+
+.infoDIV:hover {
+  background-color: rgba(255, 0, 255, 0.2);
+  cursor: ns-resize;
 }

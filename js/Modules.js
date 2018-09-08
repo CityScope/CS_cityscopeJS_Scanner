@@ -1,6 +1,7 @@
 import { keystoneMouse, keystoneKeys } from "./UI/KeyStoneUI";
 import { MatrixTransform } from "./CV/MatrixTransform";
 import "./Storage";
+import { updateInfoDIV } from "./UI/DATGUI";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //save/load local storage

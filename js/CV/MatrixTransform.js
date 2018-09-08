@@ -3,6 +3,7 @@ var PerspT = require("perspective-transform/dist/perspective-transform");
 import { ColorPicker } from "./ColorPicker";
 import "../Storage";
 import { svgCircle } from "../Modules";
+import { updateInfoDIV } from "../UI/DATGUI";
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 //GLOBAL FOR NOW

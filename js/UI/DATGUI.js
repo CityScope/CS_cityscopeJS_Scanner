@@ -78,9 +78,17 @@ export function makeInfoDIV() {
   infoDIV.className = "infoDIV";
   infoDIV.id = "infoDIV";
   document.body.appendChild(infoDIV);
+  let bool = true;
+  infoDIV.addEventListener("click", function() {
+    if (bool) infoDIV.style.height = "10vw";
+    else infoDIV.style.height = "2vw";
+    bool = !bool;
+  });
 }
 
 export function updateInfoDIV(value) {
-  let infoDiv = document.getElementById("infoDIV");
-  infoDiv.innerHTML = value;
+  let infoDIV = document.querySelector("#infoDIV");
+  if (infoDIV) {
+    infoDIV.innerHTML = value;
+  }
 }

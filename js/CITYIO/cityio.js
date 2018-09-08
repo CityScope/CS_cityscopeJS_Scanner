@@ -2,6 +2,7 @@
 //cityIO
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 import "../Storage";
+import { updateInfoDIV } from "../UI/DATGUI";
 
 var cityIOtimer;
 ///cmpare this to new cityIO string to avoid useless POST
@@ -56,20 +57,19 @@ function cityIOpost() {
       method: "POST",
       // mode: "no-cors", // fix cors issue
       body: JSON.stringify(cityIOpacket)
-    }).then(
-      response => handleErrors(response),
-      updateInfoDIV(
-        "cityIO table '" + cityIOtableName + "' uploaded at " + timeNow()
-      ).catch(error => updateInfoDIV(error))
-    );
+    })
+      .then(
+        response => handleErrors(response),
+        updateInfoDIV(
+          "cityIO table '" + cityIOtableName + "' uploaded at " + timeNow()
+        )
+      )
+      .catch(error => updateInfoDIV(error));
 
     function handleErrors(response) {
-      if (response.ok) {
-        // updateInfoDIV( ("cityIO response: " + response.ok);
-      }
       return response;
     }
   } else {
-    updateInfoDIV("Waiting for cityIO settings file [JSON]...");
+    updateInfoDIV("cityIO waits for a settings file [.JSON]...");
   }
 }

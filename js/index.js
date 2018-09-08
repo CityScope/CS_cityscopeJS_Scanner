@@ -35,7 +35,7 @@ import "babel-polyfill";
 import { setupSVG, stats, loadImg } from "./Modules";
 import { setupWebcam } from "./CV/Webcam";
 import { cityIOinit, cityIOstop } from "./CITYIO/cityio";
-import { datGUI, infoDIV } from "./UI/DATGUI";
+import { datGUI, updateInfoDIV, makeInfoDIV } from "./UI/DATGUI";
 import { webWorkerListener } from "./CV/WebWorkerListener";
 import * as logo from "../media/logo.png";
 
@@ -43,7 +43,7 @@ import * as logo from "../media/logo.png";
 import "./Storage";
 
 async function init() {
-  infoDIV();
+  makeInfoDIV();
 
   //UI menu
   datGUI();

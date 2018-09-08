@@ -1,5 +1,6 @@
 import "../Storage";
 import { setupWebCamCanvas } from "../Modules";
+import { updateInfoDIV } from "../UI/DATGUI";
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 // WEBCAM & MEDIA SETUP

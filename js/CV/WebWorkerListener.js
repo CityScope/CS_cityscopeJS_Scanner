@@ -1,4 +1,6 @@
 import "../Storage";
+import { updateInfoDIV } from "../UI/DATGUI";
+
 export function webWorkerListener() {
   //init the two WW vars
   var typesArray = 0;
