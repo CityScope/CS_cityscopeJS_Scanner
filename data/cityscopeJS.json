@@ -1,0 +1,40 @@
+{
+  "grid": [],
+  "id": "",
+  "objects": {
+    "codes": [
+      "0000000000000000",
+      "1111111111111111",
+      "0000000011111111",
+      "1111111100000000"
+    ]
+  },
+  "header": {
+    "name": "cityscopeJS",
+    "longName": "cityscopeJS",
+    "block": [
+      "type"
+    ],
+    "mapping": {
+      "type": {
+        "0": "White",
+        "1": "Black",
+        "2": "type_1",
+        "3": "type_2"
+      }
+    },
+    "spatial": {
+      "ncols": 15,
+      "nrows": 15,
+      "physical_longitude": 0,
+      "physical_latitude": 0,
+      "latitude": 0,
+      "longitude": 0,
+      "cellsize": 20
+    },
+    "owner": {
+      "name": "Ariel Noyman",
+      "institute": "City Science MIT Media Lab"
+    }
+  }
+}
