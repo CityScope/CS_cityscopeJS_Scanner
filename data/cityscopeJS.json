@@ -12,9 +12,7 @@
   "header": {
     "name": "cityscopeJS",
     "longName": "cityscopeJS",
-    "block": [
-      "type"
-    ],
+    "block": ["type"],
     "mapping": {
       "type": {
         "0": "White",
