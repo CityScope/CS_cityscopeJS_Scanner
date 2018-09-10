@@ -23,7 +23,7 @@ a {
 }
 
 .logo {
-  top: 80%;
+  top: 85%;
   left: 1%;
   position: fixed;
   z-index: 1000;
@@ -61,20 +61,21 @@ a {
 
 .infoDIV {
   position: relative;
-  height: 2vw;
   top: 85%;
-  left: 25%;
+  left: 10%;
+  height: 8vw;
+  width: 80vw;
   z-index: 1000 !important;
-  width: 50%;
-  overflow: scroll;
-  text-align: center !important;
+  overflow-y: hidden;
+  overflow-x: hidden;
+  text-align: left !important;
   color: white;
   background-color: rgba(0, 0, 0, 0.2);
   font-family: "Courier New", Courier, monospace;
-  font-size: 14px;
+  font-size: 10px;
 }
 
 .infoDIV:hover {
-  background-color: rgba(255, 0, 255, 0.2);
-  cursor: ns-resize;
+  background-color: rgba(255, 0, 255, 0.7);
+  cursor: help;
 }
