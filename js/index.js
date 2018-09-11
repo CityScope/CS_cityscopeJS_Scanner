@@ -32,7 +32,13 @@ https://github.com/RELNO]
 */
 
 import "babel-polyfill";
-import { setupSVG, stats, loadImg } from "./Modules";
+import {
+  setupSVG,
+  stats,
+  loadImg,
+  loadSettings,
+  initSequence
+} from "./Modules";
 import { setupWebcam } from "./CV/Webcam";
 import { cityIOinit, cityIOstop } from "./CITYIO/cityio";
 import { datGUI, updateInfoDIV, makeInfoDIV } from "./UI/DATGUI";
@@ -43,13 +49,21 @@ import * as logo from "../media/logo.png";
 import "./Storage";
 
 async function init() {
+  //set refresh for page to cleanup
+  setTimeout(function() {
+    window.location.reload(1);
+  }, 100000);
+
+  //create the info div
   makeInfoDIV();
+  updateInfoDIV("Starting CityScopeJS applet...");
 
   //UI menu
   datGUI();
 
   loadImg(logo.default, 80, 80, "logo");
-  updateInfoDIV("Starting CityScopeJS applet...");
+
+  //make the stats applet
   stats();
   //declare WebWorker as global
   window.CVworker = new Worker("./CV/CVwebworker.js");
@@ -69,6 +83,13 @@ async function init() {
   updateInfoDIV("starting cityIO");
   //start sending to cityIO
   cityIOinit(sendRate);
+
+  //after that, check if cityIOdataStruct is already loaded before
+  //so we can skip the JSON file selection UI
+  if (loadSettings("CityScopeJS_cityIOdataStruct")) {
+    Storage.cityIOdataStruct = loadSettings("CityScopeJS_cityIOdataStruct");
+    initSequence();
+  }
 }
 
 //start app after HTML load

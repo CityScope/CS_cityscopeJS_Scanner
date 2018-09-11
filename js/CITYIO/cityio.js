@@ -70,6 +70,6 @@ function cityIOpost() {
       return response;
     }
   } else {
-    updateInfoDIV("cityIO waits for a settings file [.JSON]...");
+    updateInfoDIV("  CityScopeJS waits for a settings file [.JSON]...  ");
   }
 }

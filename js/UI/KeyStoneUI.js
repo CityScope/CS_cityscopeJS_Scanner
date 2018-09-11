@@ -3,10 +3,8 @@ import { saveSettings, loadSettings, svgCircle } from "../Modules";
 import { MatrixTransform } from "../CV/MatrixTransform";
 import { updateInfoDIV } from "../UI/DATGUI";
 
+//initial keystone using mouse
 export function keystoneMouse() {
-  //turn on mag-glass effect
-  //  magGlass();
-
   var camCanvas = Storage.camCanvas;
   document.body.style.cursor = "crosshair";
   updateInfoDIV(

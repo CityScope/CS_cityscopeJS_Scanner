@@ -15,28 +15,40 @@ export function onFileLoad(loadEvent) {
   let res = reader.readAsText(file);
   reader.onload = function(e) {
     res = e.target.result;
+
     //store cityIOdataStruct in Storage
     var cityIOdataStruct = JSON.parse(res);
+    //save settings file data into a local Storage location
+    saveSettings("CityScopeJS_cityIOdataStruct", cityIOdataStruct);
     Storage.cityIOdataStruct = cityIOdataStruct;
+    updateInfoDIV("loaded settings [JSON]...", cityIOdataStruct);
 
-    updateInfoDIV("found settings [JSON]...", cityIOdataStruct);
-
-    // send the table settings once to Web worker for init
-    CVworker.postMessage(["cityIOsetup", cityIOdataStruct]);
-
-    // than, if exists, load pos. settings from localStorage
-    if (loadSettings("CityScopeJS_keystone")) {
-      updateInfoDIV("found key stoning setup...Loading last key stone");
-      Storage.cellGap = loadSettings("CityScopeJS_gap");
-      MatrixTransform(loadSettings("CityScopeJS_keystone"));
-      keystoneKeys();
-    } else {
-      updateInfoDIV("no ket stone was found, starting new one..");
-      Storage.cellGap = 0;
-      //save these keystone points to local storage
-      keystoneMouse();
-    }
+    initSequence();
   };
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// start the actual keystone sequence
+export function initSequence() {
+  // send the table settings once to Web worker for init
+  CVworker.postMessage(["cityIOsetup", Storage.cityIOdataStruct]);
+
+  // than, if exists, load pos. settings from localStorage
+  if (loadSettings("CityScopeJS_keystone")) {
+    updateInfoDIV("found key stoning setup...Loading last key stone");
+    //load also the gap props
+    Storage.cellGap = loadSettings("CityScopeJS_gap");
+    // start the matrix transform with the keystone
+    MatrixTransform(loadSettings("CityScopeJS_keystone"));
+    //call the keystoning keyboard function
+    keystoneKeys();
+  } else {
+    updateInfoDIV("no keystone was found, starting new one..");
+    Storage.cellGap = 0;
+    //save these keystone points to local storage
+    keystoneMouse();
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -78,51 +90,6 @@ export function setupSVG() {
   svgDiv.appendChild(svgKeystone);
 
   return svgKeystone;
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export function magGlass(state) {
-  if (state !== false) {
-    var camCanvas = Storage.camCanvas;
-    //make gls div
-    var glsDiv = document.createElement("div");
-    glsDiv.id = "glsDiv";
-    document.body.appendChild(glsDiv);
-    //another canvas for magnifying glass
-    var magGlassCanvas = document.createElement("canvas");
-    // mag. glass
-    glsDiv.appendChild(magGlassCanvas);
-    magGlassCanvas.id = "magGlass";
-    magGlassCanvas.className = "magGlassCanvas";
-    let magWid = (magGlassCanvas.width = 200);
-    magGlassCanvas.height = magWid;
-    magGlassCanvas.style.zIndex = 1;
-    let magGlassCtx = magGlassCanvas.getContext("2d");
-    document.addEventListener("mousemove", function(e) {
-      magGlassCtx.clearRect(0, 0, magWid, magWid);
-      magGlassCtx.drawImage(
-        camCanvas,
-        e.pageX - magWid / 4,
-        e.pageY - magWid / 4,
-        camCanvas.width,
-        camCanvas.width,
-        0,
-        0,
-        camCanvas.width * 2,
-        camCanvas.height * 2
-      );
-      magGlassCanvas.style.top = e.pageY - magWid / 2 + "px";
-      magGlassCanvas.style.left = e.pageX - magWid / 2 + "px";
-      magGlassCanvas.style.display = "block";
-      magGlassCanvas.style.position = "absolute";
-      magGlassCanvas.style.border = "2px black solid";
-    });
-  } else {
-    //WIP
-    var glsDiv = document.querySelector("#glsDiv");
-    glsDiv.innerHTML = "";
-  }
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
