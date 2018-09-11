@@ -49,19 +49,23 @@ import * as logo from "../media/logo.png";
 import "./Storage";
 
 async function init() {
-  //set refresh for page to cleanup
-  setTimeout(function() {
-    window.location.reload(1);
-  }, 100000);
-
   //create the info div
   makeInfoDIV();
   updateInfoDIV("Starting CityScopeJS applet...");
 
+  let refreshInterval = 100000;
+  //set refresh for page to cleanup
+  setTimeout(function() {
+    window.location.reload(1);
+  }, refreshInterval);
+  updateInfoDIV(
+    "<--- restarting in " + refreshInterval / 1000 + " Seconds ---->"
+  );
+
   //UI menu
   datGUI();
 
-  loadImg(logo.default, 80, 80, "logo");
+  loadImg(logo.default, 60, 60, "logo");
 
   //make the stats applet
   stats();
