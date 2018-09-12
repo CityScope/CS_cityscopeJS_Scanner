@@ -6,6 +6,5 @@ bin/
 .cache/
 .ds_store
 .DS_Store
-#
 dist/
 node_modules/
