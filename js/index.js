@@ -52,7 +52,8 @@ async function init() {
   makeInfoDIV();
   updateInfoDIV("Starting CityScopeJS applet...");
 
-  let refreshInterval = 100000;
+  /* 
+   let refreshInterval = 100000;
   //set refresh for page to cleanup
   setTimeout(function() {
     window.location.reload(1);
@@ -60,6 +61,7 @@ async function init() {
   updateInfoDIV(
     "<--- restarting in " + refreshInterval / 1000 + " Seconds ---->"
   );
+  */
 
   //make the stats applet
   stats();
