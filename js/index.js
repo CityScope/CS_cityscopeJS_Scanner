@@ -38,9 +38,8 @@ import {
   loadImg,
   loadSettings,
   initSequence,
-  webWorkerListener
+  setupWebcam
 } from "./Modules";
-import { setupWebcam } from "./CV/Webcam";
 import { cityIOinit, cityIOstop } from "./CITYIO/cityio";
 import { datGUI, updateInfoDIV, makeInfoDIV } from "./UI/DATGUI";
 import * as logo from "../media/logo.png";
@@ -64,25 +63,19 @@ async function init() {
 
   //UI menu
   datGUI();
-
   loadImg(logo.default, 60, 60, "logo");
 
   //make the stats applet
   stats();
-  //declare WebWorker as global
-  window.CVworker = new Worker("./CV/CVwebworker.js");
 
   //setup and start webcam
   setupWebcam();
   //make the UI
   setupSVG();
 
-  //start the WW listener before initial send
-  webWorkerListener();
-
   // [WIP] POST to cityIO rate in MS
   var sendRate = 1000;
-  //make sure to clear sending from before
+  //make sure to clear CityIO sending before
   cityIOstop();
   updateInfoDIV("starting cityIO");
   //start sending to cityIO
@@ -92,6 +85,7 @@ async function init() {
   //so we can skip the JSON file selection UI
   if (loadSettings("CityScopeJS_cityIOdataStruct")) {
     Storage.cityIOdataStruct = loadSettings("CityScopeJS_cityIOdataStruct");
+    // start app sequence
     initSequence();
   }
 }

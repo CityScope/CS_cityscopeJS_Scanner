@@ -31,9 +31,6 @@ export function onFileLoad(loadEvent) {
 
 // start the actual keystone sequence
 export function initSequence() {
-  // send the table settings once to Web worker for init
-  CVworker.postMessage(["cityIOsetup", Storage.cityIOdataStruct]);
-
   // than, if exists, load pos. settings from localStorage
   if (loadSettings("CityScopeJS_keystone")) {
     updateInfoDIV("found key stoning setup...Loading last key stone");
@@ -209,26 +206,50 @@ export function setupWebCamCanvas() {
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
+// WEBCAM & MEDIA SETUP
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function webWorkerListener() {
-  //init the two WW vars
-  var typesArray = 0;
-  var pixelColArr = [];
-  // Get data back form WEB worker
-  updateInfoDIV("starting WebWorker listener...");
-  //add the event listener
-  CVworker.addEventListener(
-    "message",
-    function(msg) {
-      //get the WEB worker  msg and use
-      //its 1st item for types
-      typesArray = msg.data[0];
-      Storage.typesArray = typesArray;
-      //get the WEB worker msg and use
-      //its 2nd item for vis. the grid
-      pixelColArr = msg.data[1];
-      Storage.pixelColArr = pixelColArr;
-    },
-    false
-  );
+//setup the camera device
+export function setupWebcam() {
+  var camCanvas = setupWebCamCanvas();
+  //store webcam canvas into class
+  Storage.camCanvas = camCanvas;
+
+  //get main canvas context for scanning
+  var vidCanvas2dContext = camCanvas.getContext("2d");
+  // updateInfoDIV( ("starting video"))
+  //Video loop setup call video mesh creator
+  var width = 0;
+  var height = 0;
+  var video = document.createElement("video");
+  //set auto play for video
+  video.setAttribute("autoplay", true);
+  video.addEventListener("loadedmetadata", function() {
+    width = camCanvas.width;
+    height = camCanvas.height;
+    //call the video to canvas loop
+    loop();
+  });
+  //get user webcam
+  navigator.mediaDevices
+    .getUserMedia({ audio: false, video: true })
+    .then(function(stream) {
+      if ("srcObject" in video) {
+        video.srcObject = stream;
+      } else {
+        video.src = window.URL.createObjectURL(stream);
+      }
+      video.onloadedmetadata = video.play();
+    })
+    .catch(function(err) {
+      updateInfoDIV(err.name + ": " + err.message);
+    });
+
+  //loop
+  function loop() {
+    vidCanvas2dContext.drawImage(video, 0, 0, width, height);
+
+    //loop the video to canvas method
+    requestAnimationFrame(loop);
+  }
 }
