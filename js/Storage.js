@@ -10,6 +10,7 @@ class Storage {
     this._svgPntsArray = [];
     this._renderAnimFrame = 0;
     this._matrixGridLocArray = [];
+    this._initialScannerGridArr = [];
     this._console = "";
     this._cellGap = 0;
   }
@@ -68,6 +69,14 @@ class Storage {
   }
   set matrixGridLocArray(value) {
     this._matrixGridLocArray = value;
+  }
+
+  // initial Grid Location Array
+  get initialScannerGridArr() {
+    return this._initialScannerGridArr;
+  }
+  set initialScannerGridArr(value) {
+    this._initialScannerGridArr = value;
   }
 
   // console text

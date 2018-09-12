@@ -1,8 +1,40 @@
 import "../Storage";
-import { scanArrayMaker, ColorPicker } from "./CV";
+import { _ } from "core-js";
+import { ColorPicker } from "./CV";
 var PerspT = require("perspective-transform/dist/perspective-transform");
 import { svgCircle } from "../Modules";
 import { updateInfoDIV } from "../UI/DATGUI";
+
+///////////////////////////////////////////////////////////////////////////
+// a function to make the initial generic array of
+//evenly divided grid points before distorting
+
+export function scanArrayMaker() {
+  var cityIOdataStruct = Storage.cityIOdataStruct;
+
+  //amount of grid pixels from settings JSON
+  var gridCols = cityIOdataStruct.header.spatial.ncols * 4;
+  var gridRows = cityIOdataStruct.header.spatial.nrows * 4;
+
+  let gap = Storage.cellGap;
+  var camCanvas = Storage.camCanvas;
+
+  var initialScannerGridArr = [];
+  //get canvas ratio to divided by #-1 of points
+  let ratX = camCanvas.width / (gridCols - 1);
+  let ratY = camCanvas.height / (gridRows - 1);
+
+  for (let cols = 0; cols < camCanvas.height + gap; cols += gap + ratY * 4) {
+    for (let rows = 0; rows < camCanvas.width + gap; rows += gap + ratX * 4) {
+      for (let j = 0; j < ratY * 4 - gap; j += ratY - gap / 4) {
+        for (let i = 0; i < ratX * 4 - gap; i += ratX - gap / 4) {
+          initialScannerGridArr.push([rows + i, cols + j]);
+        }
+      }
+    }
+  }
+  Storage.initialScannerGridArr = initialScannerGridArr;
+}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 //GLOBAL FOR NOW
@@ -12,17 +44,12 @@ let colorPicker = new ColorPicker();
 export function MatrixTransform(gridCorners) {
   //get canvas from Storage
   var camCanvas = Storage.camCanvas;
-  var cityIOdataStruct = Storage.cityIOdataStruct;
 
-  //amount of grid pixels from settings JSON
-  var gridCols = cityIOdataStruct.header.spatial.ncols * 4;
-  var gridRows = cityIOdataStruct.header.spatial.nrows * 4;
+  // returns a new baseline grid of locations as Array
+  let initialScannerGridArr = Storage.initialScannerGridArr;
 
   //matrix Grid Location Array
   var matrixGridLocArray = [];
-
-  // returns a new baseline grid of locations as Array
-  let initialScannerGridArr = scanArrayMaker(gridCols, gridRows);
 
   //set the reference points of the 4 edges of the canvas
   // to get 100% of the image/video in canvas

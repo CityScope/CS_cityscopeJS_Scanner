@@ -1,5 +1,5 @@
 import { keystoneMouse, keystoneKeys } from "./UI/KeyStoneUI";
-import { MatrixTransform } from "./CV/MatrixTransform";
+import { MatrixTransform, scanArrayMaker } from "./CV/MatrixTransform";
 import "./Storage";
 import { updateInfoDIV } from "./UI/DATGUI";
 
@@ -36,6 +36,8 @@ export function initSequence() {
     updateInfoDIV("found key stoning setup...Loading last key stone");
     //load also the gap props
     Storage.cellGap = loadSettings("CityScopeJS_gap");
+    //make the initial grid
+    scanArrayMaker();
     // start the matrix transform with the keystone
     MatrixTransform(loadSettings("CityScopeJS_keystone"));
     //call the keystoning keyboard function
@@ -43,6 +45,8 @@ export function initSequence() {
   } else {
     updateInfoDIV("no keystone was found, starting new one..");
     Storage.cellGap = 0;
+    //make the initial grid
+    scanArrayMaker();
     //save these keystone points to local storage
     keystoneMouse();
   }

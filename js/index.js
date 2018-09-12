@@ -61,13 +61,11 @@ async function init() {
     "<--- restarting in " + refreshInterval / 1000 + " Seconds ---->"
   );
 
+  //make the stats applet
+  stats();
   //UI menu
   datGUI();
   loadImg(logo.default, 60, 60, "logo");
-
-  //make the stats applet
-  stats();
-
   //setup and start webcam
   setupWebcam();
   //make the UI
