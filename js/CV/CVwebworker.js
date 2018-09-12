@@ -162,7 +162,7 @@ function checkRotatedBrick(thisBrick, codes) {
   }
 }
 
-// filp function
+// flip function
 const flipMatrix = matrix =>
   matrix[0].map((column, index) => matrix.map(row => row[index]));
 const rotMtrxCCW = matrix => flipMatrix(matrix).reverse();

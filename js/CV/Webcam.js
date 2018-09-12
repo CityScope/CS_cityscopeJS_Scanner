@@ -42,29 +42,9 @@ export function setupWebcam() {
       updateInfoDIV(err.name + ": " + err.message);
     });
 
-  /*
-  //Image effect control for now
-  var brightness = -30;
-  var contrast = 50;
-  contrast = contrast / 100 + 1; //convert to decimal & shift range: [0..2]
-  var intercept = 128 * (1 - contrast);
-  */
-
   //loop
   function loop() {
     vidCanvas2dContext.drawImage(video, 0, 0, width, height);
-
-    /*
-    var pixelData = brightnessContrast(
-      camCanvas,
-      vidCanvas2dContext,
-      brightness,
-      contrast,
-      intercept
-    );
-    // Draw the data back to the visible canvas
-    vidCanvas2dContext.putImageData(pixelData, 0, 0);
-    */
 
     //loop the video to canvas method
     requestAnimationFrame(loop);
@@ -72,6 +52,25 @@ export function setupWebcam() {
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/*
+
+//Image effect control for now
+var brightness = -30;
+var contrast = 50;
+contrast = contrast / 100 + 1; //convert to decimal & shift range: [0..2]
+var intercept = 128 * (1 - contrast);
+
+var pixelData = brightnessContrast(
+  camCanvas,
+  vidCanvas2dContext,
+  brightness,
+  contrast,
+  intercept
+);
+// Draw the data back to the visible canvas
+vidCanvas2dContext.putImageData(pixelData, 0, 0);
+
 function brightnessContrast(
   camCanvas,
   vidCanvas2dContext,
@@ -99,3 +98,5 @@ function brightnessContrast(
   }
   return pixelData;
 }
+
+*/

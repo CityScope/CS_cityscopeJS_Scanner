@@ -4,26 +4,9 @@ import { updateInfoDIV } from "../UI/DATGUI";
 /*    
 get the pixel location at the center of the grid cell div
 and match it to the pixel location in the PixelBuffer linear list
-+----------------------+
-|0     ||3     ||6     |
-|      ||prev. ||      |
-|      ||pixel ||      |
-+----------------------+
-+----------------------+
-|1     ||4     ||7     |
-|      ||this  ||      |
-|      ||pixel ||      |
-+----------------------+
-+----------------------+
-|2     ||5     ||8     |
-|      ||next  ||      |
-|      ||pixel ||      |
-+----------------------+
-
-  call a looping method that scans the grid
-  [this is a hack, so this function could be called
-  using 'requestAnimationFrame' API]
-
+call a looping method that scans the grid
+[this is a hack, so this function could be called
+using 'requestAnimationFrame' API]
 */
 
 export function ColorPicker() {

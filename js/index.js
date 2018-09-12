@@ -37,12 +37,12 @@ import {
   stats,
   loadImg,
   loadSettings,
-  initSequence
+  initSequence,
+  webWorkerListener
 } from "./Modules";
 import { setupWebcam } from "./CV/Webcam";
 import { cityIOinit, cityIOstop } from "./CITYIO/cityio";
 import { datGUI, updateInfoDIV, makeInfoDIV } from "./UI/DATGUI";
-import { webWorkerListener } from "./CV/WebWorkerListener";
 import * as logo from "../media/logo.png";
 
 //Import Storage class
