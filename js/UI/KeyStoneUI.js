@@ -36,8 +36,7 @@ export function keystoneMouse() {
       if (clkArr.length == 8) {
         //save these settings for next load
         saveSettings("CityScopeJS_keystone", clkArr);
-        //save gap settings
-        saveSettings("CityScopeJS_gap", Storage.cellGap);
+
         //call the matrix transform function
         MatrixTransform(loadSettings("CityScopeJS_keystone"));
         // and stop keystone mouse clicks
@@ -109,21 +108,6 @@ export function keystoneKeys() {
         // Down pressed
         keystone[kyStArrPos + 1] = keystone[kyStArrPos + 1] + velocity;
         saveSettings("CityScopeJS_keystone", keystone);
-        MatrixTransform(keystone);
-        break;
-      //change grid gap
-      case "[":
-        if (Storage.cellGap > 0) {
-          Storage.cellGap = Storage.cellGap - velocity;
-          saveSettings("CityScopeJS_gap", Storage.cellGap);
-          MatrixTransform(keystone);
-        } else {
-          Storage.cellGap = 0;
-        }
-        break;
-      case "]":
-        Storage.cellGap += velocity;
-        saveSettings("CityScopeJS_gap", Storage.cellGap);
         MatrixTransform(keystone);
         break;
     }

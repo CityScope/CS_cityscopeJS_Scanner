@@ -34,8 +34,7 @@ export function initSequence() {
   // than, if exists, load pos. settings from localStorage
   if (loadSettings("CityScopeJS_keystone")) {
     updateInfoDIV("found key stoning setup...Loading last key stone");
-    //load also the gap props
-    Storage.cellGap = loadSettings("CityScopeJS_gap");
+
     //make the initial grid
     scanArrayMaker();
     // start the matrix transform with the keystone
@@ -44,7 +43,7 @@ export function initSequence() {
     keystoneKeys();
   } else {
     updateInfoDIV("no keystone was found, starting new one..");
-    Storage.cellGap = 0;
+
     //make the initial grid
     scanArrayMaker();
     //save these keystone points to local storage
