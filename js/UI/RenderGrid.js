@@ -1,6 +1,6 @@
 import "../Storage";
 
-//color the visual grid base on the web-worker cv analysis
+//color the visual grid base on cv analysis
 export function renderGrid(state) {
   //check if we already have grid data
   if (state === true) {

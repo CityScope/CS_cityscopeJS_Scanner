@@ -18,7 +18,7 @@ export function ColorPicker() {
   var scannerLoop = function() {
     var matrixGridLocArray = Storage.matrixGridLocArray;
 
-    // empty color array for web-worker
+    // empty color array
     let scannedColorsArray = [];
     // read all pixels from canvas
     let vidCanvas2dContext = Storage.camCanvas.getContext("2d");

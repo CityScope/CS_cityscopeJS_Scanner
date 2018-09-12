@@ -72,10 +72,10 @@ a {
   color: white;
   background-color: rgba(0, 0, 0, 0.2);
   font-family: "Courier New", Courier, monospace;
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .infoDIV:hover {
-  background-color: rgba(255, 0, 255, 0.7);
+  background-color: rgba(255, 0, 255, 0.39);
   cursor: help;
 }
