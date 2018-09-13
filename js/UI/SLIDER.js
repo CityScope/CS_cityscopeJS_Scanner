@@ -1,4 +1,4 @@
-import { updateInfoDIV } from "../UI/DATGUI";
+import { updateInfoDIV } from "../Modules";
 
 // HOW TO RUN?
 if (cityIOdataStruct.objects.sliders) {

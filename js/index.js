@@ -38,20 +38,18 @@ import {
   loadImg,
   loadSettings,
   initSequence,
-  setupWebcam
+  setupWebcam,
+  updateInfoDIV,
+  makeInfoDIV
 } from "./Modules";
 import { cityIOinit, cityIOstop } from "./CITYIO/cityio";
-import { datGUI, updateInfoDIV, makeInfoDIV } from "./UI/DATGUI";
+import { datGUI } from "./UI/DATGUI";
 import * as logo from "../media/logo.png";
 
 //Import Storage class
 import "./Storage";
 
 async function init() {
-  //create the info div
-  makeInfoDIV();
-  updateInfoDIV("Starting CityScopeJS applet...");
-
   /* 
    let refreshInterval = 100000;
   //set refresh for page to cleanup
@@ -63,6 +61,9 @@ async function init() {
   );
   */
 
+  //create the info div
+  makeInfoDIV();
+  updateInfoDIV("Starting CityScopeJS applet...");
   //make the stats applet
   stats();
   //UI menu
@@ -72,7 +73,6 @@ async function init() {
   setupWebcam();
   //make the UI
   setupSVG();
-
   // [WIP] POST to cityIO rate in MS
   var sendRate = 1000;
   //make sure to clear CityIO sending before
@@ -80,7 +80,6 @@ async function init() {
   updateInfoDIV("starting cityIO");
   //start sending to cityIO
   cityIOinit(sendRate);
-
   //after that, check if cityIOdataStruct is already loaded before
   //so we can skip the JSON file selection UI
   if (loadSettings("CityScopeJS_cityIOdataStruct")) {

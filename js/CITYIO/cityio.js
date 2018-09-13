@@ -2,7 +2,7 @@
 //cityIO
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 import "../Storage";
-import { updateInfoDIV } from "../UI/DATGUI";
+import { updateInfoDIV } from "../Modules";
 
 var cityIOtimer;
 ///cmpare this to new cityIO string to avoid useless POST

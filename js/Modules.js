@@ -1,7 +1,6 @@
 import { keystoneMouse, keystoneKeys } from "./UI/KeyStoneUI";
 import { MatrixTransform, scanArrayMaker } from "./CV/MatrixTransform";
 import "./Storage";
-import { updateInfoDIV } from "./UI/DATGUI";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //save/load local storage
@@ -254,5 +253,48 @@ export function setupWebcam() {
 
     //loop the video to canvas method
     requestAnimationFrame(loop);
+  }
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * makes infoDIV
+ * @param {void}
+ * @return {void}
+ */
+export function makeInfoDIV() {
+  let infoDIV = document.createElement("div");
+  infoDIV.className = "infoDIV";
+  infoDIV.id = "infoDIV";
+  document.body.appendChild(infoDIV);
+  let bool = false;
+  //listen to clicks
+  infoDIV.addEventListener("click", function() {
+    if (bool) {
+      infoDIV.style.height = "8vw";
+      infoDIV.style.width = "80vw";
+      infoDIV.innerHTML = "";
+    } else {
+      infoDIV.style.height = "2vw";
+      infoDIV.style.width = "2vw";
+      infoDIV.innerHTML = "";
+    }
+    bool = !bool;
+  });
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+/**
+ * Display on screen info in infoDIV
+ * @param {string} value
+ * @return {void}
+ */
+export function updateInfoDIV(value) {
+  let infoDIV = document.querySelector("#infoDIV");
+  if (infoDIV) {
+    infoDIV.innerHTML += value;
+    infoDIV.scrollTop = infoDIV.scrollHeight;
+    if (infoDIV.childNodes[0].length > 1000) infoDIV.innerHTML = "";
   }
 }

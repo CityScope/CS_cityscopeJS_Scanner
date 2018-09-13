@@ -1,5 +1,5 @@
 import "../Storage";
-import { updateInfoDIV } from "../UI/DATGUI";
+import { updateInfoDIV } from "../Modules";
 
 ///////////////////////////////////////////////////////////////////////////
 /*    

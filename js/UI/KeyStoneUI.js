@@ -1,7 +1,11 @@
 import "../Storage";
-import { saveSettings, loadSettings, svgCircle } from "../Modules";
+import {
+  saveSettings,
+  loadSettings,
+  svgCircle,
+  updateInfoDIV
+} from "../Modules";
 import { MatrixTransform } from "../CV/MatrixTransform";
-import { updateInfoDIV } from "../UI/DATGUI";
 
 //initial keystone using mouse
 export function keystoneMouse() {

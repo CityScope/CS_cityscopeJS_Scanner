@@ -2,8 +2,7 @@ import "../Storage";
 import { _ } from "core-js";
 import { ColorPicker } from "./CV";
 var PerspT = require("perspective-transform/dist/perspective-transform");
-import { svgCircle } from "../Modules";
-import { updateInfoDIV } from "../UI/DATGUI";
+import { svgCircle, updateInfoDIV } from "../Modules";
 
 ///////////////////////////////////////////////////////////////////////////
 // a function to make the initial generic array of
