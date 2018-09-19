@@ -78,7 +78,7 @@ export function CV(scannedPixels) {
   let threshold = 5;
   let avg, avg_0, avg_1, avg_2, pixelCol;
   //reset array
-  let pixColArr = [];
+  let pixelColorArray = [];
 
   //sample 3 pixels [3x3 colors] each time
   for (let i = 0; i < scannedPixels.length; i++) {
@@ -108,10 +108,10 @@ export function CV(scannedPixels) {
       //3rd color
       pixelCol = 2;
     }
-    pixColArr.push(pixelCol);
+    pixelColorArray.push(pixelCol);
   }
-  Storage.pixelColArr = pixColArr;
-  typesLookup(pixColArr);
+  Storage.pixelColArr = pixelColorArray;
+  typesLookup(pixelColorArray);
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -123,6 +123,8 @@ export function CV(scannedPixels) {
 // by running through the 1D list of colors
 
 export function typesLookup(pixelColorArray) {
+  // Storage.cityIOdataStruct.header.spatial.ncols;
+
   let typesArray = [];
 
   for (let i = 0; i < pixelColorArray.length; i = i + 16) {
@@ -133,12 +135,11 @@ export function typesLookup(pixelColorArray) {
     //remove new lines and commas to get a clear list
     thisBrick = thisBrick.join("");
 
-    //before sending back to main thread for cityIO POST,
-    //look for this bricks pattern in 'Codes' property
+    //look for this bricks pattern in 'Codes' prop
     let indexCode = Storage.cityIOdataStruct.objects.codes.indexOf(thisBrick);
 
     /*
-    // WIP ROTATION
+    // WIP -- ROTATION
     //check if this type is not known
     //and not because it has '2' color
     if (indexCode === -1 && !thisBrick.includes("2")) {
@@ -149,6 +150,8 @@ export function typesLookup(pixelColorArray) {
     typesArray.push(indexCode);
   }
   Storage.typesArray = typesArray;
+  console.log(typesArray[0]);
+
   return typesArray;
 }
 
