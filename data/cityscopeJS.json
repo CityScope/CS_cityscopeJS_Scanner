@@ -22,13 +22,13 @@
       }
     },
     "spatial": {
-      "ncols": 15,
-      "nrows": 15,
-      "physical_longitude": 0,
-      "physical_latitude": 0,
-      "latitude": 0,
-      "longitude": 0,
-      "cellsize": 20
+      "ncols": 50,
+      "nrows": 30,
+      "physical_longitude": 5,
+      "physical_latitude": -5,
+      "latitude": 5,
+      "longitude": -5,
+      "cellsize": 10
     },
     "owner": {
       "name": "Ariel Noyman",

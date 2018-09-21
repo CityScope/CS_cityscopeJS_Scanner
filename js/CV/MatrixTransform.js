@@ -154,7 +154,7 @@ function getPos(divPos) {
 
 export function drawPnt(dstPt, color, text) {
   //show points' text
-  svgKeystone.appendChild(svgText(dstPt, text, 6));
+  // svgKeystone.appendChild(svgText(dstPt, text, 6));
 
   //create visuals points on canvas for ref and add to array
   var thisPnt = svgKeystone.appendChild(
