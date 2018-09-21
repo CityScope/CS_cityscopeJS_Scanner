@@ -110,6 +110,7 @@ export function CV(scannedPixels) {
     }
     pixelColorArray.push(pixelCol);
   }
+  //save to storage for render method
   Storage.pixelColArr = pixelColorArray;
   typesLookup(pixelColorArray);
 }
@@ -122,11 +123,10 @@ export function CV(scannedPixels) {
 // by matching the 16[4x4] pixels to known types
 // by running through the 1D list of colors
 
-export function typesLookup(pixelColorArray) {
+function typesLookup(pixelColorArray) {
   // Storage.cityIOdataStruct.header.spatial.ncols;
 
   let typesArray = [];
-
   for (let i = 0; i < pixelColorArray.length; i = i + 16) {
     let thisBrick = [];
     for (let j = 0; j < 16; j++) {
@@ -150,9 +150,7 @@ export function typesLookup(pixelColorArray) {
     typesArray.push(indexCode);
   }
   Storage.typesArray = typesArray;
-  console.log(typesArray[0]);
-
-  return typesArray;
+  // console.log(typesArray[0]);
 }
 
 /////////////////////////////////////////////////////////////////

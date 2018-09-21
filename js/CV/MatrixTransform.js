@@ -8,36 +8,33 @@ import { svgCircle, svgText, updateInfoDIV } from "../Modules";
 // a function to make the initial generic array of
 //evenly divided grid points before distorting & scanning
 
-/*
-export function scanArrayMaker() {
-  var cityIOdataStruct = Storage.cityIOdataStruct;
+// export function scanArrayMaker() {
+//   var cityIOdataStruct = Storage.cityIOdataStruct;
 
-  //amount of grid pixels from settings JSON
-  var gridCols = cityIOdataStruct.header.spatial.ncols * 4;
-  var gridRows = cityIOdataStruct.header.spatial.nrows * 4;
-  //get the camera canvas
-  var camCanvas = Storage.camCanvas;
-  //init the array
-  var initialScannerGridArr = [];
-  //get canvas ratio to divided by #-1 of points
-  let ratX = camCanvas.width / (gridCols - 1);
-  let ratY = camCanvas.height / (gridRows - 1);
-  //outer two loops create the rows and cols of each brick
-  for (let cols = 0; cols < camCanvas.height; cols += ratY * 4) {
-    for (let rows = 0; rows < camCanvas.width; rows += ratX * 4) {
-      //inner loops create the 4x4 points of the brick itself
-      for (let j = 0; j < ratY * 4; j += ratY) {
-        for (let i = 0; i < ratX * 4; i += ratX) {
-          //push the location into array
-          initialScannerGridArr.push([rows + i, cols + j]);
-        }
-      }
-    }
-  }
-  Storage.initialScannerGridArr = initialScannerGridArr;
-}
-
-*/
+//   //amount of grid pixels from settings JSON
+//   var gridCols = cityIOdataStruct.header.spatial.ncols * 4;
+//   var gridRows = cityIOdataStruct.header.spatial.nrows * 4;
+//   //get the camera canvas
+//   var camCanvas = Storage.camCanvas;
+//   //init the array
+//   var initialScannerGridArr = [];
+//   //get canvas ratio to divided by #-1 of points
+//   let ratX = camCanvas.width / (gridCols - 1);
+//   let ratY = camCanvas.height / (gridRows - 1);
+//   //outer two loops create the rows and cols of each brick
+//   for (let cols = 0; cols < camCanvas.height; cols += ratY * 4) {
+//     for (let rows = 0; rows < camCanvas.width; rows += ratX * 4) {
+//       //inner loops create the 4x4 points of the brick itself
+//       for (let j = 0; j < ratY * 4; j += ratY) {
+//         for (let i = 0; i < ratX * 4; i += ratX) {
+//           //push the location into array
+//           initialScannerGridArr.push([rows + i, cols + j]);
+//         }
+//       }
+//     }
+//   }
+//   Storage.initialScannerGridArr = initialScannerGridArr;
+// }
 
 export function scanArrayMaker() {
   var cityIOdataStruct = Storage.cityIOdataStruct;

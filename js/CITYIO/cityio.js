@@ -24,13 +24,28 @@ function timeNow() {
   return new Date(d);
 }
 
+//reverse the grid to fit comply with APIv2
+function mirrorGrid(typesArray) {
+  let cols = Storage.cityIOdataStruct.header.spatial.ncols;
+  let mirroredArray = [];
+
+  for (let i = 0; i < typesArray.length; i = i + cols) {
+    mirroredArray = mirroredArray.concat(
+      typesArray.slice(i, i + cols).reverse()
+    );
+  }
+  return mirroredArray;
+}
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 // method to get the scanned data, look for matching brick 'types'
 // and send the results back to cityIO server for other apps to use
 
 function cityIOpost() {
   if (Storage.typesArray) {
-    var typesArray = Storage.typesArray;
+    var tempArr = Storage.typesArray;
+    //reverse the grid to fit comply with APIv2
+    var typesArray = mirrorGrid(tempArr);
 
     //test oldTypesArrayStr for new data, else don't send
     if (oldTypesArrayStr !== typesArray.toString()) {
@@ -44,6 +59,7 @@ function cityIOpost() {
     let cityIOpacket = JSON.parse(JSON.stringify(Storage.cityIOdataStruct));
     //get the grid property from the scanner
     cityIOpacket.grid = typesArray;
+
     //remove brick codes from sent packet
     delete cityIOpacket.objects.codes;
 
