@@ -4,20 +4,24 @@
 
 ![](docs/csjs.jpg)
 
-CityScopeJS is a scanning component for MIT CityScope - a rapid prototyping urban modeling and simulation platform. CityScopeJS is built with deployment, stability and ease of use in mind. CityScopeJS runs entirely in your browser, including CV, projection and spatial analysis [explored in other repos].
+CityScopeJS is a scanning component for MIT CityScope - a rapid prototyping urban modeling and simulation platform. It is made to scan a uniquely-tagged, large and continuous array of LEGO bricks with black and white tags. CityScopeJS is built with deployment, stability and ease of use in mind. CityScopeJS runs entirely in your browser, including CV, projection and spatial analysis [explored in other repos].
 
-### features
+## Features
 
 - web-based, HTML5 + JS without dependencies
 - ~65k potential unique permutations ['brick types'] using only black and white optically tagged objects
 - Dead easy setup and running in <1 min
 - 100x100 4x4 LEGO grid scanning & sending to cityIO @40fps and 20x20 @20fps from Pixel 2xl Android phone
 
-##### the real important features
+### the real important features
 
 - Vaporware graphics
 - Turing Complete
 - Turing Prize Winner
+
+## Contributions
+
+Are more than welcome. Clone is not necessary for common usage or simple debugging but please do clone and run locally before adding `issues` or `pull requests`
 
 ---
 
@@ -34,47 +38,58 @@ watch this intro video [also, 80's music] to get to know how CityScopeJS is maki
 [Click here to run CityScopeJS](https://cityscope.media.mit.edu/CS_cityscopeJS/)
 
 - CityScopeJS should run on any modern browser with HTML5 support. Tested on Raspberry pi 2, Android and IPhone though IE7 on Windows XP might not work.
-- Clone is not necessary for common usage but please do clone and run locally before adding `issues`.
 
 ### Setup
 
-At first run [new computer or after `cache` removal, follow these instructions:
+At first run [new computer or after `cache` or history removal in your browser, follow these instructions:
 
 - Generic table and LEGO bricks settings are under `data` folder in a `json` format.
-- Load `json` file using the UI file browser. File should follow settings described here:
+- Load `json` file using the UI file browser. JSON file should follow cityIO API V2 settings described here:
   https://github.com/CityScope/CS_CityIO_Backend/wiki
 
-- upon successful loading of settings file the mouse will turn to cross
+- upon successful loading of settings file your mouse will turn to point locator
 - locate the mouse on the 4 corners of the table's scanned section
 - select the top left, top right, bottom left and bottom right corners of the image (in that order)
-- when done, a magenta grid will appear, corresponding to your 4 clicks
-- for fine grain correction of the grid press `1` to `4` and use the arrow keys to move the selected point
-- increase or decrease the amount of pixels each shifted in each keystroke using `-/_` and `=/+` keys
-- if an acrylic grid is part of your setup [not recommended], use `[` and `]` to add/remove gap between bricks -- note: this feature might yield unwanted results. Remove the plastic grid and let Legos be a family again for better results.
+- when done, a grid will appear, corresponding to your 4 clicks
+- for fine grain correction of the grid press the keyboard `1` to `4` keys and use the arrow keys [up, down, left, right] to move the selected point
+- increase or decrease the amount of pixels shifted in each keystroke using `-/_` and `=/+` keys
 - check https://cityio.media.mit.edu/api or under `cityIO` UI folder to see the results
 
-### Advanced Usage
+At this point, if all went well you should be able to turn the webcam and the feedback box off [using the dropdown UI], and see something like this:
+
+![](docs/scan.png)
+
+## Advanced Usage
 
 ##### Editing `_YourSettings_.JSON`
 
-- For advanced creation of binary [0,1 x 16] permutations, us python script in: `/Py_BinaryPermutations/py_bin.py`
 - open your JSON [name it at will] file for editing
-- change the `gridSize` to the size you need in `ncol` property
-- If necessary, change the recognized patterns. To do this you need to edit the `codes` array in the `JSON` file.
+- change the `gridSize` to the size you need in `ncol`, `nrows` property
+- If necessary, change the recognized patterns. To do so you'd need to edit the `codes` array in the `JSON` file.
 - The codes represent white by 1 and black by 0.
-- If you only have lego pieces that are 2x2, then you will need to use codes that are in blocks of 4. eg. a pattern with 4 white dots in the top-left corner and the rest black would be `[1,1,0,0,1,1,0,0,0,0,0,0,0,0,0,0]`.
-- When you get the 1x1 lego pieces, you can use more complicated patterns.
+- For advanced creation of binary [0,1 x 16] permutations, look into the added JSON examples
+- A pattern with 4 white dots in the top-left corner and black in the rest would be `[1,1,0,0,1,1,0,0,0,0,0,0,0,0,0,0]`.
 
-##### Clone and Run using GH desktop
+#### Clone and Run using GH desktop
 
 - Open Github Desktop
 - Click the ‘+’ icon for adding a new repository
 - Under ‘Clone’, search for `cityscopeJS` and select it
-- Run a local server:
-- navigate to the `cityscopeJS` folder on your local and run a local server
-- open your web browser and go to http://localhost:8000/index.html
-- you should see the web tool in your browser
-- Experiment with scanning using webcam
+
+#### How to test locally
+
+- make sure `node`, `npm` and `parcel` are all installed
+- navigate to the `cityscopeJS` folder on your local machine
+- run using `$ parcel index.html` or `npm test` [`sudo` might be needed for permissions]
+- parcel should build a test build on port `1234` or other
+
+#### how to build CityScopeJS with `parcel`and deploy into GitHub pages
+
+- navigate to the `cityscopeJS` folder on your local machine
+- make an empty `gh-pages` branch and push it to GH
+- Build production into `dist` folder:
+- open terminal and use `GH.sh` to build the a local `dist` folder
+- make changes to `.sh` to fit your static `https` and GitHub pages location
 
 ---
 
