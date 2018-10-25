@@ -25,7 +25,7 @@ CityScopeJS -- decoding 2d array of black and white LEGO bricks, parsing and sen
 "Cambridge", "addressRegion": "MA",}, 
 "jobTitle": "Research Scientist", "name": "Ariel Noyman",
 "alumniOf": "MIT", "url": "http://arielnoyman.com", 
-"https://www.linkedin.com/", "http://twitter.com/relno",
+"http://twitter.com/relno",
 https://github.com/RELNO]
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -68,6 +68,7 @@ async function init() {
   stats();
   //UI menu
   datGUI();
+  //load CS logo
   loadImg(logo.default, 60, 60, "logo");
   //setup and start webcam
   setupWebcam();
