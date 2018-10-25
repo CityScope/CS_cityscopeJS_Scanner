@@ -13,7 +13,7 @@ export function datGUI() {
   // dat.GUI
   var gui = new dat.GUI({ width: 300 });
   let parm = {
-    vis: false,
+    global_boolean: true,
     getJson: function() {
       let fileClick = document.getElementById("my_file");
       fileClick.click();
@@ -50,17 +50,17 @@ export function datGUI() {
   //or reset and restart
   gui.add(parm, "reset").name("Reset and clear Keystone");
 
-  //toggle vis on camera
+  //toggle global_boolean on camera
   gui
-    .add(parm, "vis")
+    .add(parm, "global_boolean")
     .name("Toggle Grid Render")
     .onChange(function(state) {
       renderGrid(state);
     });
 
-  //toggle vis on camera
+  //toggle global_boolean on camera
   gui
-    .add(parm, "vis")
+    .add(parm, "global_boolean")
     .name("Toggle Webcam Video")
     .onChange(function(state) {
       if (!state) {
