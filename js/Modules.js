@@ -219,7 +219,7 @@ export function setupWebcam() {
 
   //get main canvas context for scanning
   var vidCanvas2dContext = camCanvas.getContext("2d");
-  // updateInfoDIV( ("starting video"))
+
   //Video loop setup call video mesh creator
   var width = 0;
   var height = 0;

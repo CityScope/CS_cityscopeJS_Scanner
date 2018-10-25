@@ -58,6 +58,18 @@ export function datGUI() {
       renderGrid(state);
     });
 
+  //toggle vis on camera
+  gui
+    .add(parm, "vis")
+    .name("Toggle Webcam Video")
+    .onChange(function(state) {
+      if (!state) {
+        Storage.camCanvas.style.display = "none";
+      } else {
+        Storage.camCanvas.style.display = "block";
+      }
+    });
+
   //add folder
   var cityioFolder = gui.addFolder("cityIO");
 
