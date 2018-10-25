@@ -8,3 +8,5 @@ bin/
 .DS_Store
 dist/
 node_modules/
+dist
+dist/
