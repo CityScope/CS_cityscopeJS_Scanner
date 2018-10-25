@@ -39,6 +39,14 @@ class Storage {
     this._pixelColArr = value;
   }
 
+  //old pixel Color array for comparison
+  get old_pixel_Col_Array() {
+    return this._old_pixel_Col_Array;
+  }
+  set old_pixel_Col_Array(value) {
+    this._old_pixel_Col_Array = value;
+  }
+
   //cityIO data Struct
   get cityIOdataStruct() {
     return this._cityIOdataStruct;

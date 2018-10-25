@@ -87,6 +87,8 @@ async function init() {
     // start app sequence
     initSequence();
   }
+
+  Storage.old_pixel_Col_Array = [];
 }
 
 //start app after HTML load

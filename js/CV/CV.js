@@ -112,7 +112,7 @@ export function CV(scannedPixels) {
   }
   //save to storage for render method
   Storage.pixelColArr = pixelColorArray;
-  typesLookup(pixelColorArray);
+  typesLookup();
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -123,100 +123,35 @@ export function CV(scannedPixels) {
 // by matching the 16[4x4] pixels to known types
 // by running through the 1D list of colors
 
-function typesLookup(pixelColorArray) {
-  // Storage.cityIOdataStruct.header.spatial.ncols;
+function typesLookup() {
+  //check for new color pixels array every frame.
+  //if exist, look for new types and produce typesArray[]
+  if (
+    JSON.stringify(Storage.old_pixel_Col_Array) !==
+    JSON.stringify(Storage.pixelColArr)
+  ) {
+    Storage.old_pixel_Col_Array = Storage.pixelColArr;
+    //get pixels colors array from storage
+    let pixelColorArray = Storage.old_pixel_Col_Array;
 
-  let typesArray = [];
-  for (let i = 0; i < pixelColorArray.length; i = i + 16) {
-    let thisBrick = [];
-    for (let j = 0; j < 16; j++) {
-      thisBrick.push(pixelColorArray[i + j]);
+    let typesArray = [];
+    for (let i = 0; i < pixelColorArray.length; i = i + 16) {
+      let thisBrick = [];
+      for (let j = 0; j < 16; j++) {
+        thisBrick.push(pixelColorArray[i + j]);
+      }
+      //remove new lines and commas to get a clear list
+      thisBrick = thisBrick.join("");
+
+      //look for this bricks pattern in 'Codes' prop
+      let indexCode = Storage.cityIOdataStruct.objects.codes.indexOf(thisBrick);
+      typesArray.push(indexCode);
     }
-    //remove new lines and commas to get a clear list
-    thisBrick = thisBrick.join("");
+    //save types array to global storage
+    Storage.typesArray = typesArray;
 
-    //look for this bricks pattern in 'Codes' prop
-    let indexCode = Storage.cityIOdataStruct.objects.codes.indexOf(thisBrick);
-
-    /*
-    // WIP -- ROTATION
-    //check if this type is not known
-    //and not because it has '2' color
-    if (indexCode === -1 && !thisBrick.includes("2")) {
-      indexCode = checkRotatedBrick(thisBrick, cityIOdataStruct.objects.codes);
-    }
-    */
-
-    typesArray.push(indexCode);
-  }
-  Storage.typesArray = typesArray;
-  // console.log(typesArray[0]);
-}
-
-/////////////////////////////////////////////////////////////////
-export function checkRotatedBrick(thisBrick, codes) {
-  //convert this brick  string to array
-  thisBrick = Array.from(thisBrick);
-
-  // console.log("-----------NEW BRICK-----------");
-
-  //convert the array to 2 matrix of 4 arrays
-  let arrBrick = [
-    thisBrick.slice(0, 4),
-    thisBrick.slice(4, 8),
-    thisBrick.slice(8, 12),
-    thisBrick.slice(12, 16)
-  ];
-  //rotate this matrix 90 deg CCW [left]
-  // and convert back to string
-  let brickCCW270 = rotMtrxCCW(arrBrick)
-    .toString()
-    .replace(/,/g, "");
-  // console.log("270 ", brickCCW270);
-  //check the brick aginst the codes array
-  let indexCode = codes.indexOf(brickCCW270);
-  //if brick is a type in codes
-  if (indexCode !== -1) {
-    //return it
-    // console.log(indexCode);
-
-    return indexCode;
-    //if brick is not a type in codes
+    //if no new colors array exist, skip this method
   } else {
-    //rotate it again
-    let brickCCW180 = rotMtrxCCW(rotMtrxCCW(arrBrick))
-      .toString()
-      .replace(/,/g, "");
-    // console.log("180", brickCCW180);
-    //check the brick aginst the codes array
-    let indexCode = codes.indexOf(brickCCW180);
-    if (indexCode !== -1) {
-      //return it
-      // console.log(indexCode);
-
-      return indexCode;
-      //if brick is not a type in codes
-    } else {
-      //rotate it again
-      let brickCCW90 = rotMtrxCCW(rotMtrxCCW(rotMtrxCCW(arrBrick)))
-        .toString()
-        .replace(/,/g, "");
-      // console.log("90", brickCCW90);
-      //check the brick aginst the codes array
-      let indexCode = codes.indexOf(brickCCW90);
-      //
-      if (indexCode !== -1) {
-        //return it
-        // console.log(indexCode);
-
-        return indexCode;
-        //conclude that this is not a type
-      } else return -1;
-    }
+    return;
   }
 }
-
-// flip function
-const flipMatrix = matrix =>
-  matrix[0].map((column, index) => matrix.map(row => row[index]));
-const rotMtrxCCW = matrix => flipMatrix(matrix).reverse();
