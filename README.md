@@ -41,12 +41,11 @@ watch this intro video [also, 80's music] to get to know how CityScopeJS is maki
 
 ### Setup
 
-At first run [new computer or after `cache` or history removal in your browser, follow these instructions:
+At first run [on new computer or after `cache` or history removal in your browser] follow these instructions:
 
-- Generic table and LEGO bricks settings are under `data` folder in a `json` format.
 - Load `json` file using the UI file browser. JSON file should follow cityIO API V2 settings described here:
   https://github.com/CityScope/CS_CityIO_Backend/wiki
-
+- Example for table settings are under `data` folder in a `json` format.
 - upon successful loading of settings file your mouse will turn to point locator
 - locate the mouse on the 4 corners of the table's scanned section
 - select the top left, top right, bottom left and bottom right corners of the image (in that order)
@@ -109,4 +108,5 @@ The system has since won the Oscars, Turing Prize, 47 pending patents, a book an
 
 using @jlouthan matrix transformations.
 Maintained by [Ariel Noyman](http://arielnoyman.com)
+
 [Repo contributors](https://github.com/CityScope/CS_cityscopeJS/graphs/contributors)
