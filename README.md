@@ -28,7 +28,6 @@ Are more than welcome. Clone is not necessary for common usage or simple debuggi
 ## Using CityScopeJS
 
 ### Before starting
-
 watch this intro video [also, 80's music] to get to know how CityScopeJS is making the world a better place:
 
 [![](http://img.youtube.com/vi/Z7v2clIaTKY/0.jpg)](http://www.youtube.com/watch?v=Z7v2clIaTKY "CityScopeJS | Intro & Setup")
@@ -89,6 +88,13 @@ At this point, if all went well you should be able to turn the webcam and the fe
 - Build production into `dist` folder:
 - open terminal and use `GH.sh` to build the a local `dist` folder
 - make changes to `.sh` to fit your static `https` and GitHub pages location
+
+
+## Troubleshooting 
+
+Note: CityScopeJS relies on a server system to send/recieve the scanned grid. This system is called cityIO. Before running CityScopeJS, make sure cityIO server is on. You can do so by visiting https://cityio.media.mit.edu. If the server is offline, leave us an issue here: https://github.com/CityScope/CS_CityIO_Backend/issues/46.
+
+For all other issues, please follow steps above and leave an issue in this repo. 
 
 ---
 
