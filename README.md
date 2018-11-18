@@ -32,6 +32,8 @@ watch this intro video [also, 80's music] to get to know how CityScopeJS is maki
 
 [![](http://img.youtube.com/vi/Z7v2clIaTKY/0.jpg)](http://www.youtube.com/watch?v=Z7v2clIaTKY "CityScopeJS | Intro & Setup")
 
+
+
 ### Running
 
 [Click here to run CityScopeJS](https://cityscope.media.mit.edu/CS_cityscopeJS/)
@@ -74,7 +76,12 @@ At this point, if all went well you should be able to turn the webcam and the fe
 - Click the ‘+’ icon for adding a new repository
 - Under ‘Clone’, search for `cityscopeJS` and select it
 
-#### How to test locally
+#### Installation/How to test locally
+Important:
+With default setting this application use the MIT public server backend, which list all basename.
+If you intend to use this server:
+- be sure to have an unique tablename before upload something, or you will overwrite someone else work!
+- dont upload unique and precious json there, cause everyone can update it without your consentment. (When it happens, this should change your lego table visualisation even when you dont move lego on it). Deploy locally (and privately) the backend if you need a secure "archiving" of precious datas.
 
 - make sure `node`, `npm` and `parcel` are all installed
 - navigate to the `cityscopeJS` folder on your local machine
