@@ -47,6 +47,11 @@ At first run [on new computer or after `cache` or history removal in your browse
 - Load `json` file using the UI file browser. JSON file should follow cityIO API V2 settings described here:
   https://github.com/CityScope/CS_CityIO_Backend/wiki
 - Example for table settings are under `data` folder in a `json` format.
+
+- NOTE: When using the above default settings, this application uses `cityIO` server backend, which lists all tables basenames. If you intend to use CityScopeJS with cityIO public server:
+  - be sure to have an unique tablename, or you might overwrite someone else's table!
+  - keep in mind that your local `JSON` settings file is open for all to see, so do not include sensative data beyond simple table settings. 
+
 - upon successful loading of settings file your mouse will turn to point locator
 - locate the mouse on the 4 corners of the table's scanned section
 - select the top left, top right, bottom left and bottom right corners of the image (in that order)
@@ -77,11 +82,6 @@ At this point, if all went well you should be able to turn the webcam and the fe
 - Under ‘Clone’, search for `cityscopeJS` and select it
 
 #### Installation/How to test locally
-Important:
-With default setting this application use the MIT public server backend, which list all basename.
-If you intend to use this server:
-- be sure to have an unique tablename before upload something, or you will overwrite someone else work!
-- dont upload unique and precious json there, cause everyone can update it without your consentment. (When it happens, this should change your lego table visualisation even when you dont move lego on it). Deploy locally (and privately) the backend if you need a secure "archiving" of precious datas.
 
 - make sure `node`, `npm` and `parcel` are all installed
 - navigate to the `cityscopeJS` folder on your local machine
