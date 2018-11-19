@@ -164,20 +164,6 @@ export function makeInfoDiv() {
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//make info div [on screen console] or add text to it
-export function UpdateinfoDiv(text) {
-  var infoDiv = Storage.infoDiv;
-  // clear div if too much text
-  if (infoDiv.scrollHeight > 2000) {
-    infoDiv.innerHTML = null;
-  } else {
-    infoDiv.innerHTML += text.toString() + "<p></p>";
-    infoDiv.scrollTop = infoDiv.scrollHeight;
-  }
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
 export function loadImg(src, width, height, classname) {
   var img = document.createElement("img");
   img.src = src;
