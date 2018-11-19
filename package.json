@@ -7,9 +7,7 @@
     "doc": "docs",
     "lib": "lib"
   },
-  "scripts": {
-    "test": "sudo parcel index.html"
-  },
+  "scripts": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/CityScope/cityscopeJS.git"
@@ -23,6 +21,7 @@
   "homepage": "https://github.com/CityScope/cityscopeJS#readme",
   "dependencies": {
     "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-polyfill": "^6.26.0",
     "core-js": "^2.5.7",
     "dat.gui": "^0.7.2",
     "perspective-transform": "^1.1.3"

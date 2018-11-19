@@ -85,7 +85,7 @@ At this point, if all went well you should be able to turn the webcam and the fe
 
 - make sure `node`, `npm` and `parcel` are all installed
 - navigate to the `cityscopeJS` folder on your local machine
-- run using `$ parcel index.html` or `npm test` [`sudo` might be needed for permissions]
+- run using `$ parcel index.html` [`sudo` might be needed for permissions]
 - parcel should build a test build on port `1234` or other
 
 #### how to build CityScopeJS with `parcel`and deploy into GitHub pages
