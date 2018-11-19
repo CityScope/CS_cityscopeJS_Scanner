@@ -3,14 +3,11 @@ bin/
 .vscode/
 .VSCODE/
 .DS_Store
-.cache/
 .ds_store
-.DS_Store
+.cache/
 dist/
 node_modules/
 dist
 dist/
-.DS_Store
-.DS_Store?
 ._*
 dist/._*
