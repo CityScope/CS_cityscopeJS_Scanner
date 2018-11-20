@@ -10,15 +10,15 @@
     ]
   },
   "header": {
-    "name": "TEST",
-    "longName": "TEST",
+    "name": "github_user",
+    "longName": "github_user",
     "block": ["type"],
     "mapping": {
       "type": {
         "0": "White",
-        "1": "type_1",
-        "2": "type_2",
-        "3": "Black"
+        "1": "black",
+        "2": "third",
+        "3": "forth"
       }
     },
     "spatial": {

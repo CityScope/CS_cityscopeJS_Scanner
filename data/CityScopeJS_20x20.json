@@ -3,8 +3,6 @@
   "id": "",
   "objects": {
     "codes": [
-      "1111111111111111",
-      "0000000000000000",
       "1000000000000000",
       "0100000000000000",
       "0010000000000000",
@@ -24,13 +22,15 @@
       "1100110000000000",
       "1111111100000000",
       "1100110000110011",
-      "1111111111001100"
+      "1111111111001100",
+      "1111111111111111",
+      "0000000000000000"
     ],
     "sliders": [10]
   },
   "header": {
-    "name": "CityScopeJS",
-    "longName": "CityScopeJS",
+    "name": "github_user",
+    "longName": "github_user",
     "block": ["type"],
     "mapping": {
       "type": {
@@ -59,8 +59,8 @@
       }
     },
     "spatial": {
-      "ncols": 16,
-      "nrows": 16,
+      "ncols": 15,
+      "nrows": 15,
       "physical_longitude": 0,
       "physical_latitude": 0,
       "latitude": 50,

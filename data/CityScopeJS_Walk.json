@@ -11,8 +11,8 @@
     ]
   },
   "header": {
-    "name": "cityscopeJSwalk",
-    "longName": "cityscopeJS",
+    "name": "github_user",
+    "longName": "github_user",
     "block": ["type"],
     "mapping": { "type": { "0": "P", "1": "W", "2": "L", "3": "G", "4": "Z" } },
     "spatial": {
