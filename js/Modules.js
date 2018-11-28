@@ -258,17 +258,19 @@ export function makeInfoDIV() {
   infoDIV.className = "infoDIV";
   infoDIV.id = "infoDIV";
   document.body.appendChild(infoDIV);
+  infoDIV.style.maxHeight = "20vw";
+  infoDIV.style.width = "20vw";
   let bool = false;
   //listen to clicks
   infoDIV.addEventListener("click", function() {
     if (bool) {
-      infoDIV.style.height = "8vw";
-      infoDIV.style.width = "80vw";
-      infoDIV.innerHTML = "";
+      infoDIV.style.height = "20vw";
+      infoDIV.style.width = "20vw";
+      // infoDIV.innerHTML = "";
     } else {
-      infoDIV.style.height = "2vw";
+      infoDIV.style.height = "20vw";
       infoDIV.style.width = "2vw";
-      infoDIV.innerHTML = "";
+      // infoDIV.innerHTML = "";
     }
     bool = !bool;
   });
@@ -283,9 +285,9 @@ export function makeInfoDIV() {
 export function updateInfoDIV(value) {
   let infoDIV = document.querySelector("#infoDIV");
   if (infoDIV) {
-    infoDIV.innerHTML += value;
     infoDIV.scrollTop = infoDIV.scrollHeight;
-    if (infoDIV.childNodes[0].length > 1000) infoDIV.innerHTML = "";
+    infoDIV.innerHTML += "<br />" + value + "<br />";
+    if (infoDIV.childNodes[0].length > 3000) infoDIV.innerHTML = "";
   }
 }
 
@@ -294,7 +296,7 @@ export function updateInfoDIV(value) {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 var cityIOtimer;
-///cmpare this to new cityIO string to avoid useless POST
+///compare this to new cityIO string to avoid useless POST
 var oldTypesArrayStr;
 
 export function cityIOinit(sendRate) {
@@ -304,7 +306,7 @@ export function cityIOinit(sendRate) {
 //stop cityio
 export function cityIOstop() {
   clearInterval(cityIOtimer);
-  updateInfoDIV("Stopped cityIO POST");
+  // updateInfoDIV("Stopped cityIO POST");
 }
 
 //calc this current time
@@ -340,7 +342,7 @@ function cityIOpost() {
     if (oldTypesArrayStr !== typesArray.toString()) {
       oldTypesArrayStr = typesArray.toString();
     } else {
-      updateInfoDIV("PAUSING CityIO POST");
+      // updateInfoDIV("PAUSING CityIO POST");
       return;
     }
 
@@ -364,10 +366,10 @@ function cityIOpost() {
       body: JSON.stringify(cityIOpacket)
     })
       .then(
-        response => handleErrors(response),
-        updateInfoDIV(
-          "cityIO table '" + cityIOtableName + "' uploaded at " + timeNow()
-        )
+        response => handleErrors(response)
+        // updateInfoDIV(
+        //   "cityIO table '" + cityIOtableName + "' uploaded at " + timeNow()
+        // )
       )
       .catch(error => updateInfoDIV(error));
 

@@ -63,18 +63,19 @@ a {
 
 .infoDIV {
   position: relative;
-  top: 85%;
-  left: 10%;
-  height: 8vw;
-  width: 80vw;
+  top: 10%;
+  left: 1%;
+  /* height: 8vw;
+  width: 80vw; */
   z-index: 1000 !important;
-  overflow-y: hidden;
+  overflow-y: scroll;
   overflow-x: hidden;
+  scroll-behavior: auto;
   text-align: left !important;
   color: white;
   background-color: rgba(0, 0, 0, 0.2);
   font-family: "Courier New", Courier, monospace;
-  font-size: 12px;
+  font-size: 10px;
 }
 
 .infoDIV:hover {
