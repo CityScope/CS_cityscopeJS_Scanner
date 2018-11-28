@@ -40,9 +40,10 @@ import {
   initSequence,
   setupWebcam,
   updateInfoDIV,
-  makeInfoDIV
+  makeInfoDIV,
+  cityIOinit,
+  cityIOstop
 } from "./Modules";
-import { cityIOinit, cityIOstop } from "./CITYIO/cityio";
 import { datGUI } from "./UI/DATGUI";
 import * as logo from "../media/logo.png";
 

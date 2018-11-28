@@ -1,6 +1,5 @@
 import * as dat from "dat.gui";
-import { cityIOinit, cityIOstop } from "../CITYIO/cityio";
-import { onFileLoad, updateInfoDIV } from "../Modules";
+import { onFileLoad, updateInfoDIV, cityIOinit, cityIOstop } from "../Modules";
 import { renderGrid } from "./RenderGrid";
 import "../Storage";
 
