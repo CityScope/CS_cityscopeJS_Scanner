@@ -75,6 +75,7 @@ async function init() {
   setupWebcam();
   //make the UI
   setupSVG();
+
   // [WIP] POST to cityIO rate in MS
   var sendRate = 1000;
   //make sure to clear CityIO sending before
@@ -82,6 +83,7 @@ async function init() {
   updateInfoDIV("starting cityIO");
   //start sending to cityIO
   cityIOinit(sendRate);
+
   //after that, check if cityIOdataStruct is already loaded before
   //so we can skip the JSON file selection UI
   if (loadSettings("CityScopeJS_cityIOdataStruct")) {

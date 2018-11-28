@@ -328,7 +328,6 @@ function mirrorGrid(typesArray) {
   return mirroredArray;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
 // method to get the scanned data, look for matching brick 'types'
 // and send the results back to cityIO server for other apps to use
 
