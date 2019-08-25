@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style type="text/css">
+      .dg {
+        text-align: left;
+      }
+      .dg .property-name {
+        font: 10px Lucida Grande, sans-serif;
+        line-height: 27px;
+      }
+      .dg.main .close-button {
+        font: 10px Lucida Grande, sans-serif;
+        line-height: 27px;
+      }
+      .cell-top {
+        vertical-align: top;
+      }
+
+      .hidden {
+        visibility: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <p class="err" id="errorMessage"></p>
+    <div id="container">
+      <table>
+        <tr>
+          <td></td>
+          <td>
+            <div>
+              <span>Current Filter: </span
+              ><span id="filterName">Pass Through</span>
+            </div>
+          </td>
+          <td>
+            <div>Select Filter:</div>
+          </td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td class="cell-top">
+            <canvas id="canvasOutput" width="640" height="480"></canvas>
+          </td>
+          <td class="cell-top">
+            <div id="guiContainer"></div>
+          </td>
+          <td></td>
+        </tr>
+      </table>
+
+      <div class="hidden">
+        <video id="videoInput">
+          Your browser does not support the video tag.
+        </video>
+      </div>
+    </div>
+    <!-- <script src="https://webrtc.github.io/adapter/adapter-5.0.4.js" type="text/javascript"></script> -->
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/stats.js/r16/Stats.min.js"
+      type="text/javascript"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.6.4/dat.gui.min.js"
+      type="text/javascript"
+    ></script>
+    <script src="utils.js" type="text/javascript"></script>
+    <script src="index.js" type="text/javascript"></script>
+  </body>
+</html>
