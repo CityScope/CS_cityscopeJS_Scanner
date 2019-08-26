@@ -2,6 +2,25 @@ html {
   height: 100%;
 }
 
+.dg {
+  text-align: left;
+}
+.dg .property-name {
+  font: 10px Lucida Grande, sans-serif;
+  line-height: 27px;
+}
+.dg.main .close-button {
+  font: 10px Lucida Grande, sans-serif;
+  line-height: 27px;
+}
+.cell-top {
+  vertical-align: top;
+}
+
+.hidden {
+  visibility: hidden;
+}
+
 /* hides native file loader for better UI */
 #my_file {
   display: none;

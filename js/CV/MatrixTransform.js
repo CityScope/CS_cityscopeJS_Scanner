@@ -130,21 +130,4 @@ export function drawPnt(dstPt, color, text) {
     svgCircle(dstPt, color, 1.5, 0.5, "#000000", 0.3)
   );
   return thisPnt;
-
-  /*  
-  // show text for each grid pnt
-  svgKeystone.appendChild(svgText(dstPt, j, 8));
-  //Save for basline grid draw
-  let counter = 0;
-  let counter_inner = 0;
-  // draw points if needed
-  let t = svgText([rows, cols], counter, 5);
-  let c = svgCircle([rows, cols], "green", 10, 1, "green", 10);
-  let c2 = svgCircle([rows + i, cols + j], "green", 10, 1, "green", 2);
-  let t2 = svgText([rows + i, cols + j], counter_inner, 2);
-  svgKeystone.appendChild(c2, t2);
-  //
-  counter_inner++;
-  counter++;
-  */
 }

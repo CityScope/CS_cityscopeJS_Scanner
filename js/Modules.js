@@ -83,13 +83,13 @@ export function setupSVG() {
   var svgDiv = document.createElement("div");
   document.body.appendChild(svgDiv);
   svgDiv.id = "svgDiv";
-  svgDiv.width = camCanvas.width;
-  svgDiv.height = camCanvas.height;
+  svgDiv.width = "500px";
+  svgDiv.height = "500px";
   svgDiv.className = "svgDiv";
   var svgKeystone = document.createElementNS(svgCDN, "svg");
   svgKeystone.id = "svgKeystone";
-  svgKeystone.setAttributeNS(null, "width", camCanvas.width);
-  svgKeystone.setAttributeNS(null, "height", camCanvas.height);
+  svgKeystone.setAttributeNS(null, "width", "500px");
+  svgKeystone.setAttributeNS(null, "height", "500px");
   svgDiv.appendChild(svgKeystone);
 
   return svgKeystone;
@@ -200,51 +200,6 @@ export function setupWebCamCanvas() {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 // WEBCAM & MEDIA SETUP
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//setup the camera device
-export function setupWebcam() {
-  var camCanvas = setupWebCamCanvas();
-  //store webcam canvas into class
-  Storage.camCanvas = camCanvas;
-
-  //get main canvas context for scanning
-  var vidCanvas2dContext = camCanvas.getContext("2d");
-
-  //Video loop setup call video mesh creator
-  var width = 0;
-  var height = 0;
-  var video = document.createElement("video");
-  //set auto play for video
-  video.setAttribute("autoplay", true);
-  video.addEventListener("loadedmetadata", function() {
-    width = camCanvas.width;
-    height = camCanvas.height;
-    //call the video to canvas loop
-    loop();
-  });
-  //get user webcam
-  navigator.mediaDevices
-    .getUserMedia({ audio: false, video: true })
-    .then(function(stream) {
-      if ("srcObject" in video) {
-        video.srcObject = stream;
-      } else {
-        video.src = window.URL.createObjectURL(stream);
-      }
-      video.onloadedmetadata = video.play();
-    })
-    .catch(function(err) {
-      updateInfoDIV(err.name + ": " + err.message);
-    });
-
-  //loop
-  function loop() {
-    vidCanvas2dContext.drawImage(video, 0, 0, width, height);
-
-    //loop the video to canvas method
-    requestAnimationFrame(loop);
-  }
-}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
