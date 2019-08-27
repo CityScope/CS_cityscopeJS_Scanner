@@ -62,8 +62,8 @@ export default class Utils {
     //
     this.startCamera = function(resolution, callback, videoId) {
       const constraints = {
-        qvga: { width: { exact: 240 }, height: { exact: 320 } },
-        vga: { width: { exact: 640 }, height: { exact: 480 } }
+        qvga: { width: { exact: 600 }, height: { exact: 600 } },
+        vga: { width: { exact: 600 }, height: { exact: 600 } }
       };
       let video = document.getElementById(videoId);
       if (!video) {
@@ -73,8 +73,6 @@ export default class Utils {
       if (!videoConstraint) {
         videoConstraint = true;
       }
-
-      videoConstraint = true;
 
       navigator.mediaDevices
         .getUserMedia({ video: videoConstraint, audio: false })
