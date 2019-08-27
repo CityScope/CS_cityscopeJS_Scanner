@@ -1,5 +1,5 @@
-import { keystoneMouse, keystoneKeys } from "./UI/KeyStoneUI";
-import { MatrixTransform, scanArrayMaker } from "./CV/MatrixTransform";
+import { keystoneMouse, keystoneKeys } from "./KeyStoneUI";
+import { MatrixTransform, scanArrayMaker } from "./MatrixTransform";
 import "./Storage";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
