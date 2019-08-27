@@ -1,17 +1,32 @@
+<!DOCTYPE html>
 <html>
   <head>
     <link rel="stylesheet" href="./styles.css" />
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
-    />
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=UA-117113078-1"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "UA-117113078-1");
+    </script>
   </head>
-
   <body>
     <!-- hidden input for json file -->
+    <canvas id="canvasOutput" class="canvasOutput"></canvas>
+    <video id="videoInput" class="hidden">
+      Your browser does not support the video tag.
+    </video>
+
     <input type="file" id="my_file" />
-    <!-- start app -->
-    <script src="./js/index.js"></script>
+    <p class="err" id="errorMessage"></p>
+    <div id="guiContainer"></div>
+
+    <script src="opencv/index.js" type="text/javascript"></script>
   </body>
 </html>

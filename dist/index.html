@@ -1,22 +1,7 @@
+<!DOCTYPE html>
 <html>
   <head>
     <link rel="stylesheet" href="/styles.8986bff4.css">
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-    <script type="application/ld+json">{
-  "@context": "https://github.com/CityScope/",
-  "@type": "Person",
-  "address": {
-    "@type": "75 Amherst St, Cambridge, MA 02139",
-    "addressLocality": " Cambridge",
-    "addressRegion": "MA"
-  },
-  "jobTitle": "Research Scientist",
-  "name": "Ariel Noyman",
-  "alumniOf": "MIT",
-  "url": "http://arielnoyman.com"
-}</script>
-
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async="" src="https://www.googletagmanager.com/gtag/js?id=UA-117113078-1"></script>
     <script>window.dataLayer = window.dataLayer || [];
@@ -28,11 +13,17 @@ function gtag() {
 gtag("js", new Date());
 gtag("config", "UA-117113078-1");</script>
   <script src="/styles.8986bff4.js"></script></head>
-
   <body>
     <!-- hidden input for json file -->
+    <canvas id="canvasOutput" class="canvasOutput"></canvas>
+    <video id="videoInput" class="hidden">
+      Your browser does not support the video tag.
+    </video>
+
     <input type="file" id="my_file">
-    <!-- start app -->
-    <script src="/js.00a46daa.js"></script>
+    <p class="err" id="errorMessage"></p>
+    <div id="guiContainer"></div>
+
+    <script src="/opencv.3cfc3bf0.js" type="text/javascript"></script>
   </body>
 </html>
