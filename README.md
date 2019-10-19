@@ -1,8 +1,12 @@
 # CityScopeJS
 
-##### also favorably known as ©® TactileScopeMatrixCityLEGOtizer ©®
-
 ![](docs/csjs.jpg)
+
+---
+
+### _Note_: As of Oct '19, CityScope scanning should be performed using https://github.com/CityScope/CS_CityScoPy. While `CityScopeJS_Scanner` might still work, it is not supporting CityScope 2.0 - cityIO Modular architecture and cannot fully instantiate a new CityScope table. Nevertheless, `CityScopeJS_Scanner` can be used to update grid data for already instantiated CityScope tables.
+
+---
 
 CityScopeJS is a scanning component for MIT CityScope - a rapid prototyping urban modeling and simulation platform. It is made to scan a uniquely-tagged, large and continuous array of LEGO bricks with black and white tags. CityScopeJS is built with deployment, stability and ease of use in mind. CityScopeJS runs entirely in your browser, including CV, projection and spatial analysis [explored in other repos].
 
@@ -13,7 +17,7 @@ CityScopeJS is a scanning component for MIT CityScope - a rapid prototyping urba
 - Dead easy setup and running in <1 min
 - 100x100 4x4 LEGO grid scanning & sending to cityIO @40fps and 20x20 @20fps from Pixel 2xl Android phone
 
-### the real important features
+## the real important features
 
 - Vaporware graphics
 - Turing Complete
@@ -28,15 +32,12 @@ Are more than welcome. Clone is not necessary for common usage or simple debuggi
 ## Using CityScopeJS
 
 ### Before starting
+
 watch this intro video [also, 80's music] to get to know how CityScopeJS is making the world a better place:
 
 [![](http://img.youtube.com/vi/Z7v2clIaTKY/0.jpg)](http://www.youtube.com/watch?v=Z7v2clIaTKY "CityScopeJS | Intro & Setup")
 
-
-
 ### Running
-
-[Click here to run CityScopeJS](https://cityscope.media.mit.edu/CS_cityscopeJS/)
 
 - CityScopeJS should run on any modern browser with HTML5 support. Tested on Raspberry pi 2, Android and IPhone though IE7 on Windows XP might not work.
 
@@ -49,8 +50,9 @@ At first run [on new computer or after `cache` or history removal in your browse
 - Example for table settings are under `data` folder in a `json` format.
 
 - NOTE: When using the above default settings, this application uses `cityIO` server backend, which lists all tables basenames. If you intend to use CityScopeJS with cityIO public server:
+
   - be sure to have an unique tablename, or you might overwrite someone else's table!
-  - keep in mind that your local `JSON` settings file is open for all to see, so do not include sensative data beyond simple table settings. 
+  - keep in mind that your local `JSON` settings file is open for all to see, so do not include sensative data beyond simple table settings.
 
 - upon successful loading of settings file your mouse will turn to point locator
 - locate the mouse on the 4 corners of the table's scanned section
@@ -88,7 +90,7 @@ At this point, if all went well you should be able to turn the webcam and the fe
 - run using `$ parcel index.html` [`sudo` might be needed for permissions]
 - parcel should build a test build on port `1234` or other
 
-#### how to build CityScopeJS with `parcel`and deploy into GitHub pages
+#### how to build CityScopeJS with `parcelJS` and deploy into GitHub pages
 
 - navigate to the `cityscopeJS` folder on your local machine
 - make an empty `gh-pages` branch and push it to GH
@@ -96,12 +98,11 @@ At this point, if all went well you should be able to turn the webcam and the fe
 - open terminal and use `GH.sh` to build the a local `dist` folder
 - make changes to `.sh` to fit your static `https` and GitHub pages location
 
-
-## Troubleshooting 
+## Troubleshooting
 
 Note: CityScopeJS relies on a server system to send/recieve the scanned grid. This system is called cityIO. Before running CityScopeJS, make sure cityIO server is on. You can do so by visiting https://cityio.media.mit.edu. If the server is offline, leave us an issue here: https://github.com/CityScope/CS_CityIO_Backend/issues/46.
 
-For all other issues, please follow steps above and leave an issue in this repo. 
+For all other issues, please follow steps above and leave an issue in this repo.
 
 ---
 
